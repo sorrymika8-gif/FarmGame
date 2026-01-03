@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.Extensions.AI.OpenAI</id>
+    <version>10.0.1-preview.1.25571.5</version>
+    <authors>Microsoft</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>Icon.png</icon>
+    <readme>README.md</readme>
+    <projectUrl>https://dot.net/</projectUrl>
+    <description>Implementation of generative AI abstractions for OpenAI-compatible endpoints.</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <serviceable>true</serviceable>
+    <repository type="git" url="https://github.com/dotnet/extensions" commit="14a26cec7ca739a80101d7df910280a6f806156a" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.2">
+        <dependency id="Microsoft.Extensions.AI.Abstractions" version="10.0.1" exclude="Build,Analyzers" />
+        <dependency id="OpenAI" version="2.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory.Data" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="10.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="Microsoft.Extensions.AI.Abstractions" version="10.0.1" exclude="Build,Analyzers" />
+        <dependency id="OpenAI" version="2.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory.Data" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="10.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net9.0">
+        <dependency id="Microsoft.Extensions.AI.Abstractions" version="10.0.1" exclude="Build,Analyzers" />
+        <dependency id="OpenAI" version="2.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory.Data" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="10.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net10.0">
+        <dependency id="Microsoft.Extensions.AI.Abstractions" version="10.0.1" exclude="Build,Analyzers" />
+        <dependency id="OpenAI" version="2.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory.Data" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="10.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.Extensions.AI.Abstractions" version="10.0.1" exclude="Build,Analyzers" />
+        <dependency id="OpenAI" version="2.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory.Data" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="10.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
