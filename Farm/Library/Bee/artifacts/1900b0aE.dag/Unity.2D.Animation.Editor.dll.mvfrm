@@ -8,6 +8,13 @@ SpriteLibCategory
 SpriteLibraryAsset
 SpriteResolver
 SpriteSkin
+RegisterGenericJobTypeAttribute
+Unity
+Entities
+DataStreamReader
+Networking
+Transport
+DataStreamWriter
 AssetModificationProcessor
 
 Sysroot

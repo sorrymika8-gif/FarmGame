@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 639029184531457702
-    m_Hash: 1503542712
+      ticks: 639033039367736610
+    m_Hash: 3287682541
   m_LockFileStatus:
     m_FilePath: D:/FarmGame/Farm/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 639029184531495112
-    m_Hash: 2134487930
+      ticks: 639033039420879382
+    m_Hash: 653431440
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
@@ -22,6 +22,856 @@ m_LocalPackages:
 m_ProjectPath: D:/FarmGame/Farm/Packages
 m_EditorVersion: 2022.3.61t9 (2e9db1b79d2d)
 m_ResolvedPackages:
+- packageId: com.unity.2d.animation@9.2.0
+  testable: 0
+  isDirectDependency: 1
+  version: 9.2.0
+  source: 1
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.animation@9.2.0
+  assetPath: Packages/com.unity.2d.animation
+  name: com.unity.2d.animation
+  displayName: 2D Animation
+  author:
+    name: 
+    email: 
+    url: 
+  category: 2D
+  type: 
+  description: 2D Animation provides all the necessary tooling and runtime components
+    for skeletal animation using Sprites.
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 1.0.15-preview.1
+    - 1.0.15-preview.2
+    - 1.0.15-preview.3
+    - 1.0.15-preview.4
+    - 1.0.15-preview.5
+    - 1.0.16-preview
+    - 1.0.16-preview.1
+    - 1.0.16-preview.2
+    - 2.0.0-preview.1
+    - 2.0.0-preview.2
+    - 2.0.0-preview.3
+    - 2.1.0-preview.1
+    - 2.1.0-preview.2
+    - 2.1.0-preview.4
+    - 2.1.0-preview.5
+    - 2.1.0-preview.7
+    - 2.2.0-preview.1
+    - 2.2.0-preview.4
+    - 2.2.0-preview.5
+    - 2.2.1-preview.1
+    - 2.2.1-preview.2
+    - 3.0.2
+    - 3.0.3
+    - 3.0.4
+    - 3.0.5
+    - 3.0.6
+    - 3.0.8
+    - 3.1.0
+    - 3.1.1
+    - 3.2.1
+    - 3.2.2
+    - 3.2.3
+    - 3.2.4
+    - 3.2.5
+    - 3.2.6
+    - 3.2.9
+    - 3.2.10
+    - 3.2.11
+    - 3.2.13
+    - 3.2.14
+    - 3.2.15
+    - 3.2.16
+    - 3.2.17
+    - 3.2.18
+    - 4.0.0
+    - 4.0.1
+    - 4.1.0
+    - 4.1.1
+    - 4.2.1
+    - 4.2.2
+    - 4.2.3
+    - 4.2.4
+    - 4.2.5
+    - 4.2.6
+    - 4.2.8
+    - 5.0.0
+    - 5.0.1
+    - 5.0.2
+    - 5.0.3
+    - 5.0.4
+    - 5.0.5
+    - 5.0.6
+    - 5.0.7
+    - 5.0.8
+    - 5.0.9
+    - 5.0.10
+    - 5.1.0
+    - 5.1.1
+    - 5.2.0
+    - 5.2.1
+    - 5.2.3
+    - 5.2.4
+    - 5.2.6
+    - 5.2.7
+    - 6.0.0-pre.1
+    - 6.0.0-pre.2
+    - 6.0.1
+    - 6.0.3
+    - 6.0.4
+    - 6.0.5
+    - 6.0.7
+    - 7.0.0-pre.2
+    - 7.0.0-pre.3
+    - 7.0.0
+    - 7.0.1
+    - 7.0.2
+    - 7.0.3
+    - 7.0.4
+    - 7.0.5
+    - 7.0.6
+    - 7.0.7
+    - 7.0.8
+    - 7.0.9
+    - 7.0.10
+    - 7.0.11
+    - 7.0.12
+    - 7.0.13
+    - 7.1.0
+    - 7.1.1
+    - 7.1.2
+    - 7.2.0
+    - 8.0.0-pre.3
+    - 8.0.0-pre.4
+    - 8.0.0
+    - 8.0.1
+    - 8.0.2
+    - 8.0.3
+    - 8.0.4
+    - 8.0.5
+    - 9.0.0-pre.1
+    - 9.0.0-pre.3
+    - 9.0.0
+    - 9.0.1
+    - 9.0.2
+    - 9.0.3
+    - 9.0.4
+    - 9.1.0
+    - 9.1.1
+    - 9.1.2
+    - 9.1.3
+    - 9.2.0
+    - 9.2.1
+    - 9.2.2
+    - 10.0.0-pre.1
+    - 10.0.0-pre.2
+    - 10.0.0
+    - 10.0.1
+    - 10.0.2
+    - 10.0.3
+    - 10.1.0
+    - 10.1.1
+    - 10.1.2
+    - 10.1.3
+    - 10.1.4
+    - 10.2.0
+    - 10.2.1
+    - 10.2.2
+    - 11.0.0
+    - 12.0.0
+    - 12.0.1
+    - 12.0.2
+    - 12.0.3
+    - 13.0.0
+    - 13.0.1
+    - 13.0.2
+    - 14.0.0
+    - 14.0.1
+    - 14.0.2
+    compatible:
+    - 9.2.0
+    - 9.2.1
+    - 9.2.2
+    recommended: 9.2.2
+    deprecated: []
+  dependencies:
+  - name: com.unity.2d.common
+    version: 8.1.0
+  - name: com.unity.2d.sprite
+    version: 1.0.0
+  - name: com.unity.collections
+    version: 1.1.0
+  - name: com.unity.modules.animation
+    version: 1.0.0
+  - name: com.unity.modules.uielements
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.2d.common
+    version: 8.1.0
+  - name: com.unity.2d.sprite
+    version: 1.0.0
+  - name: com.unity.mathematics
+    version: 1.2.6
+  - name: com.unity.modules.uielements
+    version: 1.0.0
+  - name: com.unity.modules.ui
+    version: 1.0.0
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  - name: com.unity.modules.animation
+    version: 1.0.0
+  - name: com.unity.burst
+    version: 1.8.19
+  - name: com.unity.collections
+    version: 2.4.3
+  - name: com.unity.nuget.mono-cecil
+    version: 1.11.4
+  - name: com.unity.test-framework
+    version: 1.4.3
+  - name: com.unity.ext.nunit
+    version: 2.0.3
+  - name: com.unity.test-framework.performance
+    version: 3.0.3
+  keywords:
+  - 2d
+  - animation
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638787277200000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.2d.animation@9.2/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.cds.internal.unity3d.com/unity/2d.git
+    revision: 854e7c330168787e9d4ea0311c42dadc256cb889
+    path: 
+  unityLifecycle:
+    version: 9.2.0
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
+- packageId: com.unity.2d.pixel-perfect@5.1.0
+  testable: 0
+  isDirectDependency: 1
+  version: 5.1.0
+  source: 1
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.pixel-perfect@5.1.0
+  assetPath: Packages/com.unity.2d.pixel-perfect
+  name: com.unity.2d.pixel-perfect
+  displayName: 2D Pixel Perfect
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: 
+  description: 'The 2D Pixel Perfect package contains the Pixel Perfect Camera component
+    which ensures your pixel art remains crisp and clear at different resolutions,
+    and stable in motion.
+
+
+    It is a single component that makes all the calculations
+    needed to scale the viewport with resolution changes, removing the hassle from
+    the user. The user can adjust the definition of the pixel art rendered within
+    the camera viewport through the component settings, as well preview any changes
+    immediately in Game view by using the Run in Edit Mode feature.'
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 1.0.0-preview
+    - 1.0.1-preview
+    - 2.0.2
+    - 2.0.3
+    - 2.0.4
+    - 2.1.0
+    - 3.0.0
+    - 3.0.1
+    - 3.0.2
+    - 4.0.0
+    - 4.0.1
+    - 5.0.0-pre.1
+    - 5.0.0-pre.2
+    - 5.0.0
+    - 5.0.1
+    - 5.0.2
+    - 5.0.3
+    - 5.1.0
+    - 5.1.1
+    compatible:
+    - 5.1.0
+    - 5.1.1
+    recommended: 5.1.1
+    deprecated: []
+  dependencies:
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  keywords:
+  - pixel
+  - perfect
+  - 2D
+  - sprite
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638776909500000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.2d.pixel-perfect@5.1/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.cds.internal.unity3d.com/unity/2d.git
+    revision: 9ead9de91ee9fdb290bfcc223d793a449e7f8370
+    path: 
+  unityLifecycle:
+    version: 5.1.0
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
+- packageId: com.unity.2d.psdimporter@8.1.0
+  testable: 0
+  isDirectDependency: 1
+  version: 8.1.0
+  source: 1
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.psdimporter@8.1.0
+  assetPath: Packages/com.unity.2d.psdimporter
+  name: com.unity.2d.psdimporter
+  displayName: 2D PSD Importer
+  author:
+    name: 
+    email: 
+    url: 
+  category: 2D
+  type: 
+  description: A ScriptedImporter for importing Adobe Photoshop PSB (Photoshop Big)
+    file format. The ScriptedImporter is currently targeted for users who wants to
+    create multi Sprite character animation using Unity 2D Animation Package.
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 1.0.0-preview.1
+    - 1.0.0-preview.2
+    - 1.0.0-preview.3
+    - 1.0.0-preview.4
+    - 1.1.0-preview.1
+    - 1.1.0-preview.3
+    - 1.2.0-preview.1
+    - 1.2.0-preview.3
+    - 1.2.0-preview.4
+    - 2.0.2
+    - 2.0.3
+    - 2.0.4
+    - 2.0.5
+    - 2.0.7
+    - 2.1.0
+    - 2.1.3
+    - 2.1.4
+    - 2.1.5
+    - 2.1.6
+    - 2.1.8
+    - 2.1.9
+    - 2.1.10
+    - 2.1.11
+    - 3.0.0
+    - 3.1.1
+    - 3.1.3
+    - 3.1.4
+    - 3.1.5
+    - 3.1.6
+    - 3.1.7
+    - 4.0.0
+    - 4.0.1
+    - 4.0.2
+    - 4.1.0
+    - 4.1.1
+    - 4.1.2
+    - 4.1.3
+    - 4.2.0
+    - 4.3.0
+    - 4.3.1
+    - 5.0.0-pre.1
+    - 5.0.0-pre.2
+    - 5.0.1
+    - 5.0.3
+    - 5.0.4
+    - 5.0.6
+    - 6.0.0-pre.2
+    - 6.0.0-pre.3
+    - 6.0.0-pre.4
+    - 6.0.0
+    - 6.0.1
+    - 6.0.2
+    - 6.0.3
+    - 6.0.4
+    - 6.0.5
+    - 6.0.6
+    - 6.0.7
+    - 6.0.8
+    - 6.0.9
+    - 6.1.0
+    - 7.0.0-pre.3
+    - 7.0.0-pre.4
+    - 7.0.0
+    - 7.0.1
+    - 7.0.2
+    - 7.0.3
+    - 8.0.0-pre.1
+    - 8.0.0-pre.3
+    - 8.0.0
+    - 8.0.1
+    - 8.0.2
+    - 8.0.3
+    - 8.0.4
+    - 8.0.5
+    - 8.1.0
+    - 8.1.1
+    - 8.1.2
+    - 9.0.0-pre.1
+    - 9.0.0-pre.2
+    - 9.0.0
+    - 9.0.1
+    - 9.0.2
+    - 9.0.3
+    - 9.1.0
+    - 9.1.1
+    - 10.0.0
+    - 10.1.0
+    - 10.1.1
+    - 11.0.0
+    - 11.0.1
+    - 11.0.2
+    - 12.0.0
+    - 12.0.1
+    - 13.0.0
+    - 13.0.1
+    compatible:
+    - 8.1.0
+    - 8.1.1
+    - 8.1.2
+    recommended: 8.1.2
+    deprecated: []
+  dependencies:
+  - name: com.unity.2d.common
+    version: 8.1.0
+  - name: com.unity.2d.sprite
+    version: 1.0.0
+  - name: com.unity.2d.animation
+    version: 9.2.0
+  resolvedDependencies:
+  - name: com.unity.2d.common
+    version: 8.1.0
+  - name: com.unity.2d.sprite
+    version: 1.0.0
+  - name: com.unity.mathematics
+    version: 1.2.6
+  - name: com.unity.modules.uielements
+    version: 1.0.0
+  - name: com.unity.modules.ui
+    version: 1.0.0
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  - name: com.unity.modules.animation
+    version: 1.0.0
+  - name: com.unity.burst
+    version: 1.8.19
+  - name: com.unity.2d.animation
+    version: 9.2.0
+  - name: com.unity.collections
+    version: 2.4.3
+  - name: com.unity.nuget.mono-cecil
+    version: 1.11.4
+  - name: com.unity.test-framework
+    version: 1.4.3
+  - name: com.unity.ext.nunit
+    version: 2.0.3
+  - name: com.unity.test-framework.performance
+    version: 3.0.3
+  keywords:
+  - 2d
+  - psdimporter
+  - assetimporter
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638787277500000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.2d.psdimporter@8.1/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.cds.internal.unity3d.com/unity/2d.git
+    revision: 854e7c330168787e9d4ea0311c42dadc256cb889
+    path: 
+  unityLifecycle:
+    version: 8.1.0
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
+- packageId: com.unity.2d.sprite@1.0.0
+  testable: 0
+  isDirectDependency: 1
+  version: 1.0.0
+  source: 2
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.sprite@1.0.0
+  assetPath: Packages/com.unity.2d.sprite
+  name: com.unity.2d.sprite
+  displayName: 2D Sprite
+  author:
+    name: 
+    email: 
+    url: 
+  category: 2D
+  type: 
+  description: Use Unity Sprite Editor Window to create and edit Sprite asset properties
+    like pivot, borders and Physics shape
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 1.0.0
+    compatible:
+    - 1.0.0
+    recommended: 1.0.0
+    deprecated: []
+  dependencies: []
+  resolvedDependencies: []
+  keywords:
+  - 2d
+  - sprite
+  - sprite editor window
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 0
+  documentationUrl: 
+  hasRepository: 0
+  repository:
+    type: 
+    url: 
+    revision: 
+    path: 
+  unityLifecycle:
+    version: 1.0.0
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
+- packageId: com.unity.2d.spriteshape@9.1.0
+  testable: 0
+  isDirectDependency: 1
+  version: 9.1.0
+  source: 1
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.spriteshape@9.1.0
+  assetPath: Packages/com.unity.2d.spriteshape
+  name: com.unity.2d.spriteshape
+  displayName: 2D SpriteShape
+  author:
+    name: 
+    email: 
+    url: 
+  category: 2D
+  type: 
+  description: SpriteShape Runtime & Editor Package contains the tooling and the
+    runtime component that allows you to create very organic looking spline based
+    2D worlds. It comes with intuitive configurator and a highly performant renderer.
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 1.0.10-preview.2
+    - 1.0.11-preview
+    - 1.0.12-preview
+    - 1.0.12-preview.1
+    - 1.0.14-preview.2
+    - 2.0.0-preview.4
+    - 2.0.0-preview.5
+    - 2.0.0-preview.7
+    - 2.0.0-preview.8
+    - 2.0.0-preview.9
+    - 2.1.0-preview.2
+    - 2.1.0-preview.6
+    - 2.1.0-preview.7
+    - 2.1.0-preview.10
+    - 2.1.0-preview.11
+    - 3.0.1
+    - 3.0.2
+    - 3.0.4
+    - 3.0.5
+    - 3.0.6
+    - 3.0.7
+    - 3.0.8
+    - 3.0.9
+    - 3.0.10
+    - 3.0.11
+    - 3.0.12
+    - 3.0.13
+    - 3.0.14
+    - 3.0.15
+    - 3.0.16
+    - 3.0.17
+    - 3.0.18
+    - 4.0.0
+    - 4.0.1
+    - 4.0.2
+    - 4.0.3
+    - 4.1.0
+    - 4.1.1
+    - 4.1.2
+    - 4.1.3
+    - 4.1.4
+    - 4.1.5
+    - 5.0.0
+    - 5.0.1
+    - 5.0.2
+    - 5.1.0
+    - 5.1.1
+    - 5.1.2
+    - 5.1.3
+    - 5.1.4
+    - 5.1.5
+    - 5.1.6
+    - 5.1.7
+    - 5.2.0
+    - 5.3.0
+    - 6.0.0-pre.1
+    - 6.0.0-pre.2
+    - 6.0.0
+    - 6.0.1
+    - 6.0.2
+    - 7.0.0-pre.2
+    - 7.0.0-pre.3
+    - 7.0.0
+    - 7.0.2
+    - 7.0.3
+    - 7.0.4
+    - 7.0.5
+    - 7.0.6
+    - 7.0.7
+    - 7.1.0
+    - 8.0.0-pre.4
+    - 8.0.0-pre.5
+    - 8.0.0
+    - 8.0.1
+    - 9.0.0-pre.1
+    - 9.0.0
+    - 9.0.1
+    - 9.0.2
+    - 9.0.3
+    - 9.0.4
+    - 9.0.5
+    - 9.1.0
+    - 9.1.1
+    - 10.0.0-pre.1
+    - 10.0.0-pre.2
+    - 10.0.0
+    - 10.0.1
+    - 10.0.2
+    - 10.0.3
+    - 10.0.4
+    - 10.0.5
+    - 10.0.6
+    - 10.0.7
+    - 10.1.0
+    - 11.0.0
+    - 12.0.0
+    - 12.0.1
+    - 12.0.2
+    - 13.0.0
+    - 14.0.0
+    compatible:
+    - 9.1.0
+    - 9.1.1
+    recommended: 9.1.1
+    deprecated: []
+  dependencies:
+  - name: com.unity.2d.common
+    version: 8.1.0
+  - name: com.unity.mathematics
+    version: 1.1.0
+  - name: com.unity.modules.physics2d
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.2d.common
+    version: 8.1.0
+  - name: com.unity.2d.sprite
+    version: 1.0.0
+  - name: com.unity.mathematics
+    version: 1.2.6
+  - name: com.unity.modules.uielements
+    version: 1.0.0
+  - name: com.unity.modules.ui
+    version: 1.0.0
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  - name: com.unity.modules.animation
+    version: 1.0.0
+  - name: com.unity.burst
+    version: 1.8.19
+  - name: com.unity.modules.physics2d
+    version: 1.0.0
+  keywords:
+  - 2d
+  - shape
+  - spriteshape
+  - smartsprite
+  - spline
+  - terrain2d
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638787277500000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.2d.spriteshape@9.1/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.cds.internal.unity3d.com/unity/2d.git
+    revision: 854e7c330168787e9d4ea0311c42dadc256cb889
+    path: 
+  unityLifecycle:
+    version: 9.1.0
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
+- packageId: com.unity.2d.tilemap@1.0.0
+  testable: 0
+  isDirectDependency: 1
+  version: 1.0.0
+  source: 2
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.tilemap@1.0.0
+  assetPath: Packages/com.unity.2d.tilemap
+  name: com.unity.2d.tilemap
+  displayName: 2D Tilemap Editor
+  author:
+    name: 
+    email: 
+    url: 
+  category: 2D
+  type: 
+  description: 2D Tilemap Editor is a package that contains editor functionalities
+    for editing Tilemaps.
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 1.0.0
+    compatible:
+    - 1.0.0
+    recommended: 1.0.0
+    deprecated: []
+  dependencies:
+  - name: com.unity.modules.tilemap
+    version: 1.0.0
+  - name: com.unity.modules.uielements
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.modules.tilemap
+    version: 1.0.0
+  - name: com.unity.modules.physics2d
+    version: 1.0.0
+  - name: com.unity.modules.uielements
+    version: 1.0.0
+  - name: com.unity.modules.ui
+    version: 1.0.0
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  keywords:
+  - 2d
+  - Tilemap
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 0
+  documentationUrl: 
+  hasRepository: 0
+  repository:
+    type: 
+    url: 
+    revision: 
+    path: 
+  unityLifecycle:
+    version: 1.0.0
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
 - packageId: com.unity.collab-proxy@2.11.2
   testable: 0
   isDirectDependency: 1
@@ -259,11 +1109,15 @@ m_ResolvedPackages:
   - name: com.unity.burst
     version: 1.8.19
   - name: com.unity.collections
-    version: 1.2.4
+    version: 2.4.3
+  - name: com.unity.nuget.mono-cecil
+    version: 1.11.4
   - name: com.unity.test-framework
-    version: 1.1.33
+    version: 1.4.3
   - name: com.unity.ext.nunit
-    version: 1.0.6
+    version: 2.0.3
+  - name: com.unity.test-framework.performance
+    version: 3.0.3
   - name: com.unity.2d.pixel-perfect
     version: 5.1.0
   - name: com.unity.2d.psdimporter
@@ -392,7 +1246,7 @@ m_ResolvedPackages:
     version: 1.0.6
   resolvedDependencies:
   - name: com.unity.ext.nunit
-    version: 1.0.6
+    version: 2.0.3
   keywords: []
   registry:
     id: main
@@ -482,9 +1336,9 @@ m_ResolvedPackages:
     version: 1.1.9
   resolvedDependencies:
   - name: com.unity.test-framework
-    version: 1.1.33
+    version: 1.4.3
   - name: com.unity.ext.nunit
-    version: 1.0.6
+    version: 2.0.3
   - name: com.unity.modules.imgui
     version: 1.0.0
   - name: com.unity.modules.jsonserialize
@@ -517,105 +1371,48 @@ m_ResolvedPackages:
   isDeprecated: 0
   deprecationMessage: 
   fingerprint: 
-- packageId: com.unity.test-framework@1.1.33
+- packageId: com.unity.ide.vscode@1.2.5
   testable: 0
   isDirectDependency: 1
-  version: 1.1.33
+  version: 1.2.5
   source: 1
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.test-framework@1.1.33
-  assetPath: Packages/com.unity.test-framework
-  name: com.unity.test-framework
-  displayName: Test Framework
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.ide.vscode@1.2.5
+  assetPath: Packages/com.unity.ide.vscode
+  name: com.unity.ide.vscode
+  displayName: Visual Studio Code Editor
   author:
     name: 
     email: 
     url: 
-  category: Unity Test Framework
-  type: asset
-  description: Test framework for running Edit mode and Play mode tests in Unity.
+  category: 
+  type: 
+  description: Code editor integration for supporting Visual Studio Code as code
+    editor for unity. Adds support for generating csproj files for intellisense purposes,
+    auto discovery of installations, etc.
   status: 0
   errors: []
   versions:
     all:
-    - 0.0.4-preview
-    - 0.0.29-preview
-    - 1.0.0
+    - 1.0.2
+    - 1.0.3
     - 1.0.7
-    - 1.0.9
-    - 1.0.11
-    - 1.0.12
-    - 1.0.13
-    - 1.0.14
-    - 1.0.16
-    - 1.0.17
-    - 1.0.18
     - 1.1.0
-    - 1.1.1
     - 1.1.2
     - 1.1.3
-    - 1.1.5
-    - 1.1.8
-    - 1.1.9
-    - 1.1.11
-    - 1.1.13
-    - 1.1.14
-    - 1.1.16
-    - 1.1.18
-    - 1.1.19
-    - 1.1.20
-    - 1.1.22
-    - 1.1.24
-    - 1.1.26
-    - 1.1.27
-    - 1.1.29
-    - 1.1.30
-    - 1.1.31
-    - 1.1.33
-    - 1.3.0
-    - 1.3.2
-    - 1.3.3
-    - 1.3.4
-    - 1.3.5
-    - 1.3.8
-    - 1.3.9
-    - 1.4.2
-    - 1.4.3
-    - 1.4.4
-    - 1.4.5
-    - 1.4.6
+    - 1.1.4
+    - 1.2.0
+    - 1.2.1
+    - 1.2.2
+    - 1.2.3
+    - 1.2.4
+    - 1.2.5
     compatible:
-    - 1.1.33
-    - 1.3.0
-    - 1.3.2
-    - 1.3.3
-    - 1.3.4
-    - 1.3.5
-    - 1.3.8
-    - 1.3.9
-    - 1.4.2
-    - 1.4.3
-    - 1.4.4
-    - 1.4.5
-    - 1.4.6
-    recommended: 1.1.33
+    - 1.2.5
+    recommended: 1.2.5
     deprecated: []
-  dependencies:
-  - name: com.unity.ext.nunit
-    version: 1.0.6
-  - name: com.unity.modules.imgui
-    version: 1.0.0
-  - name: com.unity.modules.jsonserialize
-    version: 1.0.0
-  resolvedDependencies:
-  - name: com.unity.ext.nunit
-    version: 1.0.6
-  - name: com.unity.modules.imgui
-    version: 1.0.0
-  - name: com.unity.modules.jsonserialize
-    version: 1.0.0
-  keywords:
-  - Test
-  - TestFramework
+  dependencies: []
+  resolvedDependencies: []
+  keywords: []
   registry:
     id: main
     name: 
@@ -626,16 +1423,136 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 1
   isAssetStorePackage: 0
-  datePublishedTicks: 638611027060000000
+  datePublishedTicks: 637800255360000000
   documentationUrl: 
   hasRepository: 1
   repository:
     type: git
-    url: git+https://github.com/Unity-Technologies/com.unity.test-framework.git
-    revision: 34a4d423d64926635eb36d3bb86276179cc186e1
+    url: https://github.com/Unity-Technologies/com.unity.ide.vscode.git
+    revision: b0740c80bfc2440527c317109f7c3d9100132722
     path: 
   unityLifecycle:
-    version: 1.1.33
+    version: 1.2.5
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
+- packageId: com.unity.sentis@2.1.3
+  testable: 0
+  isDirectDependency: 1
+  version: 2.1.3
+  source: 1
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.sentis@2.1.3
+  assetPath: Packages/com.unity.sentis
+  name: com.unity.sentis
+  displayName: Sentis
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: 
+  description: 'Sentis is a neural network inference library. It enables you to import
+    trained neural network models, connect the network inputs and outputs to your
+    game code, and then run them locally in your end-user app. Use cases include
+    capabilities like natural language processing, object recognition, automated
+    game opponents, sensor data classification, and many more.
+
+
+    Sentis automatically
+    optimizes your network for real-time use to speed up inference. It also allows
+    you to tune your implementation further with tools like frame slicing, quantization,
+    and custom backend (i.e. compute type) dispatching.
+
+
+    Visit https://unity.com/sentis
+    for more resources.'
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 1.0.0-exp.6
+    - 1.1.0-exp.2
+    - 1.1.1-exp.2
+    - 1.2.0-exp.2
+    - 1.3.0-pre.1
+    - 1.3.0-pre.2
+    - 1.3.0-pre.3
+    - 1.4.0-pre.1
+    - 1.4.0-pre.2
+    - 1.4.0-pre.3
+    - 1.5.0-pre.2
+    - 1.5.0-pre.3
+    - 1.6.0-pre.1
+    - 2.0.0
+    - 2.1.0
+    - 2.1.1
+    - 2.1.2
+    - 2.1.3
+    compatible:
+    - 1.0.0-exp.6
+    - 1.1.0-exp.2
+    - 1.1.1-exp.2
+    - 1.2.0-exp.2
+    - 2.0.0
+    - 2.1.0
+    - 2.1.1
+    - 2.1.2
+    - 2.1.3
+    recommended: 
+    deprecated: []
+  dependencies:
+  - name: com.unity.burst
+    version: 1.8.17
+  - name: com.unity.collections
+    version: 2.4.3
+  - name: com.unity.modules.imageconversion
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.burst
+    version: 1.8.19
+  - name: com.unity.mathematics
+    version: 1.2.6
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  - name: com.unity.collections
+    version: 2.4.3
+  - name: com.unity.nuget.mono-cecil
+    version: 1.11.4
+  - name: com.unity.test-framework
+    version: 1.4.3
+  - name: com.unity.ext.nunit
+    version: 2.0.3
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.test-framework.performance
+    version: 3.0.3
+  - name: com.unity.modules.imageconversion
+    version: 1.0.0
+  keywords: []
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638830486800000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.sentis@2.1/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.cds.internal.unity3d.com/unity/UnityInferenceEngine.git
+    revision: d84688ffd4cd66e612b1c1a5a36cbb464b4590bd
+    path: 
+  unityLifecycle:
+    version: 
     nextVersion: 
     recommendedVersion: 
     isDeprecated: 0
@@ -2331,6 +3248,62 @@ m_ResolvedPackages:
   isDeprecated: 0
   deprecationMessage: 
   fingerprint: 
+- packageId: com.unity.modules.umbra@1.0.0
+  testable: 0
+  isDirectDependency: 1
+  version: 1.0.0
+  source: 2
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.modules.umbra@1.0.0
+  assetPath: Packages/com.unity.modules.umbra
+  name: com.unity.modules.umbra
+  displayName: Umbra
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: module
+  description: 'The Umbra module implements Unity''s occlusion culling system. Scripting
+    API: https://docs.unity3d.com/ScriptReference/UnityEngine.UmbraModule.html'
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 1.0.0
+    compatible:
+    - 1.0.0
+    recommended: 1.0.0
+    deprecated: []
+  dependencies: []
+  resolvedDependencies: []
+  keywords: []
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 0
+  documentationUrl: 
+  hasRepository: 0
+  repository:
+    type: 
+    url: 
+    revision: 
+    path: 
+  unityLifecycle:
+    version: 
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
 - packageId: com.unity.modules.unityanalytics@1.0.0
   testable: 0
   isDirectDependency: 1
@@ -3105,292 +4078,184 @@ m_ResolvedPackages:
   isDeprecated: 0
   deprecationMessage: 
   fingerprint: 
-- packageId: com.unity.ext.nunit@1.0.6
+- packageId: com.unity.burst@1.8.19
   testable: 0
   isDirectDependency: 0
-  version: 1.0.6
+  version: 1.8.19
   source: 1
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.ext.nunit@1.0.6
-  assetPath: Packages/com.unity.ext.nunit
-  name: com.unity.ext.nunit
-  displayName: Custom NUnit
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.burst@1.8.19
+  assetPath: Packages/com.unity.burst
+  name: com.unity.burst
+  displayName: Burst
   author:
     name: 
     email: 
     url: 
-  category: Libraries
-  type: 
-  description: Custom version of the nunit package build to work with Unity. Used
-    by the Unity Test Framework.
+  category: 
+  type: asset
+  description: Burst is a compiler that translates from IL/.NET bytecode to highly
+    optimized native code using LLVM.
   status: 0
   errors: []
   versions:
     all:
-    - 0.1.5-preview
-    - 0.1.6-preview
-    - 0.1.9-preview
-    - 1.0.0
-    - 1.0.5
-    - 1.0.6
-    - 2.0.2
-    - 2.0.3
-    - 2.0.4
-    - 2.0.5
+    - 0.2.4-preview.5
+    - 0.2.4-preview.7
+    - 0.2.4-preview.11
+    - 0.2.4-preview.12
+    - 0.2.4-preview.13
+    - 0.2.4-preview.14
+    - 0.2.4-preview.15
+    - 0.2.4-preview.16
+    - 0.2.4-preview.17
+    - 0.2.4-preview.18
+    - 0.2.4-preview.19
+    - 0.2.4-preview.20
+    - 0.2.4-preview.21
+    - 0.2.4-preview.22
+    - 0.2.4-preview.23
+    - 0.2.4-preview.24
+    - 0.2.4-preview.25
+    - 0.2.4-preview.30
+    - 0.2.4-preview.31
+    - 0.2.4-preview.33
+    - 0.2.4-preview.34
+    - 0.2.4-preview.37
+    - 0.2.4-preview.41
+    - 0.2.4-preview.45
+    - 0.2.4-preview.48
+    - 0.2.4-preview.50
+    - 1.1.0-preview.2
+    - 1.1.0-preview.3
+    - 1.1.0-preview.4
+    - 1.1.1
+    - 1.1.2
+    - 1.1.3-preview.3
+    - 1.2.0-preview.1
+    - 1.2.0-preview.5
+    - 1.2.0-preview.6
+    - 1.2.0-preview.8
+    - 1.2.0-preview.9
+    - 1.2.0-preview.10
+    - 1.2.0-preview.11
+    - 1.2.0-preview.12
+    - 1.2.0
+    - 1.2.1
+    - 1.2.2
+    - 1.2.3
+    - 1.3.0-preview.1
+    - 1.3.0-preview.2
+    - 1.3.0-preview.3
+    - 1.3.0-preview.4
+    - 1.3.0-preview.5
+    - 1.3.0-preview.6
+    - 1.3.0-preview.7
+    - 1.3.0-preview.8
+    - 1.3.0-preview.9
+    - 1.3.0-preview.10
+    - 1.3.0-preview.11
+    - 1.3.0-preview.12
+    - 1.3.0-preview.13
+    - 1.3.0
+    - 1.3.1
+    - 1.3.2
+    - 1.3.3
+    - 1.3.4
+    - 1.3.5
+    - 1.3.6
+    - 1.3.7
+    - 1.3.8
+    - 1.3.9
+    - 1.4.0-pre.1
+    - 1.4.0-preview.1
+    - 1.4.0-preview.2
+    - 1.4.0-preview.3
+    - 1.4.0-preview.4
+    - 1.4.0-preview.5
+    - 1.4.1-pre.1
+    - 1.4.1-pre.2
+    - 1.4.1
+    - 1.4.2
+    - 1.4.3
+    - 1.4.4-preview.1
+    - 1.4.4-preview.2
+    - 1.4.4
+    - 1.4.5
+    - 1.4.6
+    - 1.4.7
+    - 1.4.8
+    - 1.4.9
+    - 1.4.11
+    - 1.5.0-pre.3
+    - 1.5.0-pre.4
+    - 1.5.0-pre.5
+    - 1.5.0
+    - 1.5.1
+    - 1.5.2
+    - 1.5.3
+    - 1.5.4
+    - 1.5.5
+    - 1.5.6-preview.1
+    - 1.5.6
+    - 1.6.0-pre.2
+    - 1.6.0-pre.3
+    - 1.6.0-pre.4
+    - 1.6.0
+    - 1.6.1
+    - 1.6.2
+    - 1.6.3
+    - 1.6.4
+    - 1.6.5
+    - 1.6.6
+    - 1.7.0-pre.1
+    - 1.7.0
+    - 1.7.1
+    - 1.7.2
+    - 1.7.3
+    - 1.7.4
+    - 1.8.0-pre.1
+    - 1.8.0-pre.2
+    - 1.8.0
+    - 1.8.1
+    - 1.8.2
+    - 1.8.3
+    - 1.8.4
+    - 1.8.7
+    - 1.8.8
+    - 1.8.9
+    - 1.8.10
+    - 1.8.11
+    - 1.8.12
+    - 1.8.13
+    - 1.8.14
+    - 1.8.15
+    - 1.8.16
+    - 1.8.17
+    - 1.8.18
+    - 1.8.19
+    - 1.8.20
+    - 1.8.21
+    - 1.8.25
+    - 1.8.26
     compatible:
-    - 1.0.6
-    - 2.0.2
-    - 2.0.3
-    - 2.0.4
-    - 2.0.5
-    recommended: 1.0.6
-    deprecated: []
-  dependencies: []
-  resolvedDependencies: []
-  keywords:
-  - nunit
-  - unittest
-  - test
-  registry:
-    id: main
-    name: 
-    url: https://packages.tuanjie.cn
-    scopes: []
-    isDefault: 1
-    capabilities: 7
-    configSource: 0
-  hideInEditor: 1
-  isAssetStorePackage: 0
-  datePublishedTicks: 637429759280000000
-  documentationUrl: 
-  hasRepository: 1
-  repository:
-    type: git
-    url: https://github.cds.internal.unity3d.com/unity/com.unity.ext.nunit.git
-    revision: 29ea4d6504a5f58fb3a6934db839aa80ae6d9d88
-    path: 
-  unityLifecycle:
-    version: 1.0.6
-    nextVersion: 
-    recommendedVersion: 
-    isDeprecated: 0
-    deprecationMessage: 
-  isDeprecated: 0
-  deprecationMessage: 
-  fingerprint: 
-- packageId: com.unity.2d.animation@9.2.0
-  testable: 0
-  isDirectDependency: 0
-  version: 9.2.0
-  source: 1
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.animation@9.2.0
-  assetPath: Packages/com.unity.2d.animation
-  name: com.unity.2d.animation
-  displayName: 2D Animation
-  author:
-    name: 
-    email: 
-    url: 
-  category: 2D
-  type: 
-  description: 2D Animation provides all the necessary tooling and runtime components
-    for skeletal animation using Sprites.
-  status: 0
-  errors: []
-  versions:
-    all:
-    - 1.0.15-preview.1
-    - 1.0.15-preview.2
-    - 1.0.15-preview.3
-    - 1.0.15-preview.4
-    - 1.0.15-preview.5
-    - 1.0.16-preview
-    - 1.0.16-preview.1
-    - 1.0.16-preview.2
-    - 2.0.0-preview.1
-    - 2.0.0-preview.2
-    - 2.0.0-preview.3
-    - 2.1.0-preview.1
-    - 2.1.0-preview.2
-    - 2.1.0-preview.4
-    - 2.1.0-preview.5
-    - 2.1.0-preview.7
-    - 2.2.0-preview.1
-    - 2.2.0-preview.4
-    - 2.2.0-preview.5
-    - 2.2.1-preview.1
-    - 2.2.1-preview.2
-    - 3.0.2
-    - 3.0.3
-    - 3.0.4
-    - 3.0.5
-    - 3.0.6
-    - 3.0.8
-    - 3.1.0
-    - 3.1.1
-    - 3.2.1
-    - 3.2.2
-    - 3.2.3
-    - 3.2.4
-    - 3.2.5
-    - 3.2.6
-    - 3.2.9
-    - 3.2.10
-    - 3.2.11
-    - 3.2.13
-    - 3.2.14
-    - 3.2.15
-    - 3.2.16
-    - 3.2.17
-    - 3.2.18
-    - 4.0.0
-    - 4.0.1
-    - 4.1.0
-    - 4.1.1
-    - 4.2.1
-    - 4.2.2
-    - 4.2.3
-    - 4.2.4
-    - 4.2.5
-    - 4.2.6
-    - 4.2.8
-    - 5.0.0
-    - 5.0.1
-    - 5.0.2
-    - 5.0.3
-    - 5.0.4
-    - 5.0.5
-    - 5.0.6
-    - 5.0.7
-    - 5.0.8
-    - 5.0.9
-    - 5.0.10
-    - 5.1.0
-    - 5.1.1
-    - 5.2.0
-    - 5.2.1
-    - 5.2.3
-    - 5.2.4
-    - 5.2.6
-    - 5.2.7
-    - 6.0.0-pre.1
-    - 6.0.0-pre.2
-    - 6.0.1
-    - 6.0.3
-    - 6.0.4
-    - 6.0.5
-    - 6.0.7
-    - 7.0.0-pre.2
-    - 7.0.0-pre.3
-    - 7.0.0
-    - 7.0.1
-    - 7.0.2
-    - 7.0.3
-    - 7.0.4
-    - 7.0.5
-    - 7.0.6
-    - 7.0.7
-    - 7.0.8
-    - 7.0.9
-    - 7.0.10
-    - 7.0.11
-    - 7.0.12
-    - 7.0.13
-    - 7.1.0
-    - 7.1.1
-    - 7.1.2
-    - 7.2.0
-    - 8.0.0-pre.3
-    - 8.0.0-pre.4
-    - 8.0.0
-    - 8.0.1
-    - 8.0.2
-    - 8.0.3
-    - 8.0.4
-    - 8.0.5
-    - 9.0.0-pre.1
-    - 9.0.0-pre.3
-    - 9.0.0
-    - 9.0.1
-    - 9.0.2
-    - 9.0.3
-    - 9.0.4
-    - 9.1.0
-    - 9.1.1
-    - 9.1.2
-    - 9.1.3
-    - 9.2.0
-    - 9.2.1
-    - 9.2.2
-    - 10.0.0-pre.1
-    - 10.0.0-pre.2
-    - 10.0.0
-    - 10.0.1
-    - 10.0.2
-    - 10.0.3
-    - 10.1.0
-    - 10.1.1
-    - 10.1.2
-    - 10.1.3
-    - 10.1.4
-    - 10.2.0
-    - 10.2.1
-    - 10.2.2
-    - 11.0.0
-    - 12.0.0
-    - 12.0.1
-    - 12.0.2
-    - 12.0.3
-    - 13.0.0
-    - 13.0.1
-    - 13.0.2
-    - 14.0.0
-    - 14.0.1
-    - 14.0.2
-    compatible:
-    - 9.2.0
-    - 9.2.1
-    - 9.2.2
-    recommended: 9.2.2
+    - 1.8.19
+    - 1.8.20
+    - 1.8.21
+    - 1.8.25
+    - 1.8.26
+    recommended: 1.8.26
     deprecated: []
   dependencies:
-  - name: com.unity.2d.common
-    version: 8.1.0
-  - name: com.unity.2d.sprite
-    version: 1.0.0
-  - name: com.unity.collections
-    version: 1.1.0
-  - name: com.unity.modules.animation
-    version: 1.0.0
-  - name: com.unity.modules.uielements
-    version: 1.0.0
-  resolvedDependencies:
-  - name: com.unity.2d.common
-    version: 8.1.0
-  - name: com.unity.2d.sprite
-    version: 1.0.0
   - name: com.unity.mathematics
-    version: 1.2.6
-  - name: com.unity.modules.uielements
-    version: 1.0.0
-  - name: com.unity.modules.ui
-    version: 1.0.0
-  - name: com.unity.modules.imgui
-    version: 1.0.0
+    version: 1.2.1
   - name: com.unity.modules.jsonserialize
     version: 1.0.0
-  - name: com.unity.modules.animation
+  resolvedDependencies:
+  - name: com.unity.mathematics
+    version: 1.2.6
+  - name: com.unity.modules.jsonserialize
     version: 1.0.0
-  - name: com.unity.burst
-    version: 1.8.19
-  - name: com.unity.collections
-    version: 1.2.4
-  - name: com.unity.test-framework
-    version: 1.1.33
-  - name: com.unity.ext.nunit
-    version: 1.0.6
-  keywords:
-  - 2d
-  - animation
+  keywords: []
   registry:
     id: main
     name: 
@@ -3401,16 +4266,16 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 1
   isAssetStorePackage: 0
-  datePublishedTicks: 638787277200000000
-  documentationUrl: https://docs.unity3d.com/Packages/com.unity.2d.animation@9.2/manual/index.html
+  datePublishedTicks: 638866117890000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.burst@1.8/manual/index.html
   hasRepository: 1
   repository:
     type: git
-    url: https://github.cds.internal.unity3d.com/unity/2d.git
-    revision: 854e7c330168787e9d4ea0311c42dadc256cb889
+    url: https://github.cds.internal.unity3d.com/unity/burst.git
+    revision: 6498e90e8843e51fdb3a37b709a1f1e4b86d3e57
     path: 
   unityLifecycle:
-    version: 9.2.0
+    version: 1.8.19
     nextVersion: 
     recommendedVersion: 
     isDeprecated: 0
@@ -3418,506 +4283,165 @@ m_ResolvedPackages:
   isDeprecated: 0
   deprecationMessage: 
   fingerprint: 
-- packageId: com.unity.2d.pixel-perfect@5.1.0
+- packageId: com.unity.collections@2.4.3
   testable: 0
   isDirectDependency: 0
-  version: 5.1.0
+  version: 2.4.3
   source: 1
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.pixel-perfect@5.1.0
-  assetPath: Packages/com.unity.2d.pixel-perfect
-  name: com.unity.2d.pixel-perfect
-  displayName: 2D Pixel Perfect
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.collections@2.4.3
+  assetPath: Packages/com.unity.collections
+  name: com.unity.collections
+  displayName: Collections
   author:
     name: 
     email: 
     url: 
   category: 
   type: 
-  description: 'The 2D Pixel Perfect package contains the Pixel Perfect Camera component
-    which ensures your pixel art remains crisp and clear at different resolutions,
-    and stable in motion.
-
-
-    It is a single component that makes all the calculations
-    needed to scale the viewport with resolution changes, removing the hassle from
-    the user. The user can adjust the definition of the pixel art rendered within
-    the camera viewport through the component settings, as well preview any changes
-    immediately in Game view by using the Run in Edit Mode feature.'
+  description: A C# collections library providing data structures that can be used
+    in jobs, and optimized by Burst compiler.
   status: 0
   errors: []
   versions:
     all:
-    - 1.0.0-preview
-    - 1.0.1-preview
-    - 2.0.2
-    - 2.0.3
-    - 2.0.4
-    - 2.1.0
-    - 3.0.0
-    - 3.0.1
-    - 3.0.2
-    - 4.0.0
-    - 4.0.1
-    - 5.0.0-pre.1
-    - 5.0.0-pre.2
-    - 5.0.0
-    - 5.0.1
-    - 5.0.2
-    - 5.0.3
-    - 5.1.0
-    - 5.1.1
-    compatible:
-    - 5.1.0
-    - 5.1.1
-    recommended: 5.1.1
-    deprecated: []
-  dependencies:
-  - name: com.unity.modules.imgui
-    version: 1.0.0
-  resolvedDependencies:
-  - name: com.unity.modules.imgui
-    version: 1.0.0
-  keywords:
-  - pixel
-  - perfect
-  - 2D
-  - sprite
-  registry:
-    id: main
-    name: 
-    url: https://packages.tuanjie.cn
-    scopes: []
-    isDefault: 1
-    capabilities: 7
-    configSource: 0
-  hideInEditor: 1
-  isAssetStorePackage: 0
-  datePublishedTicks: 638776909500000000
-  documentationUrl: https://docs.unity3d.com/Packages/com.unity.2d.pixel-perfect@5.1/manual/index.html
-  hasRepository: 1
-  repository:
-    type: git
-    url: https://github.cds.internal.unity3d.com/unity/2d.git
-    revision: 9ead9de91ee9fdb290bfcc223d793a449e7f8370
-    path: 
-  unityLifecycle:
-    version: 5.1.0
-    nextVersion: 
-    recommendedVersion: 
-    isDeprecated: 0
-    deprecationMessage: 
-  isDeprecated: 0
-  deprecationMessage: 
-  fingerprint: 
-- packageId: com.unity.2d.psdimporter@8.1.0
-  testable: 0
-  isDirectDependency: 0
-  version: 8.1.0
-  source: 1
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.psdimporter@8.1.0
-  assetPath: Packages/com.unity.2d.psdimporter
-  name: com.unity.2d.psdimporter
-  displayName: 2D PSD Importer
-  author:
-    name: 
-    email: 
-    url: 
-  category: 2D
-  type: 
-  description: A ScriptedImporter for importing Adobe Photoshop PSB (Photoshop Big)
-    file format. The ScriptedImporter is currently targeted for users who wants to
-    create multi Sprite character animation using Unity 2D Animation Package.
-  status: 0
-  errors: []
-  versions:
-    all:
-    - 1.0.0-preview.1
-    - 1.0.0-preview.2
-    - 1.0.0-preview.3
-    - 1.0.0-preview.4
-    - 1.1.0-preview.1
-    - 1.1.0-preview.3
-    - 1.2.0-preview.1
-    - 1.2.0-preview.3
-    - 1.2.0-preview.4
-    - 2.0.2
-    - 2.0.3
-    - 2.0.4
-    - 2.0.5
-    - 2.0.7
-    - 2.1.0
-    - 2.1.3
+    - 0.0.9-preview.1
+    - 0.0.9-preview.2
+    - 0.0.9-preview.3
+    - 0.0.9-preview.4
+    - 0.0.9-preview.5
+    - 0.0.9-preview.6
+    - 0.0.9-preview.7
+    - 0.0.9-preview.8
+    - 0.0.9-preview.9
+    - 0.0.9-preview.10
+    - 0.0.9-preview.11
+    - 0.0.9-preview.12
+    - 0.0.9-preview.13
+    - 0.0.9-preview.14
+    - 0.0.9-preview.15
+    - 0.0.9-preview.16
+    - 0.0.9-preview.17
+    - 0.0.9-preview.18
+    - 0.0.9-preview.19
+    - 0.0.9-preview.20
+    - 0.1.0-preview
+    - 0.1.1-preview
+    - 0.2.0-preview.13
+    - 0.3.0-preview.0
+    - 0.4.0-preview.6
+    - 0.5.0-preview.9
+    - 0.5.1-preview.11
+    - 0.5.2-preview.8
+    - 0.6.0-preview.9
+    - 0.7.0-preview.2
+    - 0.7.1-preview.3
+    - 0.8.0-preview.5
+    - 0.9.0-preview.5
+    - 0.9.0-preview.6
+    - 0.11.0-preview.17
+    - 0.12.0-preview.13
+    - 0.14.0-preview.16
+    - 0.15.0-preview.21
+    - 0.17.0-preview.18
+    - 1.0.0-pre.3
+    - 1.0.0-pre.5
+    - 1.0.0-pre.6
+    - 1.1.0
+    - 1.2.3-pre.1
+    - 1.2.3
+    - 1.2.4
+    - 1.3.1
+    - 1.4.0
+    - 1.5.1
+    - 1.5.2
+    - 2.1.0-exp.4
+    - 2.1.0-pre.2
+    - 2.1.0-pre.6
+    - 2.1.0-pre.11
+    - 2.1.0-pre.18
+    - 2.1.1
     - 2.1.4
-    - 2.1.5
-    - 2.1.6
-    - 2.1.8
-    - 2.1.9
-    - 2.1.10
-    - 2.1.11
-    - 3.0.0
-    - 3.1.1
-    - 3.1.3
-    - 3.1.4
-    - 3.1.5
-    - 3.1.6
-    - 3.1.7
-    - 4.0.0
-    - 4.0.1
-    - 4.0.2
-    - 4.1.0
-    - 4.1.1
-    - 4.1.2
-    - 4.1.3
-    - 4.2.0
-    - 4.3.0
-    - 4.3.1
-    - 5.0.0-pre.1
-    - 5.0.0-pre.2
-    - 5.0.1
-    - 5.0.3
-    - 5.0.4
-    - 5.0.6
-    - 6.0.0-pre.2
-    - 6.0.0-pre.3
-    - 6.0.0-pre.4
-    - 6.0.0
-    - 6.0.1
-    - 6.0.2
-    - 6.0.3
-    - 6.0.4
-    - 6.0.5
-    - 6.0.6
-    - 6.0.7
-    - 6.0.8
-    - 6.0.9
-    - 6.1.0
-    - 7.0.0-pre.3
-    - 7.0.0-pre.4
-    - 7.0.0
-    - 7.0.1
-    - 7.0.2
-    - 7.0.3
-    - 8.0.0-pre.1
-    - 8.0.0-pre.3
-    - 8.0.0
-    - 8.0.1
-    - 8.0.2
-    - 8.0.3
-    - 8.0.4
-    - 8.0.5
-    - 8.1.0
-    - 8.1.1
-    - 8.1.2
-    - 9.0.0-pre.1
-    - 9.0.0-pre.2
-    - 9.0.0
-    - 9.0.1
-    - 9.0.2
-    - 9.0.3
-    - 9.1.0
-    - 9.1.1
-    - 10.0.0
-    - 10.1.0
-    - 10.1.1
-    - 11.0.0
-    - 11.0.1
-    - 11.0.2
-    - 12.0.0
-    - 12.0.1
-    - 13.0.0
-    - 13.0.1
+    - 2.2.0
+    - 2.2.1
+    - 2.3.0-exp.1
+    - 2.3.0-pre.3
+    - 2.4.0-exp.2
+    - 2.4.0-pre.2
+    - 2.4.0-pre.5
+    - 2.4.0
+    - 2.4.1
+    - 2.4.2
+    - 2.4.3
+    - 2.5.0-exp.1
+    - 2.5.0-pre.2
+    - 2.5.1
+    - 2.5.2
+    - 2.5.3
+    - 2.5.7
+    - 2.5.8
     compatible:
-    - 8.1.0
-    - 8.1.1
-    - 8.1.2
-    recommended: 8.1.2
+    - 1.2.4
+    - 1.3.1
+    - 1.4.0
+    - 1.5.1
+    - 1.5.2
+    - 2.1.0-exp.4
+    - 2.1.0-pre.2
+    - 2.1.0-pre.6
+    - 2.1.0-pre.11
+    - 2.1.0-pre.18
+    - 2.1.1
+    - 2.1.4
+    - 2.2.0
+    - 2.2.1
+    - 2.3.0-exp.1
+    - 2.3.0-pre.3
+    - 2.4.0-exp.2
+    - 2.4.0-pre.2
+    - 2.4.0-pre.5
+    - 2.4.0
+    - 2.4.1
+    - 2.4.2
+    - 2.4.3
+    - 2.5.0-exp.1
+    - 2.5.0-pre.2
+    - 2.5.1
+    - 2.5.2
+    - 2.5.3
+    - 2.5.7
+    - 2.5.8
+    recommended: 2.5.8
     deprecated: []
   dependencies:
-  - name: com.unity.2d.common
-    version: 8.1.0
-  - name: com.unity.2d.sprite
-    version: 1.0.0
-  - name: com.unity.2d.animation
-    version: 9.2.0
-  resolvedDependencies:
-  - name: com.unity.2d.common
-    version: 8.1.0
-  - name: com.unity.2d.sprite
-    version: 1.0.0
-  - name: com.unity.mathematics
-    version: 1.2.6
-  - name: com.unity.modules.uielements
-    version: 1.0.0
-  - name: com.unity.modules.ui
-    version: 1.0.0
-  - name: com.unity.modules.imgui
-    version: 1.0.0
-  - name: com.unity.modules.jsonserialize
-    version: 1.0.0
-  - name: com.unity.modules.animation
-    version: 1.0.0
   - name: com.unity.burst
-    version: 1.8.19
-  - name: com.unity.2d.animation
-    version: 9.2.0
-  - name: com.unity.collections
-    version: 1.2.4
+    version: 1.8.13
+  - name: com.unity.nuget.mono-cecil
+    version: 1.11.4
   - name: com.unity.test-framework
-    version: 1.1.33
-  - name: com.unity.ext.nunit
-    version: 1.0.6
-  keywords:
-  - 2d
-  - psdimporter
-  - assetimporter
-  registry:
-    id: main
-    name: 
-    url: https://packages.tuanjie.cn
-    scopes: []
-    isDefault: 1
-    capabilities: 7
-    configSource: 0
-  hideInEditor: 1
-  isAssetStorePackage: 0
-  datePublishedTicks: 638787277500000000
-  documentationUrl: https://docs.unity3d.com/Packages/com.unity.2d.psdimporter@8.1/manual/index.html
-  hasRepository: 1
-  repository:
-    type: git
-    url: https://github.cds.internal.unity3d.com/unity/2d.git
-    revision: 854e7c330168787e9d4ea0311c42dadc256cb889
-    path: 
-  unityLifecycle:
-    version: 8.1.0
-    nextVersion: 
-    recommendedVersion: 
-    isDeprecated: 0
-    deprecationMessage: 
-  isDeprecated: 0
-  deprecationMessage: 
-  fingerprint: 
-- packageId: com.unity.2d.sprite@1.0.0
-  testable: 0
-  isDirectDependency: 0
-  version: 1.0.0
-  source: 2
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.sprite@1.0.0
-  assetPath: Packages/com.unity.2d.sprite
-  name: com.unity.2d.sprite
-  displayName: 2D Sprite
-  author:
-    name: 
-    email: 
-    url: 
-  category: 2D
-  type: 
-  description: Use Unity Sprite Editor Window to create and edit Sprite asset properties
-    like pivot, borders and Physics shape
-  status: 0
-  errors: []
-  versions:
-    all:
-    - 1.0.0
-    compatible:
-    - 1.0.0
-    recommended: 1.0.0
-    deprecated: []
-  dependencies: []
-  resolvedDependencies: []
-  keywords:
-  - 2d
-  - sprite
-  - sprite editor window
-  registry:
-    id: main
-    name: 
-    url: https://packages.tuanjie.cn
-    scopes: []
-    isDefault: 1
-    capabilities: 7
-    configSource: 0
-  hideInEditor: 1
-  isAssetStorePackage: 0
-  datePublishedTicks: 0
-  documentationUrl: 
-  hasRepository: 0
-  repository:
-    type: 
-    url: 
-    revision: 
-    path: 
-  unityLifecycle:
-    version: 1.0.0
-    nextVersion: 
-    recommendedVersion: 
-    isDeprecated: 0
-    deprecationMessage: 
-  isDeprecated: 0
-  deprecationMessage: 
-  fingerprint: 
-- packageId: com.unity.2d.spriteshape@9.1.0
-  testable: 0
-  isDirectDependency: 0
-  version: 9.1.0
-  source: 1
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.spriteshape@9.1.0
-  assetPath: Packages/com.unity.2d.spriteshape
-  name: com.unity.2d.spriteshape
-  displayName: 2D SpriteShape
-  author:
-    name: 
-    email: 
-    url: 
-  category: 2D
-  type: 
-  description: SpriteShape Runtime & Editor Package contains the tooling and the
-    runtime component that allows you to create very organic looking spline based
-    2D worlds. It comes with intuitive configurator and a highly performant renderer.
-  status: 0
-  errors: []
-  versions:
-    all:
-    - 1.0.10-preview.2
-    - 1.0.11-preview
-    - 1.0.12-preview
-    - 1.0.12-preview.1
-    - 1.0.14-preview.2
-    - 2.0.0-preview.4
-    - 2.0.0-preview.5
-    - 2.0.0-preview.7
-    - 2.0.0-preview.8
-    - 2.0.0-preview.9
-    - 2.1.0-preview.2
-    - 2.1.0-preview.6
-    - 2.1.0-preview.7
-    - 2.1.0-preview.10
-    - 2.1.0-preview.11
-    - 3.0.1
-    - 3.0.2
-    - 3.0.4
-    - 3.0.5
-    - 3.0.6
-    - 3.0.7
-    - 3.0.8
-    - 3.0.9
-    - 3.0.10
-    - 3.0.11
-    - 3.0.12
-    - 3.0.13
-    - 3.0.14
-    - 3.0.15
-    - 3.0.16
-    - 3.0.17
-    - 3.0.18
-    - 4.0.0
-    - 4.0.1
-    - 4.0.2
-    - 4.0.3
-    - 4.1.0
-    - 4.1.1
-    - 4.1.2
-    - 4.1.3
-    - 4.1.4
-    - 4.1.5
-    - 5.0.0
-    - 5.0.1
-    - 5.0.2
-    - 5.1.0
-    - 5.1.1
-    - 5.1.2
-    - 5.1.3
-    - 5.1.4
-    - 5.1.5
-    - 5.1.6
-    - 5.1.7
-    - 5.2.0
-    - 5.3.0
-    - 6.0.0-pre.1
-    - 6.0.0-pre.2
-    - 6.0.0
-    - 6.0.1
-    - 6.0.2
-    - 7.0.0-pre.2
-    - 7.0.0-pre.3
-    - 7.0.0
-    - 7.0.2
-    - 7.0.3
-    - 7.0.4
-    - 7.0.5
-    - 7.0.6
-    - 7.0.7
-    - 7.1.0
-    - 8.0.0-pre.4
-    - 8.0.0-pre.5
-    - 8.0.0
-    - 8.0.1
-    - 9.0.0-pre.1
-    - 9.0.0
-    - 9.0.1
-    - 9.0.2
-    - 9.0.3
-    - 9.0.4
-    - 9.0.5
-    - 9.1.0
-    - 9.1.1
-    - 10.0.0-pre.1
-    - 10.0.0-pre.2
-    - 10.0.0
-    - 10.0.1
-    - 10.0.2
-    - 10.0.3
-    - 10.0.4
-    - 10.0.5
-    - 10.0.6
-    - 10.0.7
-    - 10.1.0
-    - 11.0.0
-    - 12.0.0
-    - 12.0.1
-    - 12.0.2
-    - 13.0.0
-    - 14.0.0
-    compatible:
-    - 9.1.0
-    - 9.1.1
-    recommended: 9.1.1
-    deprecated: []
-  dependencies:
-  - name: com.unity.2d.common
-    version: 8.1.0
-  - name: com.unity.mathematics
-    version: 1.1.0
-  - name: com.unity.modules.physics2d
-    version: 1.0.0
+    version: 1.4.3
+  - name: com.unity.test-framework.performance
+    version: 3.0.3
   resolvedDependencies:
-  - name: com.unity.2d.common
-    version: 8.1.0
-  - name: com.unity.2d.sprite
-    version: 1.0.0
-  - name: com.unity.mathematics
-    version: 1.2.6
-  - name: com.unity.modules.uielements
-    version: 1.0.0
-  - name: com.unity.modules.ui
-    version: 1.0.0
-  - name: com.unity.modules.imgui
-    version: 1.0.0
-  - name: com.unity.modules.jsonserialize
-    version: 1.0.0
-  - name: com.unity.modules.animation
-    version: 1.0.0
   - name: com.unity.burst
     version: 1.8.19
-  - name: com.unity.modules.physics2d
+  - name: com.unity.mathematics
+    version: 1.2.6
+  - name: com.unity.modules.jsonserialize
     version: 1.0.0
+  - name: com.unity.nuget.mono-cecil
+    version: 1.11.4
+  - name: com.unity.test-framework
+    version: 1.4.3
+  - name: com.unity.ext.nunit
+    version: 2.0.3
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.test-framework.performance
+    version: 3.0.3
   keywords:
-  - 2d
-  - shape
-  - spriteshape
-  - smartsprite
-  - spline
-  - terrain2d
+  - dots
+  - collections
+  - unity
   registry:
     id: main
     name: 
@@ -3928,92 +4452,18 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 1
   isAssetStorePackage: 0
-  datePublishedTicks: 638787277500000000
-  documentationUrl: https://docs.unity3d.com/Packages/com.unity.2d.spriteshape@9.1/manual/index.html
+  datePublishedTicks: 638593176350000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.collections@2.4/manual/index.html
   hasRepository: 1
   repository:
     type: git
-    url: https://github.cds.internal.unity3d.com/unity/2d.git
-    revision: 854e7c330168787e9d4ea0311c42dadc256cb889
+    url: https://github.cds.internal.unity3d.com/unity/dots.git
+    revision: 3229c084d74b90980f151fe926f426ae38a63b44
     path: 
   unityLifecycle:
-    version: 9.1.0
+    version: 1.2.4
     nextVersion: 
-    recommendedVersion: 
-    isDeprecated: 0
-    deprecationMessage: 
-  isDeprecated: 0
-  deprecationMessage: 
-  fingerprint: 
-- packageId: com.unity.2d.tilemap@1.0.0
-  testable: 0
-  isDirectDependency: 0
-  version: 1.0.0
-  source: 2
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.2d.tilemap@1.0.0
-  assetPath: Packages/com.unity.2d.tilemap
-  name: com.unity.2d.tilemap
-  displayName: 2D Tilemap Editor
-  author:
-    name: 
-    email: 
-    url: 
-  category: 2D
-  type: 
-  description: 2D Tilemap Editor is a package that contains editor functionalities
-    for editing Tilemaps.
-  status: 0
-  errors: []
-  versions:
-    all:
-    - 1.0.0
-    compatible:
-    - 1.0.0
-    recommended: 1.0.0
-    deprecated: []
-  dependencies:
-  - name: com.unity.modules.tilemap
-    version: 1.0.0
-  - name: com.unity.modules.uielements
-    version: 1.0.0
-  resolvedDependencies:
-  - name: com.unity.modules.tilemap
-    version: 1.0.0
-  - name: com.unity.modules.physics2d
-    version: 1.0.0
-  - name: com.unity.modules.uielements
-    version: 1.0.0
-  - name: com.unity.modules.ui
-    version: 1.0.0
-  - name: com.unity.modules.imgui
-    version: 1.0.0
-  - name: com.unity.modules.jsonserialize
-    version: 1.0.0
-  keywords:
-  - 2d
-  - Tilemap
-  registry:
-    id: main
-    name: 
-    url: https://packages.tuanjie.cn
-    scopes: []
-    isDefault: 1
-    capabilities: 7
-    configSource: 0
-  hideInEditor: 1
-  isAssetStorePackage: 0
-  datePublishedTicks: 0
-  documentationUrl: 
-  hasRepository: 0
-  repository:
-    type: 
-    url: 
-    revision: 
-    path: 
-  unityLifecycle:
-    version: 1.0.0
-    nextVersion: 
-    recommendedVersion: 
+    recommendedVersion: 2.5.1
     isDeprecated: 0
     deprecationMessage: 
   isDeprecated: 0
@@ -4494,361 +4944,51 @@ m_ResolvedPackages:
   isDeprecated: 0
   deprecationMessage: 
   fingerprint: 
-- packageId: com.unity.collections@1.2.4
+- packageId: com.unity.nuget.mono-cecil@1.11.4
   testable: 0
   isDirectDependency: 0
-  version: 1.2.4
+  version: 1.11.4
   source: 1
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.collections@1.2.4
-  assetPath: Packages/com.unity.collections
-  name: com.unity.collections
-  displayName: Collections
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4
+  assetPath: Packages/com.unity.nuget.mono-cecil
+  name: com.unity.nuget.mono-cecil
+  displayName: Mono Cecil
   author:
     name: 
     email: 
     url: 
   category: 
-  type: 
-  description: A C# collections library providing data structures that can be used
-    in jobs, and optimized by Burst compiler.
+  type: library
+  description: 'The mono cecil library from https://www.nuget.org/packages/Mono.Cecil/
+
+
+    This
+    package is intended for internal Unity use only. Most Unity users will be better
+    suite using the existing community tooling.
+
+    To avoid assembly clashes, please
+    use this package if you intend to use Mono.Cecil.'
   status: 0
   errors: []
   versions:
     all:
-    - 0.0.9-preview.1
-    - 0.0.9-preview.2
-    - 0.0.9-preview.3
-    - 0.0.9-preview.4
-    - 0.0.9-preview.5
-    - 0.0.9-preview.6
-    - 0.0.9-preview.7
-    - 0.0.9-preview.8
-    - 0.0.9-preview.9
-    - 0.0.9-preview.10
-    - 0.0.9-preview.11
-    - 0.0.9-preview.12
-    - 0.0.9-preview.13
-    - 0.0.9-preview.14
-    - 0.0.9-preview.15
-    - 0.0.9-preview.16
-    - 0.0.9-preview.17
-    - 0.0.9-preview.18
-    - 0.0.9-preview.19
-    - 0.0.9-preview.20
-    - 0.1.0-preview
-    - 0.1.1-preview
-    - 0.2.0-preview.13
-    - 0.3.0-preview.0
-    - 0.4.0-preview.6
-    - 0.5.0-preview.9
-    - 0.5.1-preview.11
-    - 0.5.2-preview.8
-    - 0.6.0-preview.9
-    - 0.7.0-preview.2
-    - 0.7.1-preview.3
-    - 0.8.0-preview.5
-    - 0.9.0-preview.5
-    - 0.9.0-preview.6
-    - 0.11.0-preview.17
-    - 0.12.0-preview.13
-    - 0.14.0-preview.16
-    - 0.15.0-preview.21
-    - 0.17.0-preview.18
-    - 1.0.0-pre.3
-    - 1.0.0-pre.5
-    - 1.0.0-pre.6
-    - 1.1.0
-    - 1.2.3-pre.1
-    - 1.2.3
-    - 1.2.4
-    - 1.3.1
-    - 1.4.0
-    - 1.5.1
-    - 1.5.2
-    - 2.1.0-exp.4
-    - 2.1.0-pre.2
-    - 2.1.0-pre.6
-    - 2.1.0-pre.11
-    - 2.1.0-pre.18
-    - 2.1.1
-    - 2.1.4
-    - 2.2.0
-    - 2.2.1
-    - 2.3.0-exp.1
-    - 2.3.0-pre.3
-    - 2.4.0-exp.2
-    - 2.4.0-pre.2
-    - 2.4.0-pre.5
-    - 2.4.0
-    - 2.4.1
-    - 2.4.2
-    - 2.4.3
-    - 2.5.0-exp.1
-    - 2.5.0-pre.2
-    - 2.5.1
-    - 2.5.2
-    - 2.5.3
-    - 2.5.7
-    - 2.5.8
+    - 0.1.6-preview.2
+    - 1.0.0-preview.1
+    - 1.10.0-preview.1
+    - 1.10.1-preview.1
+    - 1.10.1
+    - 1.10.2
+    - 1.11.4
+    - 1.11.5
+    - 1.11.6
     compatible:
-    - 1.2.4
-    - 1.3.1
-    - 1.4.0
-    - 1.5.1
-    - 1.5.2
-    - 2.1.0-exp.4
-    - 2.1.0-pre.2
-    - 2.1.0-pre.6
-    - 2.1.0-pre.11
-    - 2.1.0-pre.18
-    - 2.1.1
-    - 2.1.4
-    - 2.2.0
-    - 2.2.1
-    - 2.3.0-exp.1
-    - 2.3.0-pre.3
-    - 2.4.0-exp.2
-    - 2.4.0-pre.2
-    - 2.4.0-pre.5
-    - 2.4.0
-    - 2.4.1
-    - 2.4.2
-    - 2.4.3
-    - 2.5.0-exp.1
-    - 2.5.0-pre.2
-    - 2.5.1
-    - 2.5.2
-    - 2.5.3
-    - 2.5.7
-    - 2.5.8
-    recommended: 2.5.8
+    - 1.11.4
+    - 1.11.5
+    - 1.11.6
+    recommended: 1.11.6
     deprecated: []
-  dependencies:
-  - name: com.unity.burst
-    version: 1.6.6
-  - name: com.unity.test-framework
-    version: 1.1.31
-  resolvedDependencies:
-  - name: com.unity.burst
-    version: 1.8.19
-  - name: com.unity.mathematics
-    version: 1.2.6
-  - name: com.unity.modules.jsonserialize
-    version: 1.0.0
-  - name: com.unity.test-framework
-    version: 1.1.33
-  - name: com.unity.ext.nunit
-    version: 1.0.6
-  - name: com.unity.modules.imgui
-    version: 1.0.0
-  keywords:
-  - dots
-  - collections
-  - unity
-  registry:
-    id: main
-    name: 
-    url: https://packages.tuanjie.cn
-    scopes: []
-    isDefault: 1
-    capabilities: 7
-    configSource: 0
-  hideInEditor: 1
-  isAssetStorePackage: 0
-  datePublishedTicks: 637908244640000000
-  documentationUrl: 
-  hasRepository: 1
-  repository:
-    type: git
-    url: https://github.cds.internal.unity3d.com/unity/dots.git
-    revision: 32d153034bea0703098263469b88c73619422782
-    path: 
-  unityLifecycle:
-    version: 1.2.4
-    nextVersion: 
-    recommendedVersion: 2.5.1
-    isDeprecated: 0
-    deprecationMessage: 
-  isDeprecated: 0
-  deprecationMessage: 
-  fingerprint: 
-- packageId: com.unity.burst@1.8.19
-  testable: 0
-  isDirectDependency: 0
-  version: 1.8.19
-  source: 1
-  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.burst@1.8.19
-  assetPath: Packages/com.unity.burst
-  name: com.unity.burst
-  displayName: Burst
-  author:
-    name: 
-    email: 
-    url: 
-  category: 
-  type: asset
-  description: Burst is a compiler that translates from IL/.NET bytecode to highly
-    optimized native code using LLVM.
-  status: 0
-  errors: []
-  versions:
-    all:
-    - 0.2.4-preview.5
-    - 0.2.4-preview.7
-    - 0.2.4-preview.11
-    - 0.2.4-preview.12
-    - 0.2.4-preview.13
-    - 0.2.4-preview.14
-    - 0.2.4-preview.15
-    - 0.2.4-preview.16
-    - 0.2.4-preview.17
-    - 0.2.4-preview.18
-    - 0.2.4-preview.19
-    - 0.2.4-preview.20
-    - 0.2.4-preview.21
-    - 0.2.4-preview.22
-    - 0.2.4-preview.23
-    - 0.2.4-preview.24
-    - 0.2.4-preview.25
-    - 0.2.4-preview.30
-    - 0.2.4-preview.31
-    - 0.2.4-preview.33
-    - 0.2.4-preview.34
-    - 0.2.4-preview.37
-    - 0.2.4-preview.41
-    - 0.2.4-preview.45
-    - 0.2.4-preview.48
-    - 0.2.4-preview.50
-    - 1.1.0-preview.2
-    - 1.1.0-preview.3
-    - 1.1.0-preview.4
-    - 1.1.1
-    - 1.1.2
-    - 1.1.3-preview.3
-    - 1.2.0-preview.1
-    - 1.2.0-preview.5
-    - 1.2.0-preview.6
-    - 1.2.0-preview.8
-    - 1.2.0-preview.9
-    - 1.2.0-preview.10
-    - 1.2.0-preview.11
-    - 1.2.0-preview.12
-    - 1.2.0
-    - 1.2.1
-    - 1.2.2
-    - 1.2.3
-    - 1.3.0-preview.1
-    - 1.3.0-preview.2
-    - 1.3.0-preview.3
-    - 1.3.0-preview.4
-    - 1.3.0-preview.5
-    - 1.3.0-preview.6
-    - 1.3.0-preview.7
-    - 1.3.0-preview.8
-    - 1.3.0-preview.9
-    - 1.3.0-preview.10
-    - 1.3.0-preview.11
-    - 1.3.0-preview.12
-    - 1.3.0-preview.13
-    - 1.3.0
-    - 1.3.1
-    - 1.3.2
-    - 1.3.3
-    - 1.3.4
-    - 1.3.5
-    - 1.3.6
-    - 1.3.7
-    - 1.3.8
-    - 1.3.9
-    - 1.4.0-pre.1
-    - 1.4.0-preview.1
-    - 1.4.0-preview.2
-    - 1.4.0-preview.3
-    - 1.4.0-preview.4
-    - 1.4.0-preview.5
-    - 1.4.1-pre.1
-    - 1.4.1-pre.2
-    - 1.4.1
-    - 1.4.2
-    - 1.4.3
-    - 1.4.4-preview.1
-    - 1.4.4-preview.2
-    - 1.4.4
-    - 1.4.5
-    - 1.4.6
-    - 1.4.7
-    - 1.4.8
-    - 1.4.9
-    - 1.4.11
-    - 1.5.0-pre.3
-    - 1.5.0-pre.4
-    - 1.5.0-pre.5
-    - 1.5.0
-    - 1.5.1
-    - 1.5.2
-    - 1.5.3
-    - 1.5.4
-    - 1.5.5
-    - 1.5.6-preview.1
-    - 1.5.6
-    - 1.6.0-pre.2
-    - 1.6.0-pre.3
-    - 1.6.0-pre.4
-    - 1.6.0
-    - 1.6.1
-    - 1.6.2
-    - 1.6.3
-    - 1.6.4
-    - 1.6.5
-    - 1.6.6
-    - 1.7.0-pre.1
-    - 1.7.0
-    - 1.7.1
-    - 1.7.2
-    - 1.7.3
-    - 1.7.4
-    - 1.8.0-pre.1
-    - 1.8.0-pre.2
-    - 1.8.0
-    - 1.8.1
-    - 1.8.2
-    - 1.8.3
-    - 1.8.4
-    - 1.8.7
-    - 1.8.8
-    - 1.8.9
-    - 1.8.10
-    - 1.8.11
-    - 1.8.12
-    - 1.8.13
-    - 1.8.14
-    - 1.8.15
-    - 1.8.16
-    - 1.8.17
-    - 1.8.18
-    - 1.8.19
-    - 1.8.20
-    - 1.8.21
-    - 1.8.25
-    - 1.8.26
-    compatible:
-    - 1.8.19
-    - 1.8.20
-    - 1.8.21
-    - 1.8.25
-    - 1.8.26
-    recommended: 1.8.26
-    deprecated: []
-  dependencies:
-  - name: com.unity.mathematics
-    version: 1.2.1
-  - name: com.unity.modules.jsonserialize
-    version: 1.0.0
-  resolvedDependencies:
-  - name: com.unity.mathematics
-    version: 1.2.6
-  - name: com.unity.modules.jsonserialize
-    version: 1.0.0
+  dependencies: []
+  resolvedDependencies: []
   keywords: []
   registry:
     id: main
@@ -4860,16 +5000,359 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 1
   isAssetStorePackage: 0
-  datePublishedTicks: 638866117890000000
-  documentationUrl: https://docs.unity3d.com/Packages/com.unity.burst@1.8/manual/index.html
+  datePublishedTicks: 637852971930000000
+  documentationUrl: 
   hasRepository: 1
   repository:
     type: git
-    url: https://github.cds.internal.unity3d.com/unity/burst.git
-    revision: 6498e90e8843e51fdb3a37b709a1f1e4b86d3e57
+    url: https://github.cds.internal.unity3d.com/unity/com.unity.nuget.mono-cecil.git
+    revision: d0133ce672d724694b56bfd20672acf6f8737fec
     path: 
   unityLifecycle:
-    version: 1.8.19
+    version: 1.11.4
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
+- packageId: com.unity.test-framework@1.4.3
+  testable: 0
+  isDirectDependency: 1
+  version: 1.4.3
+  source: 1
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.test-framework@1.4.3
+  assetPath: Packages/com.unity.test-framework
+  name: com.unity.test-framework
+  displayName: Test Framework
+  author:
+    name: 
+    email: 
+    url: 
+  category: Unity Test Framework
+  type: asset
+  description: Test framework for running Edit mode and Play mode tests in Unity.
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 0.0.4-preview
+    - 0.0.29-preview
+    - 1.0.0
+    - 1.0.7
+    - 1.0.9
+    - 1.0.11
+    - 1.0.12
+    - 1.0.13
+    - 1.0.14
+    - 1.0.16
+    - 1.0.17
+    - 1.0.18
+    - 1.1.0
+    - 1.1.1
+    - 1.1.2
+    - 1.1.3
+    - 1.1.5
+    - 1.1.8
+    - 1.1.9
+    - 1.1.11
+    - 1.1.13
+    - 1.1.14
+    - 1.1.16
+    - 1.1.18
+    - 1.1.19
+    - 1.1.20
+    - 1.1.22
+    - 1.1.24
+    - 1.1.26
+    - 1.1.27
+    - 1.1.29
+    - 1.1.30
+    - 1.1.31
+    - 1.1.33
+    - 1.3.0
+    - 1.3.2
+    - 1.3.3
+    - 1.3.4
+    - 1.3.5
+    - 1.3.8
+    - 1.3.9
+    - 1.4.2
+    - 1.4.3
+    - 1.4.4
+    - 1.4.5
+    - 1.4.6
+    compatible:
+    - 1.1.33
+    - 1.3.0
+    - 1.3.2
+    - 1.3.3
+    - 1.3.4
+    - 1.3.5
+    - 1.3.8
+    - 1.3.9
+    - 1.4.2
+    - 1.4.3
+    - 1.4.4
+    - 1.4.5
+    - 1.4.6
+    recommended: 1.1.33
+    deprecated: []
+  dependencies:
+  - name: com.unity.ext.nunit
+    version: 2.0.3
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.ext.nunit
+    version: 2.0.3
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  keywords:
+  - Test
+  - TestFramework
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638675934800000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: git+https://github.com/Unity-Technologies/com.unity.test-framework.git
+    revision: b2b8bb3a69967e76a874a55ff39aa35e52ea2095
+    path: 
+  unityLifecycle:
+    version: 1.1.33
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
+- packageId: com.unity.test-framework.performance@3.0.3
+  testable: 0
+  isDirectDependency: 0
+  version: 3.0.3
+  source: 1
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.test-framework.performance@3.0.3
+  assetPath: Packages/com.unity.test-framework.performance
+  name: com.unity.test-framework.performance
+  displayName: Performance testing API
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: 
+  description: Package that extends Unity Test Framework package. Adds performance
+    testing capabilities and collects configuration metadata.
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 0.1.27-preview
+    - 0.1.29-preview
+    - 0.1.31-preview
+    - 0.1.33-preview
+    - 0.1.34-preview
+    - 0.1.36-preview
+    - 0.1.37-preview
+    - 0.1.39-preview
+    - 0.1.40-preview
+    - 0.1.41-preview
+    - 0.1.42-preview
+    - 0.1.44-preview
+    - 0.1.45-preview
+    - 0.1.47-preview
+    - 0.1.48-preview
+    - 0.1.49-preview
+    - 0.1.50-preview
+    - 1.0.4-preview
+    - 1.0.6-preview
+    - 1.0.9-preview
+    - 1.1.2-preview
+    - 1.2.0-preview
+    - 1.2.1-preview
+    - 1.2.3-preview
+    - 1.2.5-preview
+    - 1.2.6-preview
+    - 1.3.0-preview
+    - 1.3.1-preview
+    - 1.3.2-preview
+    - 1.3.3-preview
+    - 2.0.1-preview
+    - 2.0.2-preview
+    - 2.0.3-preview
+    - 2.0.6-preview
+    - 2.0.7-preview
+    - 2.0.8-preview
+    - 2.0.9-preview
+    - 2.1.0-preview
+    - 2.2.0-preview
+    - 2.3.1-preview
+    - 2.4.1-preview
+    - 2.5.1-preview
+    - 2.6.0-preview
+    - 2.7.0-preview
+    - 2.8.0-preview
+    - 2.8.1-preview
+    - 3.0.0-pre.1
+    - 3.0.0-pre.2
+    - 3.0.1
+    - 3.0.2
+    - 3.0.3
+    - 3.1.0
+    - 3.2.0
+    compatible:
+    - 1.3.3-preview
+    - 2.0.1-preview
+    - 2.0.2-preview
+    - 2.0.3-preview
+    - 2.0.6-preview
+    - 2.0.7-preview
+    - 2.0.8-preview
+    - 2.0.9-preview
+    - 2.1.0-preview
+    - 2.2.0-preview
+    - 2.3.1-preview
+    - 2.4.1-preview
+    - 2.5.1-preview
+    - 2.6.0-preview
+    - 2.7.0-preview
+    - 2.8.0-preview
+    - 2.8.1-preview
+    - 3.0.0-pre.1
+    - 3.0.0-pre.2
+    - 3.0.1
+    - 3.0.2
+    - 3.0.3
+    - 3.1.0
+    - 3.2.0
+    recommended: 
+    deprecated: []
+  dependencies:
+  - name: com.unity.test-framework
+    version: 1.1.31
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.test-framework
+    version: 1.4.3
+  - name: com.unity.ext.nunit
+    version: 2.0.3
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  keywords:
+  - performance
+  - test
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638301960470000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.test-framework.performance@3.0/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.cds.internal.unity3d.com/unity/com.unity.test-framework.performance.git
+    revision: 10b82691b2d9f4e4aa8385c8d797c7e544bac548
+    path: 
+  unityLifecycle:
+    version: 
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  fingerprint: 
+- packageId: com.unity.ext.nunit@2.0.3
+  testable: 0
+  isDirectDependency: 0
+  version: 2.0.3
+  source: 1
+  resolvedPath: D:\FarmGame\Farm\Library\PackageCache\com.unity.ext.nunit@2.0.3
+  assetPath: Packages/com.unity.ext.nunit
+  name: com.unity.ext.nunit
+  displayName: Custom NUnit
+  author:
+    name: 
+    email: 
+    url: 
+  category: Libraries
+  type: 
+  description: A custom version of NUnit used by Unity Test Framework. Based on NUnit
+    version 3.5 and works with all platforms, il2cpp and Mono AOT.
+  status: 0
+  errors: []
+  versions:
+    all:
+    - 0.1.5-preview
+    - 0.1.6-preview
+    - 0.1.9-preview
+    - 1.0.0
+    - 1.0.5
+    - 1.0.6
+    - 2.0.2
+    - 2.0.3
+    - 2.0.4
+    - 2.0.5
+    compatible:
+    - 1.0.6
+    - 2.0.2
+    - 2.0.3
+    - 2.0.4
+    - 2.0.5
+    recommended: 1.0.6
+    deprecated: []
+  dependencies: []
+  resolvedDependencies: []
+  keywords:
+  - nunit
+  - unittest
+  - test
+  registry:
+    id: main
+    name: 
+    url: https://packages.tuanjie.cn
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 637920402200000000
+  documentationUrl: 
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.cds.internal.unity3d.com/unity/com.unity.ext.nunit.git
+    revision: 2e41147762790f2a221103bff840a0138ca01b57
+    path: 
+  unityLifecycle:
+    version: 1.0.6
     nextVersion: 
     recommendedVersion: 
     isDeprecated: 0

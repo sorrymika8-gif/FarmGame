@@ -18,6 +18,7 @@ Library\Bee\artifacts\mvdfrm\Unity.2D.Tilemap.Extras.Editor.ref.dll_8DA00406C36C
 Library\Bee\artifacts\mvdfrm\Unity.2D.Tilemap.Extras.ref.dll_371E356D6F5B6577.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.Burst.Editor.ref.dll_E2F92DAB6C167CC9.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.Burst.ref.dll_F30DFA20C0DD1968.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.Collections.Editor.ref.dll_E4491E98C71DB4B4.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.Collections.ref.dll_656D7410E7809ECD.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.InternalAPIEditorBridge.001.ref.dll_C275F416F58A86FE.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.InternalAPIEngineBridge.001.ref.dll_B4F0ACC15A996E43.mvfrm
@@ -25,10 +26,16 @@ Library\Bee\artifacts\mvdfrm\Unity.Mathematics.Editor.ref.dll_9A20CFD48BC11F43.m
 Library\Bee\artifacts\mvdfrm\Unity.Mathematics.ref.dll_E8EFDB1B8D5C174E.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.PlasticSCM.Editor.ref.dll_257AEB342BE77856.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.Rider.Editor.ref.dll_9B5591808ABA37AF.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.Sentis.Editor.ref.dll_CB39FB503C273871.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.Sentis.MacBLAS.ref.dll_62CEE95A2A6BB75D.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.Sentis.ONNX.ref.dll_FCBF15958E98896D.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.Sentis.ref.dll_8C78BABC7A4AC340.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.Sentis.iOSBLAS.ref.dll_AC5B173A7C19375B.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.TextMeshPro.Editor.ref.dll_159E061D77A10B86.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.TextMeshPro.ref.dll_84A4293DBDD182DB.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.Timeline.Editor.ref.dll_0D3D3C0B73557612.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.Timeline.ref.dll_621CDDF9C514DF8F.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.VSCode.Editor.ref.dll_3628369EB48E4C19.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.Core.Editor.ref.dll_EDC8690F57C5BDFD.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.Core.ref.dll_D75DF4EA1AFE54F4.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.Flow.Editor.ref.dll_6AF951BE66A4493E.mvfrm
@@ -137,7 +144,7 @@ Library\Bee\artifacts\mvdfrm\UnityEngine.XRModule.dll_B33E51FA47542275.mvfrm
 Library\Bee\artifacts\mvdfrm\UnityEditor.WindowsStandalone.Extensions.dll_7081722FF1871B11.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.Plastic.Antlr3.Runtime.dll_02385DE7C2B3ABF3.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.Plastic.Newtonsoft.Json.dll_579B3DCFEE519C92.mvfrm
-Library\Bee\artifacts\mvdfrm\Unity.Collections.LowLevel.ILSupport.dll_2E40CE80E145E521.mvfrm
+Library\Bee\artifacts\mvdfrm\Unity.Collections.LowLevel.ILSupport.dll_0158F52E468F5BA3.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.IonicZip.dll_840FAE5C8A141D5B.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.YamlDotNet.dll_4A5905A13DE9A491.mvfrm
 Library\Bee\artifacts\mvdfrm\Unity.VisualScripting.TextureAssets.dll_E1772EF4FEB70289.mvfrm
