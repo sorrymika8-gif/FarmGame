@@ -68,17 +68,10 @@ namespace FarmGame.Game
 
             Debug.Log("[GameInitManager] Starting new game initialization...");
 
-            // 1. 加载初始地图
-            if (!MapManager.Instance.LoadMap(INITIAL_MAP))
-            {
-                Debug.LogError("[GameInitManager] Failed to load initial map");
-                return;
-            }
+            // 使用 GameManager 进入场景
+            GameManager.Instance.EnterScene(INITIAL_MAP, INITIAL_SPAWN_POSITION);
 
-            // 2. 设置玩家初始位置
-            PlayerManager.Instance.SetPlayerPosition(INITIAL_SPAWN_POSITION);
-
-            // 3. 标记为非新玩家
+            // 4. 标记为非新玩家
             playerData.IsNewPlayer = false;
 
             Debug.Log("[GameInitManager] New game initialization completed");

@@ -17,6 +17,8 @@ namespace FarmGame.Player
         private PlayerData mData;
         private bool mIsInitialized;
         private Movable mMovable;
+        private Animator mAnimator;
+        private Transform mVisualRoot;
 
         #endregion
 
@@ -45,6 +47,27 @@ namespace FarmGame.Player
 
             // 获取Movable组件
             mMovable = GetComponent<Movable>();
+            mAnimator = GetComponentInChildren<Animator>();
+            
+            // 查找视觉根节点（通常是第一个不包含Shadow的子节点，或者是Animator所在的节点）
+            if (mAnimator != null && mAnimator.transform != transform)
+            {
+                // 如果Animator在子节点上，那它就是视觉根节点
+                mVisualRoot = mAnimator.transform;
+            }
+            else
+            {
+                // 否则遍历查找第一个非阴影的子节点
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    Transform child = transform.GetChild(i);
+                    if (!child.name.Contains("Shadow") && !child.name.Contains("shadow"))
+                    {
+                        mVisualRoot = child;
+                        break;
+                    }
+                }
+            }
 
             // 创建玩家数据
             mData = new PlayerData();
@@ -97,8 +120,10 @@ namespace FarmGame.Player
         /// </summary>
         protected virtual void HandleMoveStart()
         {
-            // TODO: 触发行走动画
-            // 子类可重写此方法来处理动画逻辑
+            if (mAnimator != null)
+            {
+                mAnimator.SetBool("isRun", true);
+            }
         }
 
         /// <summary>
@@ -106,8 +131,10 @@ namespace FarmGame.Player
         /// </summary>
         protected virtual void HandleMoveStop()
         {
-            // TODO: 切换到待机动画
-            // 子类可重写此方法来处理动画逻辑
+            if (mAnimator != null)
+            {
+                mAnimator.SetBool("isRun", false);
+            }
 
             // 同步最终位置到数据
             mData.Position = transform.position;
@@ -119,8 +146,15 @@ namespace FarmGame.Player
         /// <param name="direction">新的移动方向</param>
         protected virtual void HandleDirectionChanged(Vector2 direction)
         {
-            // TODO: 根据方向切换动画
-            // 子类可重写此方法来处理动画逻辑
+            // 通过缩放翻转角色朝向
+            if (mVisualRoot != null && direction.x != 0)
+            {
+                Vector3 scale = mVisualRoot.localScale;
+                // 确保使用绝对值作为基准，避免多次乘以-1导致的错误
+                float absScaleX = Mathf.Abs(scale.x); 
+                scale.x = direction.x < 0 ? -absScaleX : absScaleX;
+                mVisualRoot.localScale = scale;
+            }
 
             // 同步朝向到数据
             mData.FacingDirection = new Vector3(direction.x, direction.y, 0);
