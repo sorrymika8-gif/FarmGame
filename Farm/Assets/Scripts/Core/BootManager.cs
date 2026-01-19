@@ -4,6 +4,7 @@ using FarmGame.Map;
 using FarmGame.Player;
 using FarmGame.Game;
 using FarmGame.Movement;
+using FarmGame.GameLLM;
 
 namespace FarmGame.Core
 {
@@ -38,6 +39,9 @@ namespace FarmGame.Core
             // 1. 初始化资源管理器（最先，其他模块可能依赖资源）
             ResourceManager.Instance.Initialize();
             Debug.Log("[BootManager] ResourceManager initialized");
+
+            // 1.5 初始化 LLM 服务 (作为核心服务，在游戏逻辑前初始化)
+            LLMService.Instance.Initialize();
 
             // 2. 初始化UI管理器
             UIManager.Instance.Initialize();
