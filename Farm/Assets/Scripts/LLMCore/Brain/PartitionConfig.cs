@@ -1,6 +1,6 @@
 using System;
 
-namespace GameLLM.Brain
+namespace FarmGame.LLMCore.Brain
 {
     /// <summary>
     /// 分区配置

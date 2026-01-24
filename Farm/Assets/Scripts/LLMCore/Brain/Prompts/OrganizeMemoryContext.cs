@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using GameLLM.Brain;
-using GameLLM.Memory;
+using FarmGame.LLMCore.Brain;
+using FarmGame.LLMCore.Memory;
 
-namespace GameLLM.Brain.Prompts
+namespace FarmGame.LLMCore.Brain.Prompts
 {
     /// <summary>
     /// 记忆整理提示词上下文

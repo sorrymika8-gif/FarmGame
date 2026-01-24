@@ -1,11 +1,6 @@
-// ============================================================
-// 文件: LLMCore/Memory/Memory.cs
-// 描述: 一条记忆，本质就是一段文本
-// ============================================================
-
 using System;
 
-namespace GameLLM.Memory
+namespace FarmGame.LLMCore.Memory
 {
     /// <summary>
     /// 一条记忆
@@ -16,42 +11,26 @@ namespace GameLLM.Memory
     public class Memory
     {
         /// <summary>
-        /// 记忆内容（通常是LLM生成的总结）
+        /// 记忆内容
         /// </summary>
         public string Content { get; }
 
-        /// <summary>
-        /// 创建一条记忆
-        /// </summary>
-        /// <param name="content">记忆内容</param>
-        /// <exception cref="ArgumentNullException">内容不能为空</exception>
         public Memory(string content)
         {
             if (string.IsNullOrEmpty(content))
             {
                 throw new ArgumentNullException(nameof(content), "记忆内容不能为空");
             }
-            
             Content = content;
         }
 
-        public override string ToString()
-        {
-            return Content;
-        }
+        public override string ToString() => Content;
 
         public override bool Equals(object obj)
         {
-            if (obj is Memory other)
-            {
-                return Content == other.Content;
-            }
-            return false;
+            return obj is Memory other && Content == other.Content;
         }
 
-        public override int GetHashCode()
-        {
-            return Content.GetHashCode();
-        }
+        public override int GetHashCode() => Content.GetHashCode();
     }
 }

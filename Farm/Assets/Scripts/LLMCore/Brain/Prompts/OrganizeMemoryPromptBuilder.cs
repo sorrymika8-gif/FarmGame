@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Text;
-using GameLLM.Memory;
+using FarmGame.LLMCore.Memory;
 using GameLLM.Prompts;
 using UnityEngine;
-using GameLLM.Brain;
+using FarmGame.LLMCore.Brain;
 
-namespace GameLLM.Brain.Prompts
+namespace FarmGame.LLMCore.Brain.Prompts
 {
     /// <summary>
     /// 记忆整理提示词构建器

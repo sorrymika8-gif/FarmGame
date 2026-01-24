@@ -5,6 +5,8 @@ using FarmGame.Player;
 using FarmGame.Game;
 using FarmGame.Movement;
 using FarmGame.GameLLM;
+using FarmGame.GameConfig;
+using Cysharp.Threading.Tasks;
 
 namespace FarmGame.Core
 {
@@ -18,19 +20,25 @@ namespace FarmGame.Core
 
         private bool mIsInitialized;
 
+        /// <summary>
+        /// 配置文件夹路径
+        /// </summary>
+        [SerializeField]
+        private string mConfigFolder = "Assets/Configs";
+
         #endregion
 
         #region 生命周期
 
         private void Awake()
         {
-            Initialize();
+            InitializeAsync().Forget();
         }
 
         /// <summary>
-        /// 初始化所有管理器
+        /// 异步初始化所有管理器
         /// </summary>
-        public void Initialize()
+        public async UniTaskVoid InitializeAsync()
         {
             if (mIsInitialized) return;
 
@@ -39,6 +47,11 @@ namespace FarmGame.Core
             // 1. 初始化资源管理器（最先，其他模块可能依赖资源）
             ResourceManager.Instance.Initialize();
             Debug.Log("[BootManager] ResourceManager initialized");
+
+            // 1.2 初始化配置管理器并加载配置
+            ConfigManager.Instance.Initialize();
+            await ConfigManager.Instance.LoadAllCsvAsync(mConfigFolder);
+            Debug.Log("[BootManager] ConfigManager initialized and configs loaded");
 
             // 1.5 初始化 LLM 服务 (作为核心服务，在游戏逻辑前初始化)
             LLMService.Instance.Initialize();
@@ -70,6 +83,14 @@ namespace FarmGame.Core
 
             // 启动新游戏（检查是否为新玩家）
             GameInitManager.Instance.StartNewGame();
+        }
+
+        /// <summary>
+        /// 同步初始化（兼容旧代码）
+        /// </summary>
+        public void Initialize()
+        {
+            InitializeAsync().Forget();
         }
 
         #endregion

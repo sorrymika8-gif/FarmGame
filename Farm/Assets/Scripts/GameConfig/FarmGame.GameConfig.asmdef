@@ -1,0 +1,18 @@
+{
+    "name": "FarmGame.GameConfig",
+    "rootNamespace": "FarmGame.GameConfig",
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "QFramework",
+        "QFramework.CoreKit"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
