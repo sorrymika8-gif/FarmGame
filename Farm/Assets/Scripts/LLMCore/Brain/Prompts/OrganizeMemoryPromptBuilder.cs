@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using FarmGame.LLMCore.Memory;
 using GameLLM.Prompts;
 using UnityEngine;
@@ -12,18 +13,18 @@ namespace FarmGame.LLMCore.Brain.Prompts
     /// </summary>
     public class OrganizeMemoryPromptBuilder : IPromptBuilder<OrganizeMemoryContext>
     {
-        private const string PROMPT_PATH = "GameLLM/Prompts/OrganizeMemory"; // 不需要后缀，Unity Resource.Load 不需要
+        private const string PROMPT_REL_PATH = "Prompts/OrganizeMemory.md"; 
 
         public string Build(OrganizeMemoryContext context)
         {
             // 1. 加载模板
-            var templateAsset = Resources.Load<TextAsset>(PROMPT_PATH);
-            if (templateAsset == null)
+            string fullPath = Path.Combine(Application.dataPath, PROMPT_REL_PATH);
+            if (!File.Exists(fullPath))
             {
-                Debug.LogError($"[OrganizeMemoryPromptBuilder] 找不到提示词模板: {PROMPT_PATH}");
+                Debug.LogError($"[OrganizeMemoryPromptBuilder] 找不到提示词模板: {fullPath}");
                 return string.Empty;
             }
-            string template = templateAsset.text;
+            string template = File.ReadAllText(fullPath);
 
             // 2. 准备数据
             string charSettingStr = context.Character.ToPrompt();

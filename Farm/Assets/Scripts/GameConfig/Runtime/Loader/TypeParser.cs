@@ -193,6 +193,13 @@ namespace FarmGame.GameConfig
 
         #endregion
 
+        private static string PreProcessArrayString(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return string.Empty;
+            // 仅移除引号和方括号
+            return value.Trim().Trim('"').Trim('[', ']');
+        }
+
         #region 数组类型解析
 
         /// <summary>
@@ -200,13 +207,13 @@ namespace FarmGame.GameConfig
         /// </summary>
         public static int[] ParseIntArray(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            // 临时日志：检查数组解析输入
+            if (!string.IsNullOrEmpty(value) && (value.Contains("[") || value.Contains("【")))
             {
-                return Array.Empty<int>();
+               UnityEngine.Debug.Log($"[TypeParser] ParseIntArray Raw: '{value}'");
             }
 
-            // 移除引号
-            value = value.Trim().Trim('"');
+            value = PreProcessArrayString(value);
             if (string.IsNullOrWhiteSpace(value))
             {
                 return Array.Empty<int>();
@@ -218,6 +225,7 @@ namespace FarmGame.GameConfig
             {
                 result[i] = ParseInt(parts[i]);
             }
+            // Debug.Log($"[TypeParser] Parsed Int Array result: [{string.Join(",", result)}]");
             return result;
         }
 
@@ -226,12 +234,7 @@ namespace FarmGame.GameConfig
         /// </summary>
         public static long[] ParseLongArray(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return Array.Empty<long>();
-            }
-
-            value = value.Trim().Trim('"');
+            value = PreProcessArrayString(value);
             if (string.IsNullOrWhiteSpace(value))
             {
                 return Array.Empty<long>();
@@ -251,12 +254,7 @@ namespace FarmGame.GameConfig
         /// </summary>
         public static float[] ParseFloatArray(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return Array.Empty<float>();
-            }
-
-            value = value.Trim().Trim('"');
+            value = PreProcessArrayString(value);
             if (string.IsNullOrWhiteSpace(value))
             {
                 return Array.Empty<float>();
@@ -276,12 +274,7 @@ namespace FarmGame.GameConfig
         /// </summary>
         public static double[] ParseDoubleArray(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return Array.Empty<double>();
-            }
-
-            value = value.Trim().Trim('"');
+            value = PreProcessArrayString(value);
             if (string.IsNullOrWhiteSpace(value))
             {
                 return Array.Empty<double>();
@@ -301,12 +294,7 @@ namespace FarmGame.GameConfig
         /// </summary>
         public static bool[] ParseBoolArray(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return Array.Empty<bool>();
-            }
-
-            value = value.Trim().Trim('"');
+            value = PreProcessArrayString(value);
             if (string.IsNullOrWhiteSpace(value))
             {
                 return Array.Empty<bool>();
@@ -326,12 +314,7 @@ namespace FarmGame.GameConfig
         /// </summary>
         public static string[] ParseStringArray(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return Array.Empty<string>();
-            }
-
-            value = value.Trim().Trim('"');
+            value = PreProcessArrayString(value);
             if (string.IsNullOrWhiteSpace(value))
             {
                 return Array.Empty<string>();

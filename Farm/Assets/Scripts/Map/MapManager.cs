@@ -160,7 +160,7 @@ namespace FarmGame.Map
         public Vector2Int WorldToGrid(Vector3 worldPos)
         {
             int x = Mathf.FloorToInt(worldPos.x / mTileSize);
-            int y = Mathf.FloorToInt(worldPos.z / mTileSize);
+            int y = Mathf.FloorToInt(worldPos.y / mTileSize);
             return new Vector2Int(x, y);
         }
 
@@ -174,8 +174,8 @@ namespace FarmGame.Map
         {
             return new Vector3(
                 x * mTileSize + mTileSize * 0.5f,
-                0,
-                y * mTileSize + mTileSize * 0.5f
+                y * mTileSize + mTileSize * 0.5f,
+                0
             );
         }
 

@@ -76,6 +76,65 @@ namespace FarmGame.Core
         }
 
         /// <summary>
+        /// 打开指定类型的 UI 面板 (指定路径)
+        /// </summary>
+        /// <typeparam name="T">面板类型（需继承 UIPanel）</typeparam>
+        /// <param name="path">UI Prefab 的完整路径（相对于 Resources 文件夹，不含扩展名）</param>
+        /// <param name="data">面板数据（可选）</param>
+        /// <param name="level">UI 层级（默认 Common）</param>
+        /// <returns>打开的面板实例，失败返回 null</returns>
+        public T OpenPanel<T>(string path, IUIData data = null, UILevel level = UILevel.Common) where T : UIPanel
+        {
+            if (!ValidateInitialized()) return null;
+
+            // 直接使用 Resources.Load 加载 Prefab，绕过 ResKit
+            var prefab = Resources.Load<GameObject>(path);
+            if (prefab == null)
+            {
+                Debug.LogError($"[UIManager] OpenPanel failed: could not load prefab at path '{path}'");
+                return null;
+            }
+
+            // 实例化
+            var go = Object.Instantiate(prefab);
+            var panel = go.GetComponent<T>();
+            if (panel == null)
+            {
+                Debug.LogError($"[UIManager] OpenPanel failed: prefab '{path}' does not have component '{typeof(T).Name}'");
+                Object.Destroy(go);
+                return null;
+            }
+
+            // 设置到 UIKit 层级
+            UIKit.Root.SetLevelOfPanel(level, panel);
+
+            // 设置 RectTransform
+            var rect = panel.transform as RectTransform;
+            if (rect != null)
+            {
+                rect.offsetMin = Vector2.zero;
+                rect.offsetMax = Vector2.zero;
+                rect.anchoredPosition3D = Vector3.zero;
+                rect.anchorMin = Vector2.zero;
+                rect.anchorMax = Vector2.one;
+                rect.localScale = Vector3.one;
+            }
+
+            // 设置名字
+            go.name = typeof(T).Name;
+
+            // 创建 PanelInfo 并注册到 UIKit Table
+            panel.Info = PanelInfo.Allocate(go.name, level, data, typeof(T), null);
+            UIKit.Table.Add(panel);
+
+            // 初始化并打开
+            panel.Init(data);
+            panel.Open(data);
+
+            return panel;
+        }
+
+        /// <summary>
         /// 关闭指定类型的 UI 面板
         /// </summary>
         /// <typeparam name="T">面板类型</typeparam>

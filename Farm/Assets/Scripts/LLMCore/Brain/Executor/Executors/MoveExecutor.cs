@@ -1,5 +1,6 @@
 using UnityEngine;
 using FarmGame.Movement;
+using FarmGame.Game.NPC;
 
 namespace FarmGame.LLMCore.Brain
 {
@@ -29,6 +30,12 @@ namespace FarmGame.LLMCore.Brain
             // 执行移动
             Vector2 targetPos = new Vector2(moveCmd.TargetX, moveCmd.TargetY);
             movable.MoveTo(targetPos);
+
+            // 记录行为到短期记忆
+            if (context.Extra.TryGetValue("NPCEntity", out var entityObj) && entityObj is NPCEntity npc)
+            {
+                npc.RecordMemory($"我移动到了位置 ({moveCmd.TargetX}, {moveCmd.TargetY})");
+            }
 
             Debug.Log($"[MoveExecutor] 开始移动到 ({moveCmd.TargetX}, {moveCmd.TargetY})");
         }

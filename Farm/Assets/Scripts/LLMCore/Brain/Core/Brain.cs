@@ -15,6 +15,12 @@ namespace FarmGame.LLMCore.Brain
         private readonly PromptBuilderRegistry mPromptBuilders;
         private readonly CommandParserRegistry mCommandParsers;
         private readonly CommandExecutorRegistry mCommandExecutors;
+
+        /// <summary>
+        /// 获取指令执行器注册表 (供外部创建 CommandQueue 使用)
+        /// </summary>
+        public CommandExecutorRegistry ExecutorRegistry => mCommandExecutors;
+
         private readonly CommandQueue mCommandQueue;
 
         public Brain()
@@ -74,7 +80,6 @@ namespace FarmGame.LLMCore.Brain
                 string prompt = promptBuilder.Build(context);
 
                 // 3. 调用 LLM
-                // 注意：LLMService.Client 是静态属性，直接访问，不要通过 Instance
                 if (LLMService.Client == null)
                 {
                     result.Success = false;
@@ -82,10 +87,7 @@ namespace FarmGame.LLMCore.Brain
                     return result;
                 }
 
-                // 创建请求，这里我们将构建好的 prompt 作为 User 消息发送
-                // PromptBuilder 应该在 prompt 中包含所有的上下文和指令格式要求
                 var llmRequest = new LLMRequest().AddUser(prompt);
-                
                 var llmResponse = await LLMService.Client.SendAsync(llmRequest, cancellationToken);
 
                 if (!llmResponse.Success)
@@ -119,7 +121,6 @@ namespace FarmGame.LLMCore.Brain
             {
                 result.Success = false;
                 result.ErrorMessage = ex.Message;
-                Debug.LogError($"[Brain] Decision failed: {ex.Message}");
             }
             finally
             {

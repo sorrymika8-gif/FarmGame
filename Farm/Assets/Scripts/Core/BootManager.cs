@@ -6,6 +6,7 @@ using FarmGame.Game;
 using FarmGame.Movement;
 using FarmGame.GameLLM;
 using FarmGame.GameConfig;
+using FarmGame.Game.NPC;
 using Cysharp.Threading.Tasks;
 
 namespace FarmGame.Core
@@ -76,7 +77,11 @@ namespace FarmGame.Core
             GameInitManager.Instance.Initialize();
             Debug.Log("[BootManager] GameInitManager initialized");
 
-            // 7. 在此处添加其他管理器的初始化...
+            // 7. 初始化 NPC 管理器
+            NPCManager.Instance.Initialize();
+            Debug.Log("[BootManager] NPCManager initialized");
+
+            // 8. 在此处添加其他管理器的初始化...
 
             mIsInitialized = true;
             Debug.Log("[BootManager] All managers initialized successfully");

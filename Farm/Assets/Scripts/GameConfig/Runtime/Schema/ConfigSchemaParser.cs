@@ -84,17 +84,20 @@ namespace FarmGame.GameConfig
 
         /// <summary>
         /// 解析表名（第1行）
-        /// 格式：#task.csv
+        /// 改为读取文件名
         /// </summary>
         private void ParseTableName(IExcelReader reader, ConfigSchema schema)
         {
-            var value = reader.GetCellValue(ROW_TABLE_NAME, 0)?.Trim() ?? "";
+            // var value = reader.GetCellValue(ROW_TABLE_NAME, 0)?.Trim() ?? "";
 
-            // 移除 # 前缀
-            if (value.StartsWith("#"))
-            {
-                value = value.Substring(1);
-            }
+            // // 移除 # 前缀
+            // if (value.StartsWith("#"))
+            // {
+            //     value = value.Substring(1);
+            // }
+
+            // 改为读取文件名
+            var value = System.IO.Path.GetFileNameWithoutExtension(schema.SourceFilePath);
 
             schema.TableName = value;
             schema.ClassName = ConfigSchema.TableNameToClassName(value);

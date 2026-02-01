@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using FarmGame.Game.NPC;
 
 namespace FarmGame.LLMCore.Brain
 {
@@ -41,9 +42,15 @@ namespace FarmGame.LLMCore.Brain
             // 触发说话事件
             OnSpeak?.Invoke(speaker, speakCmd.Content);
 
-            // 同时输出日志（调试用）
-            string speakerName = speaker != null ? speaker.name : "Unknown";
-            Debug.Log($"[SpeakExecutor] {speakerName} 说: {speakCmd.Content}");
+            // 获取 NPC 名字并记录行为到短期记忆
+            string speakerName = "Unknown";
+            if (context.Extra.TryGetValue("NPCEntity", out var entityObj) && entityObj is NPCEntity npc)
+            {
+                speakerName = npc.Name;
+                npc.RecordMemory($"我说：{speakCmd.Content}");
+            }
+
+            Debug.Log($"[{speakerName}] {speakCmd.Content}");
         }
     }
 }

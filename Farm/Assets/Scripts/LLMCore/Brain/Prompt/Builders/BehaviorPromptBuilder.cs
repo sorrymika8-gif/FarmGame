@@ -1,4 +1,6 @@
+using System.IO;
 using System.Text;
+using UnityEngine;
 using FarmGame.LLMCore.Memory;
 
 namespace FarmGame.LLMCore.Brain
@@ -11,62 +13,65 @@ namespace FarmGame.LLMCore.Brain
     {
         public string DecisionType => DecisionTypes.Behavior;
 
+        // 模板文件路径 (相对于 Assets 目录)
+        private const string TEMPLATE_REL_PATH = "Prompts/BehaviorPromptTemplate.md";
+
         public string Build(DecisionContext context)
         {
-            var sb = new StringBuilder();
+            // 加载模板 (使用 IO 直接读取，方便修改)
+            string fullPath = Path.Combine(Application.dataPath, TEMPLATE_REL_PATH);
+            if (!File.Exists(fullPath))
+            {
+                Debug.LogError($"[BehaviorPromptBuilder] 找不到提示词模板: {fullPath}");
+                return string.Empty;
+            }
+            
+            string template = File.ReadAllText(fullPath);
 
-            // 系统指令
-            sb.AppendLine("你是一个游戏中的AI角色。根据以下信息做出行为决策。");
-            sb.AppendLine("你必须以JSON格式返回一个指令列表。");
-            sb.AppendLine();
-
-            // 角色设定
-            sb.AppendLine("## 角色设定");
+            // 1. 构建角色设定字符串
+            var sbProfile = new StringBuilder();
             if (context.CharacterProfile != null && context.CharacterProfile.Count > 0)
             {
                 foreach (var kv in context.CharacterProfile)
                 {
-                    sb.AppendLine($"- {kv.Key}: {kv.Value}");
+                    sbProfile.AppendLine($"- {kv.Key}: {kv.Value}");
                 }
             }
             else
             {
-                sb.AppendLine("- 无特定设定");
+                sbProfile.AppendLine("- 无特定设定");
             }
-            sb.AppendLine();
 
-            // 当前状态
-            sb.AppendLine("## 当前状态");
+            // 2. 构建当前状态字符串
+            var sbState = new StringBuilder();
             if (context.CurrentState != null && context.CurrentState.Count > 0)
             {
                 foreach (var kv in context.CurrentState)
                 {
-                    sb.AppendLine($"- {kv.Key}: {kv.Value}");
+                    sbState.AppendLine($"- {kv.Key}: {kv.Value}");
                 }
             }
             else
             {
-                sb.AppendLine("- 无状态信息");
+                sbState.AppendLine("- 无状态信息");
             }
-            sb.AppendLine();
 
-            // 环境感知
-            sb.AppendLine("## 环境感知");
+            // 3. 构建感知字符串
+            var sbPerception = new StringBuilder();
             if (context.Perception != null && context.Perception.Count > 0)
             {
                 foreach (var kv in context.Perception)
                 {
-                    sb.AppendLine($"- {kv.Key}: {kv.Value}");
+                    sbPerception.AppendLine($"- {kv.Key}: {kv.Value}");
                 }
             }
             else
             {
-                sb.AppendLine("- 无感知信息");
+                sbPerception.AppendLine("- 无感知信息");
             }
-            sb.AppendLine();
 
-            // 记忆
-            sb.AppendLine("## 相关记忆");
+            // 4. 构建记忆字符串
+            var sbMemories = new StringBuilder();
             if (context.MemoryStore != null)
             {
                 var memories = context.MemoryStore.GetAllMemories();
@@ -74,49 +79,29 @@ namespace FarmGame.LLMCore.Brain
                 {
                     foreach (var memory in memories)
                     {
-                        sb.AppendLine($"- {memory.Content}");
+                        sbMemories.AppendLine($"- {memory.Content}");
                     }
                 }
                 else
                 {
-                    sb.AppendLine("- 无相关记忆");
+                    sbMemories.AppendLine("- 无相关记忆");
                 }
             }
             else
             {
-                sb.AppendLine("- 无记忆存储");
+                sbMemories.AppendLine("- 无记忆存储");
             }
-            sb.AppendLine();
 
-            // 触发事件
-            sb.AppendLine("## 触发事件");
-            sb.AppendLine(string.IsNullOrEmpty(context.TriggerEvent) ? "- 无特定触发" : $"- {context.TriggerEvent}");
-            sb.AppendLine();
+            // 5. 构建触发事件字符串
+            string triggerEvent = string.IsNullOrEmpty(context.TriggerEvent) ? "- 无特定触发" : $"- {context.TriggerEvent}";
 
-            // 输出格式要求
-            sb.AppendLine("## 输出格式要求");
-            sb.AppendLine("请以JSON数组格式返回你的决策，每个元素是一个指令对象。");
-            sb.AppendLine("可用的指令类型:");
-            sb.AppendLine("1. Move: 移动到某个位置");
-            sb.AppendLine("   {\"type\": \"Move\", \"x\": 数字, \"y\": 数字}");
-            sb.AppendLine("2. Speak: 说话");
-            sb.AppendLine("   {\"type\": \"Speak\", \"content\": \"要说的话\"}");
-            sb.AppendLine("3. Attack: 攻击目标");
-            sb.AppendLine("   {\"type\": \"Attack\", \"targetId\": \"目标ID\"}");
-            sb.AppendLine("4. SetState: 设置自身状态");
-            sb.AppendLine("   {\"type\": \"SetState\", \"key\": \"状态名\", \"value\": 值}");
-            sb.AppendLine("5. MemoryOperation: 记忆操作");
-            sb.AppendLine("   {\"type\": \"MemoryOperation\", \"operation\": \"Add\"|\"Remove\", \"partition\": \"分区名\", \"content\": \"记忆内容\"}");
-            sb.AppendLine();
-            sb.AppendLine("示例输出:");
-            sb.AppendLine("[");
-            sb.AppendLine("  {\"type\": \"Speak\", \"content\": \"你好！\"},");
-            sb.AppendLine("  {\"type\": \"Move\", \"x\": 10, \"y\": 5}");
-            sb.AppendLine("]");
-            sb.AppendLine();
-            sb.AppendLine("请只返回JSON数组，不要包含其他文字。");
-
-            return sb.ToString();
+            // 替换所有占位符
+            return template
+                .Replace("{{CHARACTER_PROFILE}}", sbProfile.ToString().TrimEnd())
+                .Replace("{{CURRENT_STATE}}", sbState.ToString().TrimEnd())
+                .Replace("{{PERCEPTION}}", sbPerception.ToString().TrimEnd())
+                .Replace("{{MEMORIES}}", sbMemories.ToString().TrimEnd())
+                .Replace("{{TRIGGER_EVENT}}", triggerEvent);
         }
     }
 }

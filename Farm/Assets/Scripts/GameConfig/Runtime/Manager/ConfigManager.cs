@@ -208,10 +208,22 @@ namespace FarmGame.GameConfig
             string folderPath = "Assets/Configs",
             ConfigLoadProgressHandler onProgress = null)
         {
-            // 确保使用 CSV 读取器
-            mExcelReaderFactory = new CsvExcelReaderFactory();
-            await LoadAllAsync(folderPath, "*.csv", onProgress);
+            // [Modified] 强制使用 Xlsx 模式，不再使用 CSV
+            Debug.Log("[ConfigManager] 使用 RuntimeXlsxReader 加载 .xlsx 配置");
+            mExcelReaderFactory = new RuntimeXlsxReaderFactory();
+            await LoadAllAsync(folderPath, "*.xlsx", onProgress);
         }
+
+/* 
+        // 旧的 CSV 加载逻辑已废弃
+        #if UNITY_EDITOR
+        private class EditorXlsxReaderFactory : IExcelReaderFactory
+        {
+            public IExcelReader Create() => new EditorXlsxReader();
+        }
+        // ... (EditorXlsxReader 逻辑已整合到 RuntimeXlsxReader) ...
+        #endif 
+*/
 
         /// <summary>
         /// 加载单个配置文件

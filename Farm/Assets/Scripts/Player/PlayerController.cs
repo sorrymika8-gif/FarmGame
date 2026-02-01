@@ -47,8 +47,29 @@ namespace FarmGame.Player
 
             // 获取Movable组件
             mMovable = GetComponent<Movable>();
-            mAnimator = GetComponentInChildren<Animator>();
             
+            // 智能查找Animator：优先查找子节点上的有效Animator
+            // 即使Root上有Animator，如果子节点也有，我们通常认为子节点的是实际的视觉表现
+            Animator childAnimator = null;
+            foreach (Transform child in transform)
+            {
+                var anim = child.GetComponentInChildren<Animator>();
+                if (anim != null)
+                {
+                    childAnimator = anim;
+                    break;
+                }
+            }
+
+            if (childAnimator != null)
+            {
+                mAnimator = childAnimator;
+            }
+            else
+            {
+                mAnimator = GetComponent<Animator>();
+            }
+
             // 查找视觉根节点（通常是第一个不包含Shadow的子节点，或者是Animator所在的节点）
             if (mAnimator != null && mAnimator.transform != transform)
             {

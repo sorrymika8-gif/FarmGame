@@ -11,6 +11,9 @@ namespace FarmGame.LLMCore.Brain
         /// <summary>对话决策 - 与玩家或NPC对话</summary>
         public const string Dialogue = "Dialogue";
 
+        /// <summary>聊天决策 - 响应玩家聊天消息</summary>
+        public const string Chat = "Chat";
+
         /// <summary>战斗决策 - 战斗中的行动选择</summary>
         public const string Combat = "Combat";
 
