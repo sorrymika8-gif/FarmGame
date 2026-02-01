@@ -5,14 +5,13 @@ using UnityEngine;
 namespace FarmGame.LLMCore.Brain
 {
     /// <summary>
-    /// 行为决策指令解析器
-    /// 将 LLM 返回的 JSON 解析为指令对象列表
-    /// [已废弃] 请使用 UnifiedCommandParser
+    /// 统一指令解析器
+    /// 将 LLM 返回的 JSON 解析为指令列表
+    /// 支持所有类型的指令（Speak, Move, Attack, SetState, MemoryOperation）
     /// </summary>
-    [Obsolete("请使用 UnifiedCommandParser")]
-    public class BehaviorCommandParser : ICommandParser
+    public class UnifiedCommandParser : ICommandParser
     {
-        public string DecisionType => DecisionTypes.Behavior;
+        public string DecisionType => DecisionTypes.Unified;
 
         public IEnumerable<ICommand> Parse(string llmOutput)
         {
@@ -20,17 +19,13 @@ namespace FarmGame.LLMCore.Brain
 
             if (string.IsNullOrWhiteSpace(llmOutput))
             {
-                Debug.LogWarning("[BehaviorCommandParser] LLM输出为空");
+                Debug.LogWarning("[UnifiedCommandParser] LLM输出为空");
                 return commands;
             }
 
             try
             {
-                // 清理输出（移除可能的markdown代码块标记）
                 string jsonText = CleanJsonOutput(llmOutput);
-
-                // 使用Unity内置的JsonUtility需要包装数组
-                // 这里我们手动解析简单的JSON数组
                 var commandDataList = ParseJsonArray(jsonText);
 
                 foreach (var data in commandDataList)
@@ -44,7 +39,7 @@ namespace FarmGame.LLMCore.Brain
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[BehaviorCommandParser] 解析失败: {ex.Message}\n原始输出: {llmOutput}");
+                Debug.LogError($"[UnifiedCommandParser] 解析失败: {ex.Message}\n原始输出: {llmOutput}");
             }
 
             return commands;
@@ -77,7 +72,6 @@ namespace FarmGame.LLMCore.Brain
 
         /// <summary>
         /// 简易JSON数组解析器
-        /// 使用Unity的JsonUtility解析每个对象
         /// </summary>
         private List<CommandData> ParseJsonArray(string jsonArray)
         {
@@ -89,13 +83,13 @@ namespace FarmGame.LLMCore.Brain
 
             if (startIndex < 0 || endIndex < 0 || endIndex <= startIndex)
             {
-                Debug.LogWarning("[BehaviorCommandParser] 无效的JSON数组格式");
+                Debug.LogWarning("[UnifiedCommandParser] 无效的JSON数组格式");
                 return results;
             }
 
             string arrayContent = jsonArray.Substring(startIndex + 1, endIndex - startIndex - 1);
 
-            // 简单的对象分割（假设对象内没有嵌套的大括号）
+            // 简单的对象分割
             int depth = 0;
             int objectStart = -1;
 
@@ -137,23 +131,23 @@ namespace FarmGame.LLMCore.Brain
         {
             if (string.IsNullOrEmpty(data.type))
             {
-                Debug.LogWarning("[BehaviorCommandParser] 指令缺少type字段");
+                Debug.LogWarning("[UnifiedCommandParser] 指令缺少type字段");
                 return null;
             }
 
             switch (data.type)
             {
+                case CommandTypes.Speak:
+                    return new SpeakCommand
+                    {
+                        Content = data.content
+                    };
+
                 case CommandTypes.Move:
                     return new MoveCommand
                     {
                         TargetX = data.x,
                         TargetY = data.y
-                    };
-
-                case CommandTypes.Speak:
-                    return new SpeakCommand
-                    {
-                        Content = data.content
                     };
 
                 case CommandTypes.Attack:
@@ -178,25 +172,26 @@ namespace FarmGame.LLMCore.Brain
                     };
 
                 default:
-                    Debug.LogWarning($"[BehaviorCommandParser] 未知的指令类型: {data.type}");
+                    Debug.LogWarning($"[UnifiedCommandParser] 未知的指令类型: {data.type}");
                     return null;
             }
         }
 
         /// <summary>
         /// 用于JSON反序列化的中间数据结构
+        /// 包含所有可能的指令字段
         /// </summary>
         [Serializable]
         private class CommandData
         {
             public string type;
 
+            // Speak / MemoryOperation
+            public string content;
+
             // Move
             public float x;
             public float y;
-
-            // Speak / MemoryOperation
-            public string content;
 
             // Attack
             public string targetId;

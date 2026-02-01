@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -8,7 +9,9 @@ namespace FarmGame.LLMCore.Brain
     /// <summary>
     /// 行为决策提示词构建器
     /// 将 DecisionContext 格式化为 LLM 能理解的提示词
+    /// [已废弃] 请使用 UnifiedPromptBuilder
     /// </summary>
+    [Obsolete("请使用 UnifiedPromptBuilder")]
     public class BehaviorPromptBuilder : IPromptBuilder
     {
         public string DecisionType => DecisionTypes.Behavior;

@@ -6,8 +6,10 @@ namespace FarmGame.LLMCore.Brain
 {
     /// <summary>
     /// 聊天决策指令解析器
-    /// 将 LLM 返回的 JSON 解析为 Speak 指令
+    /// 将 LLM 返回的 JSON 解析为指令列表
+    /// [已废弃] 请使用 UnifiedCommandParser
     /// </summary>
+    [Obsolete("请使用 UnifiedCommandParser")]
     public class ChatCommandParser : ICommandParser
     {
         public string DecisionType => DecisionTypes.Chat;
@@ -133,27 +135,74 @@ namespace FarmGame.LLMCore.Brain
                 return null;
             }
 
-            // Chat 解析器主要处理 Speak 指令
-            if (data.type == CommandTypes.Speak)
+            switch (data.type)
             {
-                return new SpeakCommand
-                {
-                    Content = data.content
-                };
-            }
+                case CommandTypes.Speak:
+                    return new SpeakCommand
+                    {
+                        Content = data.content
+                    };
 
-            Debug.LogWarning($"[ChatCommandParser] 聊天场景下不支持的指令类型: {data.type}");
-            return null;
+                case CommandTypes.Move:
+                    return new MoveCommand
+                    {
+                        TargetX = data.x,
+                        TargetY = data.y
+                    };
+
+                case CommandTypes.Attack:
+                    return new AttackCommand
+                    {
+                        TargetId = data.targetId
+                    };
+
+                case CommandTypes.SetState:
+                    return new SetStateCommand
+                    {
+                        Key = data.key,
+                        Value = data.value
+                    };
+
+                case CommandTypes.MemoryOperation:
+                    return new MemoryOperationCommand
+                    {
+                        Operation = data.operation,
+                        Partition = data.partition,
+                        Content = data.content
+                    };
+
+                default:
+                    Debug.LogWarning($"[ChatCommandParser] 未知的指令类型: {data.type}");
+                    return null;
+            }
         }
 
         /// <summary>
         /// 用于JSON反序列化的中间数据结构
+        /// 包含所有可能的指令字段
         /// </summary>
         [Serializable]
         private class ChatCommandData
         {
             public string type;
+
+            // Speak / MemoryOperation
             public string content;
+
+            // Move
+            public float x;
+            public float y;
+
+            // Attack
+            public string targetId;
+
+            // SetState
+            public string key;
+            public string value;
+
+            // MemoryOperation
+            public string operation;
+            public string partition;
         }
     }
 }

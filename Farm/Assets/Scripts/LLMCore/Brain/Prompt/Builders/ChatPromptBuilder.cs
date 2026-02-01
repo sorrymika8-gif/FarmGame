@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -8,7 +9,9 @@ namespace FarmGame.LLMCore.Brain
     /// <summary>
     /// 聊天决策提示词构建器
     /// 用于处理玩家与NPC的聊天对话
+    /// [已废弃] 请使用 UnifiedPromptBuilder
     /// </summary>
+    [Obsolete("请使用 UnifiedPromptBuilder，通过 TriggerEvent 传入聊天内容")]
     public class ChatPromptBuilder : IPromptBuilder
     {
         public string DecisionType => DecisionTypes.Chat;
@@ -72,7 +75,8 @@ namespace FarmGame.LLMCore.Brain
                 .Replace("{{CURRENT_STATE}}", sbState.ToString().TrimEnd())
                 .Replace("{{SHORT_TERM_MEMORIES}}", shortTermMemories)
                 .Replace("{{LONG_TERM_MEMORIES}}", longTermMemories)
-                .Replace("{{PERMANENT_MEMORIES}}", permanentMemories);
+                .Replace("{{PERMANENT_MEMORIES}}", permanentMemories)
+                .Replace("{{AVAILABLE_ACTIONS}}", ActionHintLoader.GetAllActionHints());
         }
 
         /// <summary>
