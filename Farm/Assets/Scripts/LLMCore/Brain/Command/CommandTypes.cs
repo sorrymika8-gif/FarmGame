@@ -19,5 +19,14 @@ namespace FarmGame.LLMCore.Brain
 
         /// <summary>记忆操作指令</summary>
         public const string MemoryOperation = "MemoryOperation";
+
+        /// <summary>耕地指令</summary>
+        public const string Till = "Till";
+
+        /// <summary>种植指令</summary>
+        public const string Plant = "Plant";
+
+        /// <summary>收获指令</summary>
+        public const string Harvest = "Harvest";
     }
 }

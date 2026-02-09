@@ -294,6 +294,26 @@ namespace FarmGame.GameConfig
         }
 
         /// <summary>
+        /// 快捷获取单个配置 (ID为int类型)
+        /// </summary>
+        /// <typeparam name="T">配置类型</typeparam>
+        /// <param name="id">配置ID</param>
+        /// <returns>配置实例，若不存在返回null</returns>
+        public T GetConfig<T>(int id) where T : class
+        {
+            if (mContainers.TryGetValue(typeof(T), out var container))
+            {
+                var map = container as IMapContainer<int, T>;
+                if (map != null)
+                {
+                    return map.Get(id);
+                }
+            }
+            Debug.LogWarning($"[ConfigManager] GeConfig<{typeof(T).Name}>({id}) 失败: 容器不存在或Key类型不匹配");
+            return null;
+        }
+
+        /// <summary>
         /// 获取双层 Map 容器
         /// </summary>
         /// <typeparam name="TKey1">第一层主键类型</typeparam>

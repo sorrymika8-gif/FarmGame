@@ -171,6 +171,28 @@ namespace FarmGame.LLMCore.Brain
                         Content = data.content
                     };
 
+                case CommandTypes.Till:
+                    return new TillCommand
+                    {
+                        X = Mathf.RoundToInt(data.x),
+                        Y = Mathf.RoundToInt(data.y)
+                    };
+
+                case CommandTypes.Plant:
+                    return new PlantCommand
+                    {
+                        X = Mathf.RoundToInt(data.x),
+                        Y = Mathf.RoundToInt(data.y),
+                        ItemId = data.itemId
+                    };
+
+                case CommandTypes.Harvest:
+                    return new HarvestCommand
+                    {
+                        X = Mathf.RoundToInt(data.x),
+                        Y = Mathf.RoundToInt(data.y)
+                    };
+
                 default:
                     Debug.LogWarning($"[UnifiedCommandParser] 未知的指令类型: {data.type}");
                     return null;
@@ -203,6 +225,9 @@ namespace FarmGame.LLMCore.Brain
             // MemoryOperation
             public string operation;
             public string partition;
+
+            // Plant
+             public int itemId;
         }
     }
 }

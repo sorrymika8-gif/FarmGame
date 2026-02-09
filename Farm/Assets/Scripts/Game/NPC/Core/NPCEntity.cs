@@ -4,6 +4,7 @@ using UnityEngine;
 using FarmGame.LLMCore.Memory;
 using FarmGame.LLMCore.Brain;
 using Cysharp.Threading.Tasks;
+using FarmGame.Item;
 
 namespace FarmGame.Game.NPC
 {
@@ -39,7 +40,8 @@ namespace FarmGame.Game.NPC
         #endregion
 
         #region 物品
-        public List<string> Inventory { get; } = new();
+        /// <summary>背包组件</summary>
+        public InventoryComponent Inventory { get; private set; } = new InventoryComponent();
         #endregion
 
         #region 核心组件
