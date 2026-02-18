@@ -34,6 +34,11 @@ namespace FarmGame.Player
         /// </summary>
         public Movable Movable => mMovable;
 
+        /// <summary>
+        /// 获取玩家背包组件
+        /// </summary>
+        public FarmGame.Item.InventoryComponent Inventory => mData?.Inventory;
+
         #endregion
 
         #region 生命周期

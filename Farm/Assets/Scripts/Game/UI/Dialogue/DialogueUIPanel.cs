@@ -17,7 +17,7 @@ namespace FarmGame.UI
         }
     }
 
-    public class DiaLogUiPab : UIPanel
+    public class DialogueUIPanel : UIPanel
     {
         [Header("UI Components")]
         [Tooltip("拖拽你的 TMP_InputField 到这里")]
@@ -37,12 +37,12 @@ namespace FarmGame.UI
             if (SendButton != null)
                 SendButton.onClick.AddListener(OnSendClick);
             else
-                Debug.LogWarning("[DiaLogUiPab] SendButton is not assigned!");
+                Debug.LogWarning("[DialogueUIPanel] SendButton is not assigned!");
                 
             if (CloseButton != null)
                 CloseButton.onClick.AddListener(OnCloseClick);
             else
-                Debug.LogWarning("[DiaLogUiPab] CloseButton is not assigned!");
+                Debug.LogWarning("[DialogueUIPanel] CloseButton is not assigned!");
         }
 
         protected override void OnOpen(IUIData uiData = null)

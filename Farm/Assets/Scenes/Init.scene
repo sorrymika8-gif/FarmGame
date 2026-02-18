@@ -332,7 +332,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1741538839}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2b2e7a80f477634f8974248a5a02fed, type: 3}
+  m_Script: {fileID: 11500000, guid: a985b84d32724987aec1bbe47dcecd0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mConfigFolder: Assets/Configs

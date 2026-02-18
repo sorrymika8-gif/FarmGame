@@ -2,6 +2,7 @@ using UnityEngine;
 using QFramework;
 using FarmGame.Map;
 using FarmGame.Player;
+using FarmGame.Core;
 
 namespace FarmGame.Game
 {
@@ -58,23 +59,30 @@ namespace FarmGame.Game
             }
 
             var playerData = PlayerManager.Instance.Player.Data;
+            bool isNewPlayer = playerData.IsNewPlayer;
 
-            // 检查是否为新玩家
-            if (!playerData.IsNewPlayer)
-            {
-                Debug.Log("[GameInitManager] Not a new player, skipping initialization");
-                return;
-            }
+            // 无论是否新玩家，都需要进入场景
+            // TODO: 非新玩家时应从存档读取地图名和位置，目前暂用初始值
+            string mapToLoad = INITIAL_MAP;
+            Vector3 spawnPosition = INITIAL_SPAWN_POSITION;
 
-            Debug.Log("[GameInitManager] Starting new game initialization...");
+            Debug.Log($"[GameInitManager] Starting game, IsNewPlayer: {isNewPlayer}");
 
             // 使用 GameManager 进入场景
-            GameManager.Instance.EnterScene(INITIAL_MAP, INITIAL_SPAWN_POSITION);
+            GameManager.Instance.EnterScene(mapToLoad, spawnPosition);
 
-            // 4. 标记为非新玩家
-            playerData.IsNewPlayer = false;
+            // 打开主界面
+            FarmGame.Core.UIManager.Instance.OpenMainUIPanel();
+            Debug.Log("[GameInitManager] MainUIPanel opened");
 
-            Debug.Log("[GameInitManager] New game initialization completed");
+            // 如果是新玩家，标记为非新玩家
+            if (isNewPlayer)
+            {
+                playerData.IsNewPlayer = false;
+                Debug.Log("[GameInitManager] New player marked as initialized");
+            }
+
+            Debug.Log("[GameInitManager] Game initialization completed");
         }
 
         #endregion

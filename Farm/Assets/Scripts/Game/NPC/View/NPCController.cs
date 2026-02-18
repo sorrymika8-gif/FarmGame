@@ -52,7 +52,7 @@ namespace FarmGame.Game.NPC
             else
             {
                 // Fallback (应该不再需要，但保留兼容性)
-                UIManager.Instance.OpenPanel<DiaLogUiPab>("UI/DialogUI/DiaLogUiPab", new DialogueUIData(mEntity));
+                UIManager.Instance.OpenPanel<DialogueUIPanel>("UI/DialogUI/DialogueUIPanel", new DialogueUIData(mEntity));
             }
         }
 

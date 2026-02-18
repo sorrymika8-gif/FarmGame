@@ -1,4 +1,5 @@
 using UnityEngine;
+using FarmGame.Item;
 
 namespace FarmGame.Player
 {
@@ -30,6 +31,11 @@ namespace FarmGame.Player
         /// </summary>
         public float MoveSpeed { get; set; }
 
+        /// <summary>
+        /// 玩家背包组件
+        /// </summary>
+        public InventoryComponent Inventory { get; set; }
+
         #endregion
 
         #region 构造函数
@@ -44,6 +50,7 @@ namespace FarmGame.Player
             Position = Vector3.zero;
             FacingDirection = Vector3.down; // 默认朝下
             MoveSpeed = 5f; // 默认移动速度
+            Inventory = new InventoryComponent(); // 初始化背包
         }
 
         #endregion

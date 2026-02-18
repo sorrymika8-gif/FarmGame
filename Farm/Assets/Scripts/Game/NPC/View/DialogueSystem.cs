@@ -29,7 +29,7 @@ namespace FarmGame.Game.NPC
             if (mEntity == null) return;
 
             // 打开对话面板，并传递当前 NPC 实体作为上下文
-            UIManager.Instance.OpenPanel<DiaLogUiPab>("UI/DialogUI/DiaLogUiPab", new DialogueUIData(mEntity));
+            UIManager.Instance.OpenPanel<DialogueUIPanel>("UI/DialogUI/DialogueUIPanel", new DialogueUIData(mEntity));
         }
 
         /// <summary>

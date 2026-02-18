@@ -1,5 +1,8 @@
 using UnityEngine;
 using QFramework;
+using FarmGame.UI;
+using FarmGame.Item;
+using FarmGame.Game.NPC;
 
 namespace FarmGame.Core
 {
@@ -195,38 +198,6 @@ namespace FarmGame.Core
             return UIKit.GetPanel<T>();
         }
 
-        /// <summary>
-        /// 检查指定类型的面板是否已打开
-        /// </summary>
-        /// <typeparam name="T">面板类型</typeparam>
-        /// <returns>是否已打开</returns>
-        public bool IsPanelOpen<T>() where T : UIPanel
-        {
-            if (!ValidateInitialized()) return false;
-
-            return UIKit.GetPanel<T>() != null;
-        }
-
-        /// <summary>
-        /// 关闭所有已打开的 UI 面板
-        /// </summary>
-        public void CloseAllPanels()
-        {
-            if (!mIsInitialized) return;
-
-            UIKit.CloseAllPanel();
-        }
-
-        /// <summary>
-        /// 隐藏所有已打开的 UI 面板
-        /// </summary>
-        public void HideAllPanels()
-        {
-            if (!ValidateInitialized()) return;
-
-            UIKit.HideAllPanel();
-        }
-
         #endregion
 
         #region 私有方法
@@ -240,6 +211,146 @@ namespace FarmGame.Core
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// 关闭所有已打开的 UI 面板
+        /// </summary>
+        private void CloseAllPanels()
+        {
+            UIKit.CloseAllPanel();
+        }
+
+        #endregion
+
+        #region 背包面板专用方法
+
+        /// <summary>
+        /// 检查背包面板是否已打开
+        /// </summary>
+        /// <returns>是否已打开</returns>
+        public bool IsBackpackPanelOpen()
+        {
+            return GetPanel<BackpackPanel>() != null;
+        }
+
+        /// <summary>
+        /// 打开背包面板
+        /// </summary>
+        /// <param name="inventory">背包组件</param>
+        /// <returns>打开的背包面板实例</returns>
+        public BackpackPanel OpenBackpackPanel(InventoryComponent inventory)
+        {
+            if (!ValidateInitialized()) return null;
+
+            var data = new BackpackPanelData()
+            {
+                Inventory = inventory
+            };
+
+            return OpenPanel<BackpackPanel>("UI/BackpackUI/BackpackPanel", data);
+        }
+
+        /// <summary>
+        /// 关闭背包面板
+        /// </summary>
+        public void CloseBackpackPanel()
+        {
+            ClosePanel<BackpackPanel>();
+        }
+
+        /// <summary>
+        /// 获取已打开的背包面板
+        /// </summary>
+        /// <returns>背包面板实例</returns>
+        public BackpackPanel GetBackpackPanel()
+        {
+            return GetPanel<BackpackPanel>();
+        }
+
+        #endregion
+
+        #region 主界面专用方法
+
+        /// <summary>
+        /// 检查主界面是否已打开
+        /// </summary>
+        /// <returns>是否已打开</returns>
+        public bool IsMainUIPanelOpen()
+        {
+            return GetPanel<MainUIPanel>() != null;
+        }
+
+        /// <summary>
+        /// 打开主界面
+        /// </summary>
+        /// <returns>打开的主界面实例</returns>
+        public MainUIPanel OpenMainUIPanel()
+        {
+            if (!ValidateInitialized()) return null;
+
+            var data = new MainUIPanelData();
+            return OpenPanel<MainUIPanel>("UI/MainUI/MainUIPanel", data);
+        }
+
+        /// <summary>
+        /// 关闭主界面
+        /// </summary>
+        public void CloseMainUIPanel()
+        {
+            ClosePanel<MainUIPanel>();
+        }
+
+        /// <summary>
+        /// 获取已打开的主界面
+        /// </summary>
+        /// <returns>主界面实例</returns>
+        public MainUIPanel GetMainUIPanel()
+        {
+            return GetPanel<MainUIPanel>();
+        }
+
+        #endregion
+
+        #region 对话面板专用方法
+
+        /// <summary>
+        /// 检查对话面板是否已打开
+        /// </summary>
+        /// <returns>是否已打开</returns>
+        public bool IsDialoguePanelOpen()
+        {
+            return GetPanel<DialogueUIPanel>() != null;
+        }
+
+        /// <summary>
+        /// 打开对话面板
+        /// </summary>
+        /// <param name="npcEntity">NPC实体</param>
+        /// <returns>打开的对话面板实例</returns>
+        public DialogueUIPanel OpenDialoguePanel(NPCEntity npcEntity)
+        {
+            if (!ValidateInitialized()) return null;
+
+            var data = new DialogueUIData(npcEntity);
+            return OpenPanel<DialogueUIPanel>(data);
+        }
+
+        /// <summary>
+        /// 关闭对话面板
+        /// </summary>
+        public void CloseDialoguePanel()
+        {
+            ClosePanel<DialogueUIPanel>();
+        }
+
+        /// <summary>
+        /// 获取已打开的对话面板
+        /// </summary>
+        /// <returns>对话面板实例</returns>
+        public DialogueUIPanel GetDialoguePanel()
+        {
+            return GetPanel<DialogueUIPanel>();
         }
 
         #endregion
