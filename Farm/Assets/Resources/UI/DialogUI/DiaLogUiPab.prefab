@@ -69,8 +69,8 @@ MonoBehaviour:
   m_text: "\u53D1\u9001"
   m_enableAdvanceTextProcess: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 92d5cdb24943d04498917f1c8b812e9d, type: 2}
-  m_sharedMaterial: {fileID: 4355892300335534873, guid: 92d5cdb24943d04498917f1c8b812e9d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7aa9911d5b914ef3a1e9db4a12596ee4, type: 2}
+  m_sharedMaterial: {fileID: 4355892300335534873, guid: 7aa9911d5b914ef3a1e9db4a12596ee4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -205,8 +205,8 @@ MonoBehaviour:
   m_text: "\u5173\u95ED"
   m_enableAdvanceTextProcess: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 92d5cdb24943d04498917f1c8b812e9d, type: 2}
-  m_sharedMaterial: {fileID: 4355892300335534873, guid: 92d5cdb24943d04498917f1c8b812e9d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7aa9911d5b914ef3a1e9db4a12596ee4, type: 2}
+  m_sharedMaterial: {fileID: 4355892300335534873, guid: 7aa9911d5b914ef3a1e9db4a12596ee4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -849,8 +849,8 @@ MonoBehaviour:
   m_text: "\u200B"
   m_enableAdvanceTextProcess: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 92d5cdb24943d04498917f1c8b812e9d, type: 2}
-  m_sharedMaterial: {fileID: 4355892300335534873, guid: 92d5cdb24943d04498917f1c8b812e9d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7aa9911d5b914ef3a1e9db4a12596ee4, type: 2}
+  m_sharedMaterial: {fileID: 4355892300335534873, guid: 7aa9911d5b914ef3a1e9db4a12596ee4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1090,7 +1090,7 @@ Canvas:
   m_GameObject: {fileID: 8930838457872840116}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 5
   m_PixelPerfect: 0
@@ -1098,7 +1098,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -1153,7 +1153,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8930838457872840116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c9b7a5e90b38384091d2f9f9629f2dd, type: 3}
+  m_Script: {fileID: 11500000, guid: 8733eba2c423433ebf74faa8e428e6c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   InputField: {fileID: 1148117073298438822}

@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using FarmGame.GameConfig;
+using FarmGame.GameConfig.Generated;
 
 namespace FarmGame.GameLLM
 {
@@ -15,19 +17,6 @@ namespace FarmGame.GameLLM
 
         public static LLMClient Client => Instance?._client;
 
-        // 2. 硬编码配置区域 (请修改此处)
-        // ==========================================
-        private const LLMProviderType CONF_PROVIDER = LLMProviderType.DeepSeek;
-        
-        // TODO: 请将 "sk-replace-with-your-key" 替换为您真实的 API Key
-        private const string CONF_API_KEY = "sk-88310d74635747c38833c53f24ef02e7"; 
-        
-        // DeepSeek 默认 BaseURL
-        private const string CONF_BASE_URL = "https://api.deepseek.com";
-        // DeepSeek V3/R1 模型: deepseek-chat (或 deepseek-reasoner)
-        private const string CONF_MODEL = "deepseek-reasoner";
-        // ==========================================
-
         private LLMClient _client;
         private bool mIsInitialized = false;
 
@@ -38,19 +27,34 @@ namespace FarmGame.GameLLM
         {
             if (mIsInitialized) return;
 
-            Debug.Log("[LLMService] Starting initialization (Code Config)...");
+            Debug.Log("[LLMService] Starting initialization from config...");
+            
+            // 从配置表读取启用的 LLM 配置
+            var settingsConfig = LlmSettingsHelper.GetEnabledConfig();
+            if (settingsConfig == null)
+            {
+                Debug.LogError("[LLMService] 无法获取 LLM 配置，请检查 llm_settings 配置表是否正确加载且有启用的配置");
+                return;
+            }
+            
+            // 解析 provider_type 字符串到枚举
+            if (!Enum.TryParse<LLMProviderType>(settingsConfig.provider_type, true, out var providerType))
+            {
+                Debug.LogError($"[LLMService] 无法识别的 provider_type: {settingsConfig.provider_type}");
+                return;
+            }
             
             var config = new LLMConfig
             {
-                ProviderType = CONF_PROVIDER,
-                ApiKey = CONF_API_KEY,
-                BaseUrl = CONF_BASE_URL,
-                DefaultModel = CONF_MODEL
+                ProviderType = providerType,
+                ApiKey = settingsConfig.api_key,
+                BaseUrl = settingsConfig.base_url,
+                DefaultModel = settingsConfig.default_model
             };
 
             _client = LLMClientFactory.Create(config);
             mIsInitialized = true;
-            Debug.Log($"[LLMService] Initialized with {CONF_PROVIDER}");
+            Debug.Log($"[LLMService] Initialized with {providerType}, Model: {settingsConfig.default_model}");
         }
     }
 }

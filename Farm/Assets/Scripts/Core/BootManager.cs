@@ -9,6 +9,7 @@ using FarmGame.GameConfig;
 using FarmGame.Game.NPC;
 using FarmGame.Farm;
 using FarmGame.Item;
+using FarmGame.Core.LLMDescription;
 using Cysharp.Threading.Tasks;
 
 namespace FarmGame.Core
@@ -58,6 +59,10 @@ namespace FarmGame.Core
 
             // 1.5 初始化 LLM 服务 (作为核心服务，在游戏逻辑前初始化)
             LLMService.Instance.Initialize();
+
+            // 1.6 初始化 LLM 描述服务
+            LLMDescriptionService.Instance.Initialize();
+            Debug.Log("[BootManager] LLMDescriptionService initialized");
 
             // 2. 初始化UI管理器
             UIManager.Instance.Initialize();

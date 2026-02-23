@@ -32,11 +32,20 @@ namespace FarmGame.LLMCore.Brain
                 return;
             }
 
-            // 从上下文获取说话者的GameObject（可选）
+            // 从上下文获取说话者的GameObject
             GameObject speaker = null;
             if (context.Extra.TryGetValue("GameObject", out var goObj) && goObj is GameObject go)
             {
                 speaker = go;
+            }
+            // 如果没有直接的 GameObject，尝试通过 NPCEntity 获取对应的 Controller
+            else if (context.Extra.TryGetValue("NPCEntity", out var entityObj) && entityObj is NPCEntity npcEntity)
+            {
+                var controller = NPCManager.Instance?.GetController(npcEntity.Id);
+                if (controller != null)
+                {
+                    speaker = controller.gameObject;
+                }
             }
 
             // 触发说话事件
@@ -44,7 +53,7 @@ namespace FarmGame.LLMCore.Brain
 
             // 获取 NPC 名字并记录行为到短期记忆
             string speakerName = "Unknown";
-            if (context.Extra.TryGetValue("NPCEntity", out var entityObj) && entityObj is NPCEntity npc)
+            if (context.Extra.TryGetValue("NPCEntity", out var npcObj) && npcObj is NPCEntity npc)
             {
                 speakerName = npc.Name;
                 npc.RecordMemory($"我说：{speakCmd.Content}");

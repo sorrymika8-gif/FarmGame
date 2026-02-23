@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
@@ -53,8 +54,31 @@ namespace FarmGame.GameLLM
                     return LLMResponse.Fail($"HTTP {webRequest.responseCode}: {webRequest.error}\nContext: {webRequest.downloadHandler.text}");
                 }
 
-                var responseJson = JObject.Parse(webRequest.downloadHandler.text);
-                var content = responseJson["choices"]?[0]?["message"]?["content"]?.ToString();
+                var rawResponse = webRequest.downloadHandler.text;
+                Debug.Log($"[DeepSeekProvider] Raw response: {rawResponse}");
+                
+                var responseJson = JObject.Parse(rawResponse);
+                
+                // DeepSeek-R1 (reasoner) 模型可能返回 reasoning_content 而非 content
+                // 优先获取 content，如果为空则尝试 reasoning_content
+                var message = responseJson["choices"]?[0]?["message"];
+                var content = message?["content"]?.ToString();
+                
+                // 如果 content 为空，尝试获取 reasoning_content（R1 模型特有）
+                if (string.IsNullOrEmpty(content))
+                {
+                    content = message?["reasoning_content"]?.ToString();
+                    Debug.LogWarning($"[DeepSeekProvider] content 为空，使用 reasoning_content");
+                }
+
+                // 过滤掉 DeepSeek-R1 的思考过程标签 <think>...</think>
+                content = RemoveThinkingTags(content);
+                
+                if (string.IsNullOrEmpty(content))
+                {
+                    Debug.LogError($"[DeepSeekProvider] 无法从响应中提取内容");
+                    return LLMResponse.Fail("Response content is empty");
+                }
                 
                 var response = LLMResponse.Ok(content);
                 response.Latency = Time.realtimeSinceStartup - startTime;
@@ -172,6 +196,29 @@ namespace FarmGame.GameLLM
                     yield return content;
                 }
             }
+        }
+
+        /// <summary>
+        /// 移除 DeepSeek-R1 模型的思考过程标签
+        /// 支持 <think>、<thinking>、【思考】等格式
+        /// </summary>
+        private static string RemoveThinkingTags(string content)
+        {
+            if (string.IsNullOrEmpty(content)) return content;
+
+            // 移除 <think>...</think> 标签及其内容
+            content = Regex.Replace(content, @"<think>[\s\S]*?</think>", "", RegexOptions.IgnoreCase);
+            
+            // 移除 <thinking>...</thinking> 标签及其内容
+            content = Regex.Replace(content, @"<thinking>[\s\S]*?</thinking>", "", RegexOptions.IgnoreCase);
+            
+            // 移除中文格式的思考标签 【思考】...【/思考】 或 【思考】...【思考结束】
+            content = Regex.Replace(content, @"【思考】[\s\S]*?【/?思考(结束)?】", "", RegexOptions.IgnoreCase);
+            
+            // 移除开头的 "首先" 类解释性文字直到第一个句号（可选，如果仍有问题可启用）
+            // content = Regex.Replace(content, @"^首先[^。]*。\s*", "");
+
+            return content.Trim();
         }
     }
 }

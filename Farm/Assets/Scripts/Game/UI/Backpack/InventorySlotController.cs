@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using FarmGame.Item;
 using FarmGame.GameConfig;
+using FarmGame.GameConfig.Generated;
 
 namespace FarmGame.UI
 {
@@ -146,9 +147,9 @@ namespace FarmGame.UI
                 return;
             }
 
-            // 获取物品配置
-            var config = item.Config;
-            if (config == null)
+            // 获取物品配置（支持从多个配置表查询）
+            var configInfo = item.ConfigInfo;
+            if (!configInfo.IsValid)
             {
                 Debug.LogWarning($"[InventorySlot] Item config not found for configId: {item.ConfigId}");
                 ClearSlot();
@@ -159,16 +160,16 @@ namespace FarmGame.UI
             SetOccupiedState(true);
 
             // 更新图标
-            UpdateIcon(config);
+            UpdateIcon(configInfo);
 
             // 更新数量
             UpdateCount(item.Count);
 
             // 更新名称
-            UpdateName(config.name);
+            UpdateName(configInfo.Name);
 
             // 更新描述
-            UpdateDescription(config.description);
+            UpdateDescription(configInfo.Description);
 
             // 重置背景色
             ResetBackground();
@@ -273,16 +274,16 @@ namespace FarmGame.UI
         /// <summary>
         /// 更新图标
         /// </summary>
-        /// <param name="config">物品配置</param>
-        private void UpdateIcon(ItemConfig config)
+        /// <param name="configInfo">物品配置信息</param>
+        private void UpdateIcon(ItemConfigInfo configInfo)
         {
             if (mIconImage == null)
                 return;
 
             // 根据配置加载图标资源
-            if (!string.IsNullOrEmpty(config.iconPath))
+            if (!string.IsNullOrEmpty(configInfo.Icon))
             {
-                var sprite = Resources.Load<Sprite>(config.iconPath);
+                var sprite = Resources.Load<Sprite>(configInfo.Icon);
                 if (sprite != null)
                 {
                     mIconImage.sprite = sprite;
@@ -291,13 +292,13 @@ namespace FarmGame.UI
                 else
                 {
                     // 图标资源不存在，使用类型颜色代替
-                    SetPlaceholderIcon(config);
+                    SetPlaceholderIcon(configInfo);
                 }
             }
             else
             {
                 // 没有配置图标路径，使用类型颜色代替
-                SetPlaceholderIcon(config);
+                SetPlaceholderIcon(configInfo);
             }
 
             mIconImage.gameObject.SetActive(true);
@@ -306,13 +307,13 @@ namespace FarmGame.UI
         /// <summary>
         /// 设置占位图标（根据物品类型显示不同颜色）
         /// </summary>
-        /// <param name="config">物品配置</param>
-        private void SetPlaceholderIcon(ItemConfig config)
+        /// <param name="configInfo">物品配置信息</param>
+        private void SetPlaceholderIcon(ItemConfigInfo configInfo)
         {
             if (mIconImage == null) return;
 
             // 根据物品类型设置不同颜色
-            Color typeColor = config.ItemType switch
+            Color typeColor = (ItemType)configInfo.ItemType switch
             {
                 ItemType.Seed => new Color(0.4f, 0.8f, 0.4f, 1f),    // 绿色 - 种子
                 ItemType.Product => new Color(1f, 0.6f, 0.2f, 1f),   // 橙色 - 农产品

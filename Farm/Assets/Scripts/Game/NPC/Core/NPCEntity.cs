@@ -126,18 +126,40 @@ namespace FarmGame.Game.NPC
 
             // 3. 触发大脑思考
             var brain = NPCManager.Instance.SharedBrain;
-            if (brain != null)
+            if (brain == null)
             {
-               var result = await brain.DecideAsync(context);
-               
-               if (result.Success && result.Commands != null && result.Commands.Count > 0)
-               {
-                   foreach (var cmd in result.Commands)
-                   {
-                        var executor = brain.ExecutorRegistry.Get(cmd.CommandType);
-                        executor?.Execute(cmd, context);
-                   }
-               }
+                Debug.LogError($"[NPCEntity] SharedBrain is null!");
+                return;
+            }
+            
+            Debug.Log($"[NPCEntity] {Name} 开始调用 LLM 进行决策...");
+            var result = await brain.DecideAsync(context);
+            
+            if (!result.Success)
+            {
+                Debug.LogError($"[NPCEntity] LLM 决策失败: {result.ErrorMessage}");
+                return;
+            }
+            
+            Debug.Log($"[NPCEntity] LLM 原始输出: {result.RawOutput}");
+            
+            if (result.Commands == null || result.Commands.Count == 0)
+            {
+                Debug.LogWarning($"[NPCEntity] LLM 返回成功但没有解析到任何指令");
+                return;
+            }
+            
+            Debug.Log($"[NPCEntity] 解析到 {result.Commands.Count} 条指令");
+            foreach (var cmd in result.Commands)
+            {
+                Debug.Log($"[NPCEntity] 执行指令: {cmd.CommandType}");
+                var executor = brain.ExecutorRegistry.Get(cmd.CommandType);
+                if (executor == null)
+                {
+                    Debug.LogWarning($"[NPCEntity] 未找到指令执行器: {cmd.CommandType}");
+                    continue;
+                }
+                executor.Execute(cmd, context);
             }
         }
 

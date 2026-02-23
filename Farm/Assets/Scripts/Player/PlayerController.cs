@@ -17,8 +17,6 @@ namespace FarmGame.Player
         private PlayerData mData;
         private bool mIsInitialized;
         private Movable mMovable;
-        private Animator mAnimator;
-        private Transform mVisualRoot;
 
         #endregion
 
@@ -52,48 +50,6 @@ namespace FarmGame.Player
 
             // 获取Movable组件
             mMovable = GetComponent<Movable>();
-            
-            // 智能查找Animator：优先查找子节点上的有效Animator
-            // 即使Root上有Animator，如果子节点也有，我们通常认为子节点的是实际的视觉表现
-            Animator childAnimator = null;
-            foreach (Transform child in transform)
-            {
-                var anim = child.GetComponentInChildren<Animator>();
-                if (anim != null)
-                {
-                    childAnimator = anim;
-                    break;
-                }
-            }
-
-            if (childAnimator != null)
-            {
-                mAnimator = childAnimator;
-            }
-            else
-            {
-                mAnimator = GetComponent<Animator>();
-            }
-
-            // 查找视觉根节点（通常是第一个不包含Shadow的子节点，或者是Animator所在的节点）
-            if (mAnimator != null && mAnimator.transform != transform)
-            {
-                // 如果Animator在子节点上，那它就是视觉根节点
-                mVisualRoot = mAnimator.transform;
-            }
-            else
-            {
-                // 否则遍历查找第一个非阴影的子节点
-                for (int i = 0; i < transform.childCount; i++)
-                {
-                    Transform child = transform.GetChild(i);
-                    if (!child.name.Contains("Shadow") && !child.name.Contains("shadow"))
-                    {
-                        mVisualRoot = child;
-                        break;
-                    }
-                }
-            }
 
             // 创建玩家数据
             mData = new PlayerData();
@@ -106,6 +62,13 @@ namespace FarmGame.Player
 
             // 同步初始位置
             transform.position = mData.Position;
+
+            // 同步背包到输入处理器
+            var inputHandler = GetComponent<PlayerInputHandler>();
+            if (inputHandler != null)
+            {
+                inputHandler.Inventory = mData.Inventory;
+            }
 
             // 订阅移动事件（预留给动画系统）
             SubscribeMovementEvents();
@@ -142,46 +105,28 @@ namespace FarmGame.Player
         }
 
         /// <summary>
-        /// 开始移动时调用（预留给动画系统）
+        /// 开始移动时调用（预留给未来扩展）
         /// </summary>
         protected virtual void HandleMoveStart()
         {
-            if (mAnimator != null)
-            {
-                mAnimator.SetBool("isRun", true);
-            }
+            // 预留给未来扩展
         }
 
         /// <summary>
-        /// 停止移动时调用（预留给动画系统）
+        /// 停止移动时调用（预留给未来扩展）
         /// </summary>
         protected virtual void HandleMoveStop()
         {
-            if (mAnimator != null)
-            {
-                mAnimator.SetBool("isRun", false);
-            }
-
             // 同步最终位置到数据
             mData.Position = transform.position;
         }
 
         /// <summary>
-        /// 移动方向改变时调用（预留给动画系统）
+        /// 移动方向改变时调用（预留给未来扩展）
         /// </summary>
         /// <param name="direction">新的移动方向</param>
         protected virtual void HandleDirectionChanged(Vector2 direction)
         {
-            // 通过缩放翻转角色朝向
-            if (mVisualRoot != null && direction.x != 0)
-            {
-                Vector3 scale = mVisualRoot.localScale;
-                // 确保使用绝对值作为基准，避免多次乘以-1导致的错误
-                float absScaleX = Mathf.Abs(scale.x); 
-                scale.x = direction.x < 0 ? -absScaleX : absScaleX;
-                mVisualRoot.localScale = scale;
-            }
-
             // 同步朝向到数据
             mData.FacingDirection = new Vector3(direction.x, direction.y, 0);
         }

@@ -42,6 +42,7 @@ namespace FarmGame.GameConfig
             { "double[]", "double[]" },
             { "bool[]", "bool[]" },
             { "string[]", "string[]" },
+            { "json", "Dictionary<string, object>" },
         };
 
         /// <summary>
@@ -61,6 +62,7 @@ namespace FarmGame.GameConfig
             { "double[]", "Array.Empty<double>()" },
             { "bool[]", "Array.Empty<bool>()" },
             { "string[]", "Array.Empty<string>()" },
+            { "json", "new Dictionary<string, object>()" },
         };
 
         /// <summary>
@@ -126,6 +128,7 @@ namespace FarmGame.GameConfig
                 "double[]" => typeof(double[]),
                 "bool[]" => typeof(bool[]),
                 "string[]" => typeof(string[]),
+                "json" => typeof(Dictionary<string, object>),
                 _ => throw new NotSupportedException($"不支持的类型: {excelType}")
             };
         }

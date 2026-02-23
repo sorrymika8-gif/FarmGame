@@ -88,7 +88,13 @@ namespace FarmGame.Core
         /// <returns>打开的面板实例，失败返回 null</returns>
         public T OpenPanel<T>(string path, IUIData data = null, UILevel level = UILevel.Common) where T : UIPanel
         {
-            if (!ValidateInitialized()) return null;
+            Debug.Log($"[UIManager] OpenPanel<{typeof(T).Name}> with path: {path}");
+            
+            if (!ValidateInitialized())
+            {
+                Debug.LogError("[UIManager] OpenPanel failed: not initialized");
+                return null;
+            }
 
             // 直接使用 Resources.Load 加载 Prefab，绕过 ResKit
             var prefab = Resources.Load<GameObject>(path);
@@ -126,13 +132,22 @@ namespace FarmGame.Core
             // 设置名字
             go.name = typeof(T).Name;
 
+            // 分配 Loader（重要：确保 CloseSelf 能正确工作）
+            var panelInterface = panel as IPanel;
+            var loader = UIKit.Config.PanelLoaderPool.AllocateLoader();
+            panelInterface.Loader = loader;
+            Debug.Log($"[UIManager] Loader allocated: {loader != null}, panelInterface.Loader: {panelInterface.Loader != null}");
+
             // 创建 PanelInfo 并注册到 UIKit Table
             panel.Info = PanelInfo.Allocate(go.name, level, data, typeof(T), null);
             UIKit.Table.Add(panel);
+            Debug.Log($"[UIManager] Panel added to UIKit.Table, Info: {panel.Info != null}");
 
             // 初始化并打开
             panel.Init(data);
             panel.Open(data);
+            
+            Debug.Log($"[UIManager] OpenPanel<{typeof(T).Name}> completed successfully");
 
             return panel;
         }

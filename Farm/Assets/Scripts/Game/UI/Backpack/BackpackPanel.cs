@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using QFramework;
 using FarmGame.Item;
 using FarmGame.GameConfig;
+using FarmGame.GameConfig.Generated;
+using FarmGame.Player;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -383,7 +385,7 @@ namespace FarmGame.UI
                 UpdateDetailPanel(item);
                 SetOperationButtonsEnabled(true);
 
-                Debug.Log($"[BackpackPanel] Selected item: {item.Config?.name ?? "Unknown"} x{item.Count}");
+                Debug.Log($"[BackpackPanel] Selected item: {item.ConfigInfo.Name ?? "Unknown"} x{item.Count}");
             }
             else
             {
@@ -403,8 +405,8 @@ namespace FarmGame.UI
         {
             if (item == null || mDetailPanel == null) return;
 
-            var config = item.Config;
-            if (config == null) return;
+            var configInfo = item.ConfigInfo;
+            if (!configInfo.IsValid) return;
 
             // 显示详情面板
             mDetailPanel.SetActive(true);
@@ -412,9 +414,9 @@ namespace FarmGame.UI
             // 更新图标
             if (mDetailIcon != null)
             {
-                if (!string.IsNullOrEmpty(config.iconPath))
+                if (!string.IsNullOrEmpty(configInfo.Icon))
                 {
-                    var sprite = Resources.Load<Sprite>(config.iconPath);
+                    var sprite = Resources.Load<Sprite>(configInfo.Icon);
                     if (sprite != null)
                     {
                         mDetailIcon.sprite = sprite;
@@ -422,27 +424,27 @@ namespace FarmGame.UI
                     }
                     else
                     {
-                        SetDetailPlaceholderIcon(config);
+                        SetDetailPlaceholderIcon(configInfo);
                     }
                 }
                 else
                 {
-                    SetDetailPlaceholderIcon(config);
+                    SetDetailPlaceholderIcon(configInfo);
                 }
             }
 
             // 更新名称
             if (mDetailNameText != null)
             {
-                mDetailNameText.text = config.name;
+                mDetailNameText.text = configInfo.Name;
             }
 
             // 更新描述
             if (mDetailDescText != null)
             {
-                mDetailDescText.text = string.IsNullOrEmpty(config.description) 
+                mDetailDescText.text = string.IsNullOrEmpty(configInfo.Description) 
                     ? "暂无描述" 
-                    : config.description;
+                    : configInfo.Description;
             }
 
             // 更新数量
@@ -454,7 +456,7 @@ namespace FarmGame.UI
             // 更新类型
             if (mDetailTypeText != null)
             {
-                string typeStr = config.ItemType switch
+                string typeStr = (ItemType)configInfo.ItemType switch
                 {
                     ItemType.Seed => "种子",
                     ItemType.Product => "农产品",
@@ -467,7 +469,7 @@ namespace FarmGame.UI
             // 更新使用按钮文本
             if (mUseButtonText != null)
             {
-                string useText = config.ItemType switch
+                string useText = (ItemType)configInfo.ItemType switch
                 {
                     ItemType.Seed => "种植",
                     ItemType.Product => "使用",
@@ -481,11 +483,11 @@ namespace FarmGame.UI
         /// <summary>
         /// 设置详情面板的占位图标
         /// </summary>
-        private void SetDetailPlaceholderIcon(ItemConfig config)
+        private void SetDetailPlaceholderIcon(ItemConfigInfo configInfo)
         {
             if (mDetailIcon == null) return;
 
-            Color typeColor = config.ItemType switch
+            Color typeColor = (ItemType)configInfo.ItemType switch
             {
                 ItemType.Seed => new Color(0.4f, 0.8f, 0.4f, 1f),
                 ItemType.Product => new Color(1f, 0.6f, 0.2f, 1f),
@@ -554,31 +556,31 @@ namespace FarmGame.UI
             var item = mSelectedSlot.GetCurrentItem();
             if (item == null) return;
 
-            var config = item.Config;
-            if (config == null) return;
+            var configInfo = item.ConfigInfo;
+            if (!configInfo.IsValid) return;
 
-            Debug.Log($"[BackpackPanel] Using item: {config.name}");
+            Debug.Log($"[BackpackPanel] Using item: {configInfo.Name}");
 
             // 根据物品类型执行不同操作
-            switch (config.ItemType)
+            switch ((ItemType)configInfo.ItemType)
             {
                 case ItemType.Seed:
                     // 种子类型 - 可以触发种植模式
-                    OnUseSeed(item, config);
+                    OnUseSeed(item, configInfo);
                     break;
 
                 case ItemType.Product:
                     // 农产品类型 - 可以食用或出售
-                    OnUseProduct(item, config);
+                    OnUseProduct(item, configInfo);
                     break;
 
                 case ItemType.Tool:
                     // 工具类型 - 装备工具
-                    OnUseTool(item, config);
+                    OnUseTool(item, configInfo);
                     break;
 
                 default:
-                    Debug.Log($"[BackpackPanel] Unknown item type: {config.type}");
+                    Debug.Log($"[BackpackPanel] Unknown item type: {configInfo.ItemType}");
                     break;
             }
         }
@@ -597,7 +599,7 @@ namespace FarmGame.UI
             var item = mSelectedSlot.GetCurrentItem();
             if (item == null || mData.Inventory == null) return;
 
-            Debug.Log($"[BackpackPanel] Discarding item: {item.Config?.name ?? "Unknown"}");
+            Debug.Log($"[BackpackPanel] Discarding item: {item.ConfigInfo.Name ?? "Unknown"}");
 
             // 移除一个物品
             bool success = mData.Inventory.RemoveItem(item.ConfigId, 1);
@@ -612,13 +614,13 @@ namespace FarmGame.UI
         /// <summary>
         /// 使用种子
         /// </summary>
-        private void OnUseSeed(ItemEntity item, ItemConfig config)
+        private void OnUseSeed(ItemEntity item, ItemConfigInfo configInfo)
         {
-            Debug.Log($"[BackpackPanel] Planting seed: {config.name}, PlantConfigId: {config.function_args}");
+            Debug.Log($"[BackpackPanel] Planting seed: {configInfo.Name}, SeedConfigId: {configInfo.ClassId}");
 
             // TODO: 触发种植模式
-            // 可以发送事件或调用GameManager进入种植模式
-            // 示例: GameManager.Instance.EnterPlantMode(config.function_args);
+            // 种子物品的 class_id 与 SeedConfig.class_id 相同
+            // 示例: GameManager.Instance.EnterPlantMode(configInfo.ClassId);
 
             // 关闭背包界面
             CloseSelf();
@@ -627,16 +629,24 @@ namespace FarmGame.UI
         /// <summary>
         /// 使用农产品
         /// </summary>
-        private void OnUseProduct(ItemEntity item, ItemConfig config)
+        private void OnUseProduct(ItemEntity item, ItemConfigInfo configInfo)
         {
-            Debug.Log($"[BackpackPanel] Using product: {config.name}");
+            Debug.Log($"[BackpackPanel] Using product: {configInfo.Name}");
 
-            // TODO: 实现农产品使用逻辑
-            // 例如恢复体力、出售等
-
-            // 消耗一个物品
-            if (mData.Inventory != null)
+            // 获取玩家数据
+            var playerData = PlayerManager.Instance?.Player?.Data;
+            if (playerData == null)
             {
+                Debug.LogWarning("[BackpackPanel] 无法获取玩家数据");
+                return;
+            }
+
+            // 通过注册表执行使用逻辑
+            bool success = ItemUseRegistry.TryUse(playerData, item);
+            
+            if (success && mData.Inventory != null)
+            {
+                // 使用成功，消耗一个物品
                 mData.Inventory.RemoveItem(item.ConfigId, 1);
                 RefreshInventory();
             }
@@ -645,12 +655,20 @@ namespace FarmGame.UI
         /// <summary>
         /// 使用工具
         /// </summary>
-        private void OnUseTool(ItemEntity item, ItemConfig config)
+        private void OnUseTool(ItemEntity item, ItemConfigInfo configInfo)
         {
-            Debug.Log($"[BackpackPanel] Equipping tool: {config.name}");
+            Debug.Log($"[BackpackPanel] Equipping tool: {configInfo.Name}");
 
-            // TODO: 实现工具装备逻辑
-            // 例如设置当前装备的工具
+            // 获取玩家数据
+            var playerData = PlayerManager.Instance?.Player?.Data;
+            if (playerData == null)
+            {
+                Debug.LogWarning("[BackpackPanel] 无法获取玩家数据");
+                return;
+            }
+
+            // 通过注册表执行装备逻辑
+            ItemUseRegistry.TryUse(playerData, item);
 
             // 关闭背包界面
             CloseSelf();

@@ -8,36 +8,96 @@ using UnityEngine;
 
 namespace FarmGame.Farm
 {
+    /// <summary>
+    /// 农场管理器
+    /// 负责农场业务逻辑：耕地、种植、收获、生长循环
+    /// </summary>
     public class FarmManager : MonoSingleton<FarmManager>
     {
-        // Managing multiple farm maps (e.g., "Main", "NPC_Home")
+        #region 常量
+
+        /// <summary>
+        /// 生长周期配置键名
+        /// </summary>
+        private const string GROWTH_TICK_INTERVAL_KEY = "growth_tick_interval";
+
+        /// <summary>
+        /// 默认生长周期间隔（毫秒）
+        /// </summary>
+        private const int DEFAULT_GROWTH_TICK_INTERVAL = 1000;
+
+        /// <summary>
+        /// 默认农田宽度（格）
+        /// </summary>
+        private const int DEFAULT_FARM_WIDTH = 5;
+
+        /// <summary>
+        /// 默认农田高度（格）
+        /// </summary>
+        private const int DEFAULT_FARM_HEIGHT = 4;
+
+        /// <summary>
+        /// 默认农田左下角原点（网格）
+        /// </summary>
+        private static readonly Vector2Int DEFAULT_FARM_ORIGIN = Vector2Int.zero;
+
+        #endregion
+
+        #region 私有字段
+
+        /// <summary>
+        /// 管理多个农场地图
+        /// </summary>
         private Dictionary<string, FarmMapData> mMaps = new Dictionary<string, FarmMapData>();
-        
+
+        /// <summary>
+        /// 生长周期间隔（毫秒）
+        /// </summary>
+        private int mGrowthTickInterval = DEFAULT_GROWTH_TICK_INTERVAL;
+
+        #endregion
+
+        #region 公共属性
+
+        /// <summary>
+        /// 当前地图
+        /// </summary>
         public FarmMapData CurrentMap { get; private set; }
 
+        /// <summary>
+        /// 是否已初始化
+        /// </summary>
         public bool IsInitialized { get; private set; }
 
+        #endregion
+
+        #region 公共方法
+
+        /// <summary>
+        /// 初始化农场管理器
+        /// </summary>
         public void Initialize()
         {
-            // Default Map initialization
+            // 读取生长周期配置
+            mGrowthTickInterval = GameSettingsHelper.GetInt(GROWTH_TICK_INTERVAL_KEY, DEFAULT_GROWTH_TICK_INTERVAL);
+            Debug.Log($"[FarmManager] 生长周期间隔: {mGrowthTickInterval}ms");
+
+            // 默认地图初始化
             var defaultMap = new FarmMapData("Main");
-            
-            try 
+
+            int soilId = 1;
+            for (int y = 0; y < DEFAULT_FARM_HEIGHT; y++)
             {
-                var soilMap = ConfigManager.Instance.GetMap<int, SoilConfig>();
-                if (soilMap != null)
+                for (int x = 0; x < DEFAULT_FARM_WIDTH; x++)
                 {
-                    foreach (var soil in soilMap.GetAll())
-                    {
-                        var pos = new Vector2Int(Mathf.RoundToInt(soil.pos_x), Mathf.RoundToInt(soil.pos_y));
-                        var soilEntity = new SoilEntity(soil.id, pos.x, pos.y);
-                        defaultMap.AddSoil(soilEntity);
-                    }
+                    int gridX = DEFAULT_FARM_ORIGIN.x + x;
+                    int gridY = DEFAULT_FARM_ORIGIN.y + y;
+                    var soilEntity = new SoilEntity(soilId, gridX, gridY);
+                    // 默认已耕地，可直接种植
+                    soilEntity.IsTilled = true;
+                    defaultMap.AddSoil(soilEntity);
+                    soilId++;
                 }
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogWarning($"[FarmManager] Failed to load soil config: {e.Message}");
             }
 
             RegisterMap(defaultMap);
@@ -77,11 +137,6 @@ namespace FarmGame.Farm
             if (soil == null) return false;
             
             // Logic Checks on Entity State
-            if (!soil.IsTilled) 
-            {
-                Debug.LogWarning($"[FarmLogic] Cannot plant at {soil.GridPos}: Land is not tilled.");
-                return false;
-            }
             if (soil.HasPlant) 
             {
                 Debug.LogWarning($"[FarmLogic] Cannot plant at {soil.GridPos}: Already has plant.");
@@ -89,8 +144,8 @@ namespace FarmGame.Farm
             }
             
             // Check Item Config (Data Lookup)
-            var itemConfig = ConfigManager.Instance.GetConfig<ItemConfig>(itemId);
-            if (itemConfig == null || itemConfig.type != 1) // 1 = Seed
+            var configInfo = ItemConfigHelper.GetConfigInfo(itemId);
+            if (!configInfo.IsValid || configInfo.ItemType != (int)ItemType.Seed)
             {
                 Debug.LogWarning($"[FarmLogic] Item {itemId} is not a seed.");
                 return false;
@@ -104,7 +159,7 @@ namespace FarmGame.Farm
 
             // State Mutation
             soil.Plant = new PlantEntity(itemId);
-            Debug.Log($"[FarmLogic] Planted {itemConfig.name} at {soil.GridPos}.");
+            Debug.Log($"[FarmLogic] Planted {configInfo.Name} at {soil.GridPos}.");
             return true;
         }
 
@@ -140,15 +195,20 @@ namespace FarmGame.Farm
             return true;
         }
 
-        // --- Logic Loop ---
+        #endregion
 
+        #region 私有方法
+
+        /// <summary>
+        /// 生长循环
+        /// </summary>
         private async UniTaskVoid StartGrowthLoop()
         {
-            while (this != null) 
+            while (this != null)
             {
-                await UniTask.Delay(1000); 
-                
-                // Update all maps
+                await UniTask.Delay(mGrowthTickInterval);
+
+                // 更新所有地图
                 foreach (var map in mMaps.Values)
                 {
                     foreach (var soil in map.GetAllSoils())
@@ -169,5 +229,7 @@ namespace FarmGame.Farm
                 }
             }
         }
+
+        #endregion
     }
 }

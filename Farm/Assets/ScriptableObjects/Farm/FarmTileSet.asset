@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad073a980fbf4554ba4a26d9d6e25ef3, type: 3}
+  m_Name: FarmTileSet
+  m_EditorClassIdentifier: 
+  untilledTile: {fileID: 11400000, guid: 1699d7a1f3f0c0747bf7f17f1a853228, type: 2}
+  tilledTile: {fileID: 11400000, guid: 558122f4a1202d748b89b66df2aea697, type: 2}
+  highlightTile: {fileID: 11400000, guid: 71fbed922b07e974db356d4d3330ea58, type: 2}
+  plantTileConfigs:
+  - plantConfigId: 10000
+    plantName: "\u7267\u8349"
+    stageTiles:
+    - {fileID: 11400000, guid: 62a618a74f5f6144d904a95b572d9215, type: 2}
+    - {fileID: 11400000, guid: 996135238fa7286419eeb824a746c5b5, type: 2}

@@ -18,6 +18,10 @@ namespace FarmGame.Game
         private const string INITIAL_MAP = "init_map";
         private static readonly Vector3 INITIAL_SPAWN_POSITION = new Vector3(0, 0, 0);
 
+        // 初始物品配置（对应 seed.xlsx 中的 class_id）
+        private const int GRASS_SEED_CONFIG_ID = 1000;
+        private const int INITIAL_SEED_COUNT = 3;
+
         #endregion
 
         #region 私有字段
@@ -75,9 +79,13 @@ namespace FarmGame.Game
             FarmGame.Core.UIManager.Instance.OpenMainUIPanel();
             Debug.Log("[GameInitManager] MainUIPanel opened");
 
-            // 如果是新玩家，标记为非新玩家
+            // 如果是新玩家，发放初始物品并标记为非新玩家
             if (isNewPlayer)
             {
+                // 发放初始物品：3颗牧草种子
+                playerData.Inventory.AddItem(GRASS_SEED_CONFIG_ID, INITIAL_SEED_COUNT);
+                Debug.Log($"[GameInitManager] Granted initial items: {INITIAL_SEED_COUNT} grass seeds (ConfigId: {GRASS_SEED_CONFIG_ID})");
+
                 playerData.IsNewPlayer = false;
                 Debug.Log("[GameInitManager] New player marked as initialized");
             }

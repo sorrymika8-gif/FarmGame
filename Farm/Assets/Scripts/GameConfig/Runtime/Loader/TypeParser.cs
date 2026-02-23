@@ -3,6 +3,7 @@
 // ==========================================================
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace FarmGame.GameConfig
@@ -47,6 +48,7 @@ namespace FarmGame.GameConfig
                 "double[]" => ParseDoubleArray(value),
                 "bool[]" => ParseBoolArray(value),
                 "string[]" => ParseStringArray(value),
+                "json" => ParseJson(value),
                 _ => throw new NotSupportedException($"不支持的类型: {excelType}")
             };
         }
@@ -70,6 +72,7 @@ namespace FarmGame.GameConfig
                 "double[]" => Array.Empty<double>(),
                 "bool[]" => Array.Empty<bool>(),
                 "string[]" => Array.Empty<string>(),
+                "json" => new Dictionary<string, object>(),
                 _ => null
             };
         }
@@ -189,6 +192,32 @@ namespace FarmGame.GameConfig
                 "" => false,
                 _ => throw new FormatException($"无法将 '{value}' 解析为 bool")
             };
+        }
+
+        #endregion
+
+        #region JSON类型解析
+
+        /// <summary>
+        /// 解析 JSON 字符串为 Dictionary
+        /// </summary>
+        public static Dictionary<string, object> ParseJson(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return new Dictionary<string, object>();
+            }
+
+            try
+            {
+                var result = MiniJSON.Deserialize(value) as Dictionary<string, object>;
+                return result ?? new Dictionary<string, object>();
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"[TypeParser] JSON 解析失败: '{value}', 错误: {ex.Message}");
+                return new Dictionary<string, object>();
+            }
         }
 
         #endregion
