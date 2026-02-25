@@ -2,7 +2,7 @@
 // 自动生成，请勿手动修改
 // 来源: item.xlsx
 // 描述: 道具配置表
-// 生成时间: 2026-02-23 02:47:02
+// 生成时间: 2026-02-25 22:23:12
 // ==========================================================
 
 using System;
@@ -36,5 +36,8 @@ namespace FarmGame.GameConfig.Generated
 
         /// <summary>使用参数</summary>
         public Dictionary<string, object> use_arg;
+
+        /// <summary>售价</summary>
+        public int sell_price;
     }
 }

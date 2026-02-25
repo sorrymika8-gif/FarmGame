@@ -37,6 +37,18 @@ namespace FarmGame.Game.NPC
         public float Fatigue { get; set; } = 0f;
         public string Emotion { get; set; } = "neutral";
         public string CurrentActivity { get; set; } = "idle";
+        
+        /// <summary>当前表情ID（用于立绘显示）</summary>
+        public string CurrentExpression { get; private set; } = "default";
+        
+        /// <summary>表情变更事件</summary>
+        public event Action<string, string> OnExpressionChanged;
+        
+        /// <summary>当前心情emoji（用于气泡对话显示）</summary>
+        public string CurrentMood { get; private set; } = "";
+        
+        /// <summary>心情变更事件</summary>
+        public event Action<string, string> OnMoodChanged;
         #endregion
 
         #region 物品
@@ -96,6 +108,42 @@ namespace FarmGame.Game.NPC
             {
                 foreach (var memory in initialMemories) permanent.Add(new Memory(memory));
             }
+        }
+
+        /// <summary>
+        /// 设置表情
+        /// </summary>
+        /// <param name="expression">表情ID</param>
+        public void SetExpression(string expression)
+        {
+            if (string.IsNullOrEmpty(expression)) return;
+            if (CurrentExpression == expression) return;
+            
+            string oldExpression = CurrentExpression;
+            CurrentExpression = expression;
+            OnExpressionChanged?.Invoke(oldExpression, expression);
+        }
+
+        /// <summary>
+        /// 设置心情（emoji）
+        /// </summary>
+        /// <param name="emoji">心情emoji</param>
+        public void SetMood(string emoji)
+        {
+            string oldMood = CurrentMood;
+            CurrentMood = emoji ?? "";
+            if (oldMood != CurrentMood)
+            {
+                OnMoodChanged?.Invoke(oldMood, CurrentMood);
+            }
+        }
+
+        /// <summary>
+        /// 清除心情
+        /// </summary>
+        public void ClearMood()
+        {
+            SetMood("");
         }
 
         /// <summary>

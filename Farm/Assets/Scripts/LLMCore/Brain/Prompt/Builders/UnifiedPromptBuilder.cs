@@ -55,6 +55,9 @@ namespace FarmGame.LLMCore.Brain
             // 6. 获取可用行为（可从 Extra 中指定特定行为列表，否则获取全部）
             string availableActions = GetAvailableActions(context);
 
+            // 7. 获取表情列表（用于替换 SetExpression 中的占位符）
+            string expressionList = ExpressionHintLoader.GetAllExpressionHints();
+
             // 替换所有占位符
             return template
                 .Replace("{{CHARACTER_PROFILE}}", characterProfile)
@@ -64,7 +67,8 @@ namespace FarmGame.LLMCore.Brain
                 .Replace("{{LONG_TERM_MEMORIES}}", longTermMemories)
                 .Replace("{{PERMANENT_MEMORIES}}", permanentMemories)
                 .Replace("{{TRIGGER_EVENT}}", triggerEvent)
-                .Replace("{{AVAILABLE_ACTIONS}}", availableActions);
+                .Replace("{{AVAILABLE_ACTIONS}}", availableActions)
+                .Replace("{{EXPRESSION_LIST}}", expressionList);
         }
 
         /// <summary>

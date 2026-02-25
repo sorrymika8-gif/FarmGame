@@ -59,8 +59,11 @@ namespace FarmGame.Game.NPC
             // 如果是在场景中手动放置的 NPC，需要在 Start 时注册
             // 如果是动态生成的，由 Factory 负责初始化
 
-            // 订阅说话事件（使用 LLMCore 中的 SpeakExecutor）
-            LLMCore.Brain.SpeakExecutor.OnSpeak += OnNPCSpeak;
+            // 订阅气泡说话事件
+            LLMCore.Brain.SpeakExecutor.OnBubbleSpeak += OnBubbleSpeak;
+            
+            // 订阅对话框说话事件
+            LLMCore.Brain.SpeakExecutor.OnDialogueSpeak += OnDialogueSpeak;
 
             // 初始化气泡
             InitializeBubble();
@@ -146,7 +149,8 @@ namespace FarmGame.Game.NPC
         private void OnDestroy()
         {
             // 取消订阅说话事件
-            LLMCore.Brain.SpeakExecutor.OnSpeak -= OnNPCSpeak;
+            LLMCore.Brain.SpeakExecutor.OnBubbleSpeak -= OnBubbleSpeak;
+            LLMCore.Brain.SpeakExecutor.OnDialogueSpeak -= OnDialogueSpeak;
 
             // 销毁气泡实例
             if (mBubbleInstance != null)
@@ -199,15 +203,28 @@ namespace FarmGame.Game.NPC
         }
 
         /// <summary>
-        /// 处理说话事件
+        /// 处理气泡说话事件（日常自言自语）
         /// </summary>
-        private void OnNPCSpeak(GameObject speaker, string content)
+        private void OnBubbleSpeak(GameObject speaker, string content, string mood)
         {
             // 检查是否是自己
             if (speaker != gameObject) return;
 
-            // 显示气泡
-            ShowBubble(content);
+            // 显示带心情的气泡
+            ShowBubbleWithMood(content, mood);
+        }
+
+        /// <summary>
+        /// 处理对话框说话事件（正式对话）
+        /// </summary>
+        private void OnDialogueSpeak(NPCEntity entity, string content)
+        {
+            // 检查是否是自己
+            if (mEntity == null || entity.Id != mEntity.Id) return;
+
+            // 对话框模式下，内容由 DialogueUIPanel 订阅事件来显示
+            // 这里不需要做额外处理，只记录日志
+            Debug.Log($"[NPCController] {mEntity.Name} 在对话框中说: {content}");
         }
 
         /// <summary>
@@ -217,13 +234,24 @@ namespace FarmGame.Game.NPC
         /// <param name="duration">显示时长，-1使用默认值</param>
         public void ShowBubble(string content, float duration = -1f)
         {
+            ShowBubbleWithMood(content, null, duration);
+        }
+
+        /// <summary>
+        /// 显示带心情emoji的气泡
+        /// </summary>
+        /// <param name="content">显示内容</param>
+        /// <param name="mood">心情emoji</param>
+        /// <param name="duration">显示时长，-1使用默认值</param>
+        public void ShowBubbleWithMood(string content, string mood, float duration = -1f)
+        {
             if (mBubbleInstance == null)
             {
                 Debug.LogWarning($"[NPCController] {gameObject.name} 气泡实例未初始化");
                 return;
             }
 
-            mBubbleInstance.Show(content, duration);
+            mBubbleInstance.ShowWithMood(content, mood, duration);
         }
 
         /// <summary>

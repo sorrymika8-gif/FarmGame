@@ -30,7 +30,9 @@ namespace FarmGame.LLMCore.Brain
             { CommandTypes.Move, "Move.md" },
             { CommandTypes.Attack, "Attack.md" },
             { CommandTypes.SetState, "SetState.md" },
-            { CommandTypes.MemoryOperation, "MemoryOperation.md" }
+            { CommandTypes.MemoryOperation, "MemoryOperation.md" },
+            { CommandTypes.SetExpression, "SetExpression.md" },
+            { CommandTypes.SetMood, "SetMood.md" }
         };
 
         /// <summary>

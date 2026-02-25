@@ -9,6 +9,7 @@ using FarmGame.GameConfig;
 using FarmGame.Game.NPC;
 using FarmGame.Farm;
 using FarmGame.Item;
+using FarmGame.Shop;
 using FarmGame.Core.LLMDescription;
 using Cysharp.Threading.Tasks;
 
@@ -92,11 +93,15 @@ namespace FarmGame.Core
             ItemManager.Instance.Initialize();
             Debug.Log("[BootManager] ItemManager initialized");
 
-            // 9. 初始化农场管理器
+            // 9. 初始化商店管理器
+            ShopManager.Instance.Initialize();
+            Debug.Log("[BootManager] ShopManager initialized");
+
+            // 10. 初始化农场管理器
             FarmManager.Instance.Initialize();
             Debug.Log("[BootManager] FarmManager initialized");
 
-            // 10. 在此处添加其他管理器的初始化...
+            // 11. 在此处添加其他管理器的初始化...
 
             mIsInitialized = true;
             Debug.Log("[BootManager] All managers initialized successfully");

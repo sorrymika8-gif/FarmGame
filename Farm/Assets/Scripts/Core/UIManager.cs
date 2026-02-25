@@ -3,6 +3,7 @@ using QFramework;
 using FarmGame.UI;
 using FarmGame.Item;
 using FarmGame.Game.NPC;
+using FarmGame.Shop;
 
 namespace FarmGame.Core
 {
@@ -366,6 +367,55 @@ namespace FarmGame.Core
         public DialogueUIPanel GetDialoguePanel()
         {
             return GetPanel<DialogueUIPanel>();
+        }
+
+        #endregion
+
+        #region 商店面板专用方法
+
+        /// <summary>
+        /// 检查商店面板是否已打开
+        /// </summary>
+        /// <returns>是否已打开</returns>
+        public bool IsShopPanelOpen()
+        {
+            return GetPanel<ShopPanel>() != null;
+        }
+
+        /// <summary>
+        /// 打开商店面板
+        /// </summary>
+        /// <param name="shopType">商店类型</param>
+        /// <param name="inventory">玩家背包组件（可选）</param>
+        /// <returns>打开的商店面板实例</returns>
+        public ShopPanel OpenShopPanel(ShopType shopType, InventoryComponent inventory = null)
+        {
+            if (!ValidateInitialized()) return null;
+
+            var data = new ShopPanelData()
+            {
+                ShopType = shopType,
+                PlayerInventory = inventory
+            };
+
+            return OpenPanel<ShopPanel>("UI/ShopUI/ShopPanel", data);
+        }
+
+        /// <summary>
+        /// 关闭商店面板
+        /// </summary>
+        public void CloseShopPanel()
+        {
+            ClosePanel<ShopPanel>();
+        }
+
+        /// <summary>
+        /// 获取已打开的商店面板
+        /// </summary>
+        /// <returns>商店面板实例</returns>
+        public ShopPanel GetShopPanel()
+        {
+            return GetPanel<ShopPanel>();
         }
 
         #endregion

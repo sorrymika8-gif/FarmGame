@@ -93,6 +93,20 @@ namespace FarmGame.Item
             if (mItems.TryGetValue(configId, out var item)) return item;
             return null;
         }
+
+        /// <summary>
+        /// 获取指定物品的数量
+        /// </summary>
+        /// <param name="configId">物品配置ID</param>
+        /// <returns>物品数量，不存在则返回0</returns>
+        public int GetItemCount(int configId)
+        {
+            if (mItems.TryGetValue(configId, out var item))
+            {
+                return item.Count;
+            }
+            return 0;
+        }
         
         public IEnumerable<ItemEntity> GetAllItems() => mItems.Values;
     }

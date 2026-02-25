@@ -27,6 +27,8 @@ namespace FarmGame.LLMCore.Brain
             brain.RegisterCommandExecutor(new AttackExecutor());
             brain.RegisterCommandExecutor(new SetStateExecutor());
             brain.RegisterCommandExecutor(new MemoryOperationExecutor());
+            brain.RegisterCommandExecutor(new SetExpressionExecutor());
+            brain.RegisterCommandExecutor(new SetMoodExecutor());
 
             return brain;
         }
