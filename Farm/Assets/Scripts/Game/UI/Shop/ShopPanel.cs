@@ -6,6 +6,7 @@ using FarmGame.Item;
 using FarmGame.Player;
 using FarmGame.GameConfig;
 using FarmGame.GameConfig.Generated;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace FarmGame.UI
@@ -139,6 +140,17 @@ namespace FarmGame.UI
 
         #endregion
 
+        #region UI组件 - 适配相关
+
+        [Header("适配相关")]
+        [SerializeField]
+        private RectTransform mMainPanel; // 主面板RectTransform
+
+        [SerializeField]
+        private GridLayoutGroup mGridLayout; // 格子容器GridLayoutGroup
+
+        #endregion
+
         #region 私有字段
 
         private ShopPanelData mData;
@@ -156,6 +168,14 @@ namespace FarmGame.UI
         private Color mTabActiveColor = new Color(1f, 0.9f, 0.6f, 1f);
         private Color mTabInactiveColor = new Color(0.8f, 0.8f, 0.8f, 1f);
 
+        // 适配参数
+        private const float MIN_PANEL_WIDTH = 600f;
+        private const float MAX_PANEL_WIDTH = 1200f;
+        private const float MIN_PANEL_HEIGHT = 400f;
+        private const float MAX_PANEL_HEIGHT = 800f;
+        private const float PANEL_WIDTH_RATIO = 0.85f;  // 面板占屏幕宽度比例
+        private const float PANEL_HEIGHT_RATIO = 0.80f; // 面板占屏幕高度比例
+
         #endregion
 
         #region UIPanel生命周期
@@ -166,6 +186,12 @@ namespace FarmGame.UI
         protected override void OnInit(IUIData uiData = null)
         {
             mData = uiData as ShopPanelData ?? new ShopPanelData();
+
+            // 自动获取适配相关组件
+            AutoFindAdaptComponents();
+
+            // 应用屏幕适配
+            ApplyScreenAdaptation();
 
             // 初始化UI组件
             InitializeUIComponents();
@@ -267,15 +293,282 @@ namespace FarmGame.UI
         }
 
         /// <summary>
-        /// 初始化详情面板
+        /// 自动查找适配相关的组件（如果未在Inspector中指定）
+        /// </summary>
+        private void AutoFindAdaptComponents()
+        {
+            // 查找MainPanel（主面板）
+            if (mMainPanel == null)
+            {
+                var mainPanelObj = transform.Find("MainPanel");
+                if (mainPanelObj != null)
+                {
+                    mMainPanel = mainPanelObj.GetComponent<RectTransform>();
+                }
+            }
+
+            // 查找GridLayoutGroup（格子容器）
+            if (mGridLayout == null && mSlotContainer != null)
+            {
+                mGridLayout = mSlotContainer.GetComponent<GridLayoutGroup>();
+            }
+
+            // 修复ScrollView缺失的组件
+            FixScrollViewComponents();
+        }
+
+        /// <summary>
+        /// 修复ScrollView缺失的组件（ContentSizeFitter, Mask, Viewport）
+        /// </summary>
+        private void FixScrollViewComponents()
+        {
+            if (mScrollRect == null)
+            {
+                Debug.LogWarning("[ShopPanel] ScrollRect为空，无法修复ScrollView组件");
+                return;
+            }
+
+            var scrollViewObj = mScrollRect.gameObject;
+
+            // 1. 修复Mask组件 - 确保内容被正确裁剪
+            var mask = scrollViewObj.GetComponent<Mask>();
+            var rectMask2D = scrollViewObj.GetComponent<RectMask2D>();
+            if (mask == null && rectMask2D == null)
+            {
+                // 优先使用RectMask2D，性能更好
+                rectMask2D = scrollViewObj.AddComponent<RectMask2D>();
+                Debug.Log("[ShopPanel] 已添加RectMask2D组件到ScrollView");
+            }
+
+            // 2. 修复Content的ContentSizeFitter - 确保Content高度能自动调整
+            if (mSlotContainer != null)
+            {
+                var contentSizeFitter = mSlotContainer.GetComponent<ContentSizeFitter>();
+                if (contentSizeFitter == null)
+                {
+                    contentSizeFitter = mSlotContainer.gameObject.AddComponent<ContentSizeFitter>();
+                    contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+                    contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                    Debug.Log("[ShopPanel] 已添加ContentSizeFitter组件到Content");
+                }
+
+                // 确保Content的RectTransform设置正确
+                var contentRect = mSlotContainer.GetComponent<RectTransform>();
+                if (contentRect != null)
+                {
+                    // 设置锚点为顶部拉伸
+                    contentRect.anchorMin = new Vector2(0, 1);
+                    contentRect.anchorMax = new Vector2(1, 1);
+                    contentRect.pivot = new Vector2(0, 1);
+                    contentRect.anchoredPosition = Vector2.zero;
+                }
+            }
+
+            // 3. 修复ScrollRect的Viewport引用
+            if (mScrollRect.viewport == null)
+            {
+                // 直接使用ScrollView自身的RectTransform作为viewport
+                mScrollRect.viewport = scrollViewObj.GetComponent<RectTransform>();
+                Debug.Log("[ShopPanel] 已设置ScrollRect.viewport引用");
+            }
+
+            Debug.Log("[ShopPanel] ScrollView组件修复完成");
+        }
+
+        /// <summary>
+        /// 应用屏幕适配
+        /// </summary>
+        private void ApplyScreenAdaptation()
+        {
+            if (mMainPanel == null)
+            {
+                Debug.LogWarning("[ShopPanel] MainPanel未找到，无法进行屏幕适配");
+                return;
+            }
+
+            // 获取Canvas的尺寸
+            var canvas = GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+
+            var canvasRect = canvas.GetComponent<RectTransform>();
+            float canvasWidth = canvasRect.rect.width;
+            float canvasHeight = canvasRect.rect.height;
+
+            // 如果Canvas尺寸无效，使用屏幕尺寸
+            if (canvasWidth <= 0 || canvasHeight <= 0)
+            {
+                canvasWidth = Screen.width;
+                canvasHeight = Screen.height;
+            }
+
+            // 计算合适的面板尺寸
+            float targetWidth = Mathf.Clamp(canvasWidth * PANEL_WIDTH_RATIO, MIN_PANEL_WIDTH, MAX_PANEL_WIDTH);
+            float targetHeight = Mathf.Clamp(canvasHeight * PANEL_HEIGHT_RATIO, MIN_PANEL_HEIGHT, MAX_PANEL_HEIGHT);
+
+            // 应用到MainPanel
+            mMainPanel.sizeDelta = new Vector2(targetWidth, targetHeight);
+
+            // 调整GridLayoutGroup的格子大小
+            AdaptGridLayout(targetWidth, targetHeight);
+
+            Debug.Log($"[ShopPanel] 屏幕适配完成: Canvas({canvasWidth}x{canvasHeight}) -> Panel({targetWidth}x{targetHeight})");
+        }
+
+        /// <summary>
+        /// 适配列表布局（单个商品占满一行）
+        /// </summary>
+        private void AdaptGridLayout(float panelWidth, float panelHeight)
+        {
+            // 设置ScrollView为左侧60%
+            AdaptScrollViewForListLayout();
+
+            // 设置DetailPanel为右侧40%
+            AdaptDetailPanelForListLayout();
+
+            // 将GridLayoutGroup转换为VerticalLayoutGroup（列表模式）
+            ConvertToVerticalLayout();
+        }
+
+        /// <summary>
+        /// 设置ScrollView为左侧60%布局
+        /// </summary>
+        private void AdaptScrollViewForListLayout()
+        {
+            if (mScrollRect == null) return;
+
+            var scrollViewRect = mScrollRect.GetComponent<RectTransform>();
+            if (scrollViewRect != null)
+            {
+                // 重置pivot为左下角，方便计算
+                scrollViewRect.pivot = new Vector2(0, 0);
+                
+                // 左侧区域占60%宽度，从底部到顶部（留出标题栏空间）
+                scrollViewRect.anchorMin = new Vector2(0, 0);
+                scrollViewRect.anchorMax = new Vector2(0.6f, 1);
+                
+                // offsetMin = (left, bottom), offsetMax = (right, top)
+                // 左边距10，底部边距10，右边距-5，顶部边距-70（给标题栏留空间）
+                scrollViewRect.offsetMin = new Vector2(10, 10);
+                scrollViewRect.offsetMax = new Vector2(-5, -70);
+                
+                Debug.Log($"[ShopPanel] ScrollView布局设置完成: anchorMin={scrollViewRect.anchorMin}, anchorMax={scrollViewRect.anchorMax}, offsetMin={scrollViewRect.offsetMin}, offsetMax={scrollViewRect.offsetMax}, rect={scrollViewRect.rect}");
+            }
+        }
+
+        /// <summary>
+        /// 设置DetailPanel为右侧40%布局
+        /// </summary>
+        private void AdaptDetailPanelForListLayout()
+        {
+            if (mDetailPanel == null) return;
+
+            var detailRect = mDetailPanel.GetComponent<RectTransform>();
+            if (detailRect != null)
+            {
+                // 重置pivot
+                detailRect.pivot = new Vector2(0, 0);
+                
+                // 右侧区域占40%宽度
+                detailRect.anchorMin = new Vector2(0.6f, 0);
+                detailRect.anchorMax = new Vector2(1, 1);
+                
+                detailRect.offsetMin = new Vector2(5, 10);
+                detailRect.offsetMax = new Vector2(-10, -70);
+            }
+        }
+
+        /// <summary>
+        /// 将GridLayoutGroup转换为VerticalLayoutGroup（单列表模式）
+        /// </summary>
+        private void ConvertToVerticalLayout()
+        {
+            if (mSlotContainer == null) return;
+
+            // 移除现有的GridLayoutGroup，使用DestroyImmediate确保同帧内不会冲突
+            var existingGrid = mSlotContainer.GetComponent<GridLayoutGroup>();
+            if (existingGrid != null)
+            {
+                DestroyImmediate(existingGrid);
+                mGridLayout = null;
+            }
+
+            // 添加VerticalLayoutGroup
+            var verticalLayout = mSlotContainer.GetComponent<VerticalLayoutGroup>();
+            if (verticalLayout == null)
+            {
+                verticalLayout = mSlotContainer.gameObject.AddComponent<VerticalLayoutGroup>();
+            }
+
+            // 配置垂直布局
+            verticalLayout.childAlignment = TextAnchor.UpperCenter;
+            verticalLayout.childControlWidth = true;
+            verticalLayout.childControlHeight = false;
+            verticalLayout.childForceExpandWidth = true;
+            verticalLayout.childForceExpandHeight = false;
+            verticalLayout.spacing = 5f;
+            verticalLayout.padding = new RectOffset(5, 5, 5, 5);
+
+            Debug.Log("[ShopPanel] 已转换为垂直列表布局");
+        }
+
+        /// <summary>
+        /// 初始化详情面板（右侧固定显示模式）
         /// </summary>
         private void InitializeDetailPanel()
         {
             if (mDetailPanel != null)
             {
-                mDetailPanel.SetActive(false);
+                // 设置右侧详情面板的初始状态
+                SetupDetailPanelAsRightSide();
+                // 初始显示“请选择商品”提示
+                ShowSelectItemHint();
             }
             SetActionButtonEnabled(false);
+        }
+
+        /// <summary>
+        /// 设置详情面板为右侧固定显示样式
+        /// </summary>
+        private void SetupDetailPanelAsRightSide()
+        {
+            if (mDetailPanel == null) return;
+
+            // 确保详情面板始终显示（作为右侧固定区域）
+            mDetailPanel.SetActive(true);
+
+            // 确保有背景
+            EnsureDetailPanelBackground();
+
+            Debug.Log("[ShopPanel] 详情面板已设置为右侧固定显示模式");
+        }
+
+        /// <summary>
+        /// 显示“请选择商品”的提示
+        /// </summary>
+        private void ShowSelectItemHint()
+        {
+            // 隐藏详细信息，显示提示
+            if (mDetailIcon != null) mDetailIcon.gameObject.SetActive(false);
+            if (mDetailNameText != null) mDetailNameText.text = "请选择商品";
+            if (mDetailDescText != null) mDetailDescText.text = "点击左侧列表中的商品\n查看详细信息";
+            if (mDetailPriceText != null) mDetailPriceText.text = "";
+            if (mDetailOwnedText != null) mDetailOwnedText.text = "";
+        }
+
+        /// <summary>
+        /// 确保详情面板有背景
+        /// </summary>
+        private void EnsureDetailPanelBackground()
+        {
+            if (mDetailPanel == null) return;
+
+            // 检查是否已有背景图片
+            var bgImage = mDetailPanel.GetComponent<Image>();
+            if (bgImage == null)
+            {
+                bgImage = mDetailPanel.AddComponent<Image>();
+                bgImage.color = new Color(0.15f, 0.22f, 0.18f, 0.7f); // 深绿色背景
+            }
         }
 
         /// <summary>
@@ -352,6 +645,9 @@ namespace FarmGame.UI
         private void RefreshItemList()
         {
             ClearSlots();
+            
+            // 确保VerticalLayoutGroup存在
+            EnsureVerticalLayout();
 
             if (mCurrentMode == ShopMode.Buy)
             {
@@ -361,6 +657,162 @@ namespace FarmGame.UI
             {
                 RefreshSellList();
             }
+            
+            // 使用协程延迟刷新布局，确保布局组件已生效
+            StartCoroutine(DelayedForceRebuildLayout());
+        }
+        
+        /// <summary>
+        /// 确保垂直布局组件存在
+        /// </summary>
+        private void EnsureVerticalLayout()
+        {
+            if (mSlotContainer == null) return;
+            
+            // 移除GridLayoutGroup
+            var existingGrid = mSlotContainer.GetComponent<GridLayoutGroup>();
+            if (existingGrid != null)
+            {
+                DestroyImmediate(existingGrid);
+                mGridLayout = null;
+            }
+            
+            // 确保VerticalLayoutGroup存在
+            var verticalLayout = mSlotContainer.GetComponent<VerticalLayoutGroup>();
+            if (verticalLayout == null)
+            {
+                verticalLayout = mSlotContainer.gameObject.AddComponent<VerticalLayoutGroup>();
+            }
+            
+            // 配置垂直布局
+            verticalLayout.childAlignment = TextAnchor.UpperLeft;
+            verticalLayout.childControlWidth = true;
+            verticalLayout.childControlHeight = false; // 不控制高度，让格子保持自己设置的高度
+            verticalLayout.childScaleWidth = false;
+            verticalLayout.childScaleHeight = false;
+            verticalLayout.childForceExpandWidth = true;
+            verticalLayout.childForceExpandHeight = false;
+            verticalLayout.spacing = 5f;
+            verticalLayout.padding = new RectOffset(5, 5, 5, 5);
+            
+            // 确保ContentSizeFitter存在且配置正确
+            var contentSizeFitter = mSlotContainer.GetComponent<ContentSizeFitter>();
+            if (contentSizeFitter == null)
+            {
+                contentSizeFitter = mSlotContainer.gameObject.AddComponent<ContentSizeFitter>();
+            }
+            contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        }
+        
+        /// <summary>
+        /// 延迟强制重建布局（等待帧末和下一帧）
+        /// </summary>
+        private IEnumerator DelayedForceRebuildLayout()
+        {
+            // 等待帧末，让所有Instantiate和布局组件生效
+            yield return new WaitForEndOfFrame();
+            
+            // 等待下一帧开始
+            yield return null;
+            
+            ForceRebuildLayout();
+            
+            // 再等一帧后再次刷新（确保ContentSizeFitter已计算）
+            yield return null;
+            
+            ForceRebuildLayout();
+        }
+        
+        /// <summary>
+        /// 强制重建布局
+        /// </summary>
+        private void ForceRebuildLayout()
+        {
+            if (mSlotContainer == null) return;
+            
+            var contentRect = mSlotContainer.GetComponent<RectTransform>();
+            
+            // 首先强制设置每个格子的高度和锚点
+            foreach (var slot in mSlots)
+            {
+                var slotRect = slot.GetComponent<RectTransform>();
+                var layoutElem = slot.GetComponent<LayoutElement>();
+                
+                if (slotRect != null)
+                {
+                    // 确保锚点正确设置（水平拉伸）
+                    slotRect.anchorMin = new Vector2(0, 1);
+                    slotRect.anchorMax = new Vector2(1, 1);
+                    slotRect.pivot = new Vector2(0.5f, 1);
+                    // 强制设置sizeDelta（宽度0因为会水平拉伸，高度60）
+                    slotRect.sizeDelta = new Vector2(0, 60f);
+                }
+                
+                if (layoutElem != null)
+                {
+                    layoutElem.minHeight = 60f;
+                    layoutElem.preferredHeight = 60f;
+                    layoutElem.flexibleHeight = 0f;
+                    layoutElem.ignoreLayout = false;
+                }
+            }
+            
+            // 先禁用再启用ContentSizeFitter，强制重新计算
+            var contentSizeFitter = mSlotContainer.GetComponent<ContentSizeFitter>();
+            if (contentSizeFitter != null)
+            {
+                contentSizeFitter.enabled = false;
+                contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                contentSizeFitter.enabled = true;
+            }
+            
+            // 禁用再启用 VerticalLayoutGroup
+            var verticalLayout = mSlotContainer.GetComponent<VerticalLayoutGroup>();
+            if (verticalLayout != null)
+            {
+                verticalLayout.enabled = false;
+                verticalLayout.enabled = true;
+            }
+            
+            // 标记布局需要重建
+            if (contentRect != null)
+            {
+                LayoutRebuilder.MarkLayoutForRebuild(contentRect);
+            }
+            
+            // 强制Canvas立即更新
+            Canvas.ForceUpdateCanvases();
+            
+            // 重建Content的布局
+            if (contentRect != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+            }
+            
+            // 重建ScrollView的布局
+            if (mScrollRect != null)
+            {
+                var scrollRect = mScrollRect.GetComponent<RectTransform>();
+                if (scrollRect != null)
+                {
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(scrollRect);
+                    Debug.Log($"[ShopPanel] ScrollView尺寸: rect={scrollRect.rect}, sizeDelta={scrollRect.sizeDelta}");
+                }
+                
+                // 重置滚动位置到顶部
+                mScrollRect.verticalNormalizedPosition = 1f;
+            }
+            
+            // 输出所有格子的高度信息
+            foreach (var slot in mSlots)
+            {
+                var slotRect = slot.GetComponent<RectTransform>();
+                var layoutElem = slot.GetComponent<LayoutElement>();
+                Debug.Log($"[ShopPanel] 格子 {slot.ItemName}: rect.height={slotRect?.rect.height}, sizeDelta.y={slotRect?.sizeDelta.y}, LayoutElement.minHeight={layoutElem?.minHeight}, ignoreLayout={layoutElem?.ignoreLayout}");
+            }
+            
+            Debug.Log($"[ShopPanel] 布局已刷新，当前商品数量: {mSlots.Count}, Content高度: {contentRect?.rect.height}, Content子物体数: {mSlotContainer.childCount}");
         }
 
         /// <summary>
@@ -368,11 +820,21 @@ namespace FarmGame.UI
         /// </summary>
         private void RefreshBuyList()
         {
+            Debug.Log($"[ShopPanel] 刷新购买列表, ShopType={(int)mData.ShopType}");
+            
             var shopItems = ShopManager.Instance.GetShopItems(mData.ShopType);
+            
+            Debug.Log($"[ShopPanel] 获取到 {shopItems.Count} 个商品");
 
             foreach (var itemData in shopItems)
             {
+                Debug.Log($"[ShopPanel] 创建商品格子: {itemData.ItemName ?? "null"}, 价格:{itemData.BuyPrice}");
                 CreateShopSlot(itemData);
+            }
+            
+            if (shopItems.Count == 0)
+            {
+                Debug.LogWarning($"[ShopPanel] 商店类型 {mData.ShopType} 没有商品！请检查ShopConfig配置");
             }
         }
 
@@ -407,9 +869,35 @@ namespace FarmGame.UI
         /// </summary>
         private void CreateShopSlot(ShopItemData itemData)
         {
-            if (mSlotPrefab == null || mSlotContainer == null) return;
+            if (mSlotPrefab == null)
+            {
+                Debug.LogError("[ShopPanel] mSlotPrefab 为空！");
+                return;
+            }
+            if (mSlotContainer == null)
+            {
+                Debug.LogError("[ShopPanel] mSlotContainer 为空！");
+                return;
+            }
 
             var slotObj = Instantiate(mSlotPrefab, mSlotContainer);
+            
+            // 确保格子激活并正确设置
+            slotObj.SetActive(true);
+            
+            // 确保RectTransform正确初始化
+            var slotRect = slotObj.GetComponent<RectTransform>();
+            if (slotRect != null)
+            {
+                slotRect.localScale = Vector3.one;
+                // 设置锚点为水平拉伸，保持固定高度
+                slotRect.anchorMin = new Vector2(0, 1);
+                slotRect.anchorMax = new Vector2(1, 1);
+                slotRect.pivot = new Vector2(0.5f, 1);
+                // 强制设置高度
+                slotRect.sizeDelta = new Vector2(0, 60f);
+            }
+            
             var slotController = slotObj.GetComponent<ShopSlotController>();
 
             if (slotController != null)
@@ -417,6 +905,11 @@ namespace FarmGame.UI
                 slotController.SetShopItem(itemData);
                 slotController.OnSlotClicked += OnSlotSelected;
                 mSlots.Add(slotController);
+                Debug.Log($"[ShopPanel] 格子创建成功: {itemData.ItemName}, sizeDelta: {slotRect?.sizeDelta}, 父级子物体数: {mSlotContainer.childCount}");
+            }
+            else
+            {
+                Debug.LogError("[ShopPanel] ShopSlotController 组件缺失！");
             }
         }
 
@@ -428,6 +921,23 @@ namespace FarmGame.UI
             if (mSlotPrefab == null || mSlotContainer == null) return;
 
             var slotObj = Instantiate(mSlotPrefab, mSlotContainer);
+            
+            // 确保格子激活并正确设置
+            slotObj.SetActive(true);
+            
+            // 确保RectTransform正确初始化
+            var slotRect = slotObj.GetComponent<RectTransform>();
+            if (slotRect != null)
+            {
+                slotRect.localScale = Vector3.one;
+                // 设置锚点为水平拉伸，保持固定高度
+                slotRect.anchorMin = new Vector2(0, 1);
+                slotRect.anchorMax = new Vector2(1, 1);
+                slotRect.pivot = new Vector2(0.5f, 1);
+                // 强制设置高度
+                slotRect.sizeDelta = new Vector2(0, 60f);
+            }
+            
             var slotController = slotObj.GetComponent<ShopSlotController>();
 
             if (slotController != null)
@@ -599,10 +1109,8 @@ namespace FarmGame.UI
             mSelectedPrice = 0;
             mCurrentQuantity = 1;
 
-            if (mDetailPanel != null)
-            {
-                mDetailPanel.SetActive(false);
-            }
+            // 显示"请选择商品"提示，而不是隐藏面板
+            ShowSelectItemHint();
 
             SetActionButtonEnabled(false);
         }

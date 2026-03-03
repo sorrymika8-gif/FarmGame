@@ -1,0 +1,740 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using UnityEngine;
+using QFramework;
+using FarmGame.Player;
+using FarmGame.Farm;
+
+namespace FarmGame.Core.Save
+{
+    /// <summary>
+    /// 存档系统
+    /// 负责游戏状态的保存和加载
+    /// </summary>
+    public class SaveSystem : MonoSingleton<SaveSystem>
+    {
+        #region 常量
+        
+        private const string SAVE_FOLDER_NAME = "Saves";
+        private const string SAVE_FILE_EXTENSION = ".farm";
+        private const int MAX_SAVE_SLOTS = 10;
+        
+        #endregion
+        
+        #region 私有字段
+        
+        private string mSaveFolderPath;
+        private JsonSerializerSettings mJsonSettings;
+        
+        #endregion
+        
+        #region 公共属性
+        
+        /// <summary>
+        /// 当前存档槽索引（1-based）
+        /// </summary>
+        public int CurrentSaveSlot { get; private set; } = 1;
+        
+        /// <summary>
+        /// 是否已初始化
+        /// </summary>
+        public bool IsInitialized { get; private set; }
+        
+        #endregion
+        
+        #region 生命周期
+        
+        /// <summary>
+        /// 初始化存档系统
+        /// </summary>
+        public void Initialize()
+        {
+            if (IsInitialized) return;
+            
+            // 确定存档文件夹路径
+            mSaveFolderPath = Path.Combine(Application.persistentDataPath, SAVE_FOLDER_NAME);
+            
+            // 确保存档文件夹存在
+            if (!Directory.Exists(mSaveFolderPath))
+            {
+                Directory.CreateDirectory(mSaveFolderPath);
+                Debug.Log($"[SaveSystem] Created save folder: {mSaveFolderPath}");
+            }
+            
+            // 配置 JSON 序列化设置
+            mJsonSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore,
+                // 如果需要自定义类型转换器，可以在这里添加
+                // Converters = new List<JsonConverter> { new Vector3Converter() }
+            };
+            
+            IsInitialized = true;
+            Debug.Log($"[SaveSystem] Initialized. Save folder: {mSaveFolderPath}");
+        }
+        
+        #endregion
+        
+        #region 公共接口 - 存档管理
+        
+        /// <summary>
+        /// 获取所有存档槽的信息
+        /// </summary>
+        /// <returns>存档槽信息列表</returns>
+        public List<SaveSlotInfo> GetAllSaveSlots()
+        {
+            if (!ValidateInitialized()) return new List<SaveSlotInfo>();
+            
+            var slots = new List<SaveSlotInfo>();
+            
+            for (int slot = 1; slot <= MAX_SAVE_SLOTS; slot++)
+            {
+                string filePath = GetSaveFilePath(slot);
+                var info = GetSaveSlotInfo(slot);
+                slots.Add(info);
+            }
+            
+            return slots;
+        }
+        
+        /// <summary>
+        /// 获取指定存档槽的信息
+        /// </summary>
+        /// <param name="slot">存档槽索引（1-based）</param>
+        /// <returns>存档槽信息</returns>
+        public SaveSlotInfo GetSaveSlotInfo(int slot)
+        {
+            if (!ValidateInitialized()) return null;
+            
+            string filePath = GetSaveFilePath(slot);
+            var info = new SaveSlotInfo
+            {
+                Slot = slot,
+                FilePath = filePath,
+                Exists = File.Exists(filePath)
+            };
+            
+            if (info.Exists)
+            {
+                try
+                {
+                    string json = File.ReadAllText(filePath);
+                    var saveData = JsonConvert.DeserializeObject<GameSaveData>(json, mJsonSettings);
+                    if (saveData != null)
+                    {
+                        info.SaveTime = saveData.SaveTime;
+                        info.Description = saveData.Description;
+                        info.GameTime = saveData.GameTime.DisplayTime;
+                        info.PlayerGold = saveData.Player.Gold;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[SaveSystem] Failed to read save slot {slot}: {e.Message}");
+                    info.Corrupted = true;
+                }
+            }
+            
+            return info;
+        }
+        
+        /// <summary>
+        /// 设置当前存档槽
+        /// </summary>
+        /// <param name="slot">存档槽索引（1-based）</param>
+        public void SetCurrentSaveSlot(int slot)
+        {
+            if (slot < 1 || slot > MAX_SAVE_SLOTS)
+            {
+                Debug.LogError($"[SaveSystem] Invalid save slot: {slot}. Must be between 1 and {MAX_SAVE_SLOTS}.");
+                return;
+            }
+            
+            CurrentSaveSlot = slot;
+            Debug.Log($"[SaveSystem] Current save slot set to: {slot}");
+        }
+        
+        #endregion
+        
+        #region 公共接口 - 保存游戏
+        
+        /// <summary>
+        /// 保存游戏到当前存档槽
+        /// </summary>
+        /// <param name="description">存档描述（可选）</param>
+        /// <returns>是否保存成功</returns>
+        public bool SaveGame(string description = null)
+        {
+            return SaveGame(CurrentSaveSlot, description);
+        }
+        
+        /// <summary>
+        /// 保存游戏到指定存档槽
+        /// </summary>
+        /// <param name="slot">存档槽索引（1-based）</param>
+        /// <param name="description">存档描述（可选）</param>
+        /// <returns>是否保存成功</returns>
+        public bool SaveGame(int slot, string description = null)
+        {
+            if (!ValidateInitialized()) return false;
+            
+            try
+            {
+                // 收集游戏数据
+                var saveData = CollectGameData();
+                
+                // 更新存档信息
+                saveData.SaveTime = DateTime.Now;
+                saveData.Description = description ?? $"存档 {slot} - {DateTime.Now:yyyy-MM-dd HH:mm}";
+                
+                // 序列化为 JSON
+                string json = JsonConvert.SerializeObject(saveData, mJsonSettings);
+                
+                // 写入文件
+                string filePath = GetSaveFilePath(slot);
+                File.WriteAllText(filePath, json);
+                
+                Debug.Log($"[SaveSystem] Game saved to slot {slot}: {filePath}");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to save game: {e}");
+                return false;
+            }
+        }
+        
+        /// <summary>
+        /// 异步保存游戏
+        /// </summary>
+        /// <param name="slot">存档槽索引</param>
+        /// <param name="description">存档描述</param>
+        /// <returns>异步任务</returns>
+        public async Task<bool> SaveGameAsync(int slot, string description = null)
+        {
+            if (!ValidateInitialized()) return false;
+            
+            try
+            {
+                var saveData = CollectGameData();
+                saveData.SaveTime = DateTime.Now;
+                saveData.Description = description ?? $"存档 {slot} - {DateTime.Now:yyyy-MM-dd HH:mm}";
+                
+                string json = JsonConvert.SerializeObject(saveData, mJsonSettings);
+                string filePath = GetSaveFilePath(slot);
+                
+                await File.WriteAllTextAsync(filePath, json);
+                
+                Debug.Log($"[SaveSystem] Game saved asynchronously to slot {slot}");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to save game asynchronously: {e}");
+                return false;
+            }
+        }
+        
+        #endregion
+        
+        #region 公共接口 - 加载游戏
+        
+        /// <summary>
+        /// 从当前存档槽加载游戏
+        /// </summary>
+        /// <returns>是否加载成功</returns>
+        public bool LoadGame()
+        {
+            return LoadGame(CurrentSaveSlot);
+        }
+        
+        /// <summary>
+        /// 从指定存档槽加载游戏
+        /// </summary>
+        /// <param name="slot">存档槽索引（1-based）</param>
+        /// <returns>是否加载成功</returns>
+        public bool LoadGame(int slot)
+        {
+            if (!ValidateInitialized()) return false;
+            
+            try
+            {
+                string filePath = GetSaveFilePath(slot);
+                if (!File.Exists(filePath))
+                {
+                    Debug.LogError($"[SaveSystem] Save file not found: {filePath}");
+                    return false;
+                }
+                
+                // 读取 JSON
+                string json = File.ReadAllText(filePath);
+                var saveData = JsonConvert.DeserializeObject<GameSaveData>(json, mJsonSettings);
+                if (saveData == null)
+                {
+                    Debug.LogError($"[SaveSystem] Failed to deserialize save data from slot {slot}");
+                    return false;
+                }
+                
+                // 应用游戏数据
+                ApplyGameData(saveData);
+                
+                // 更新当前存档槽
+                CurrentSaveSlot = slot;
+                
+                Debug.Log($"[SaveSystem] Game loaded from slot {slot}");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to load game: {e}");
+                return false;
+            }
+        }
+        
+        /// <summary>
+        /// 异步加载游戏
+        /// </summary>
+        /// <param name="slot">存档槽索引</param>
+        /// <returns>异步任务</returns>
+        public async Task<bool> LoadGameAsync(int slot)
+        {
+            if (!ValidateInitialized()) return false;
+            
+            try
+            {
+                string filePath = GetSaveFilePath(slot);
+                if (!File.Exists(filePath))
+                {
+                    Debug.LogError($"[SaveSystem] Save file not found: {filePath}");
+                    return false;
+                }
+                
+                string json = await File.ReadAllTextAsync(filePath);
+                var saveData = JsonConvert.DeserializeObject<GameSaveData>(json, mJsonSettings);
+                if (saveData == null) return false;
+                
+                ApplyGameData(saveData);
+                CurrentSaveSlot = slot;
+                
+                Debug.Log($"[SaveSystem] Game loaded asynchronously from slot {slot}");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to load game asynchronously: {e}");
+                return false;
+            }
+        }
+        
+        #endregion
+        
+        #region 公共接口 - 删除存档
+        
+        /// <summary>
+        /// 删除指定存档槽的存档
+        /// </summary>
+        /// <param name="slot">存档槽索引（1-based）</param>
+        /// <returns>是否删除成功</returns>
+        public bool DeleteSave(int slot)
+        {
+            if (!ValidateInitialized()) return false;
+            
+            try
+            {
+                string filePath = GetSaveFilePath(slot);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                    Debug.Log($"[SaveSystem] Save deleted from slot {slot}");
+                    return true;
+                }
+                
+                Debug.LogWarning($"[SaveSystem] No save file to delete at slot {slot}");
+                return false;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to delete save: {e}");
+                return false;
+            }
+        }
+        
+        #endregion
+        
+        #region 数据收集与应用
+        
+        /// <summary>
+        /// 收集当前游戏数据
+        /// </summary>
+        /// <returns>游戏存档数据</returns>
+        private GameSaveData CollectGameData()
+        {
+            var saveData = new GameSaveData();
+            
+            // 收集玩家数据
+            CollectPlayerData(saveData.Player);
+            
+            // 收集农场数据
+            CollectFarmData(saveData.Farm);
+            
+            // 收集NPC数据
+            CollectNPCData(saveData.NPCs);
+            
+            // 收集商店数据
+            CollectShopData(saveData.Shop);
+            
+            return saveData;
+        }
+        
+        /// <summary>
+        /// 收集玩家数据
+        /// </summary>
+        private void CollectPlayerData(PlayerSaveData playerData)
+        {
+            try
+            {
+                var playerManager = PlayerManager.Instance;
+                var playerController = playerManager?.Player;
+                
+                if (playerController != null)
+                {
+                    var data = playerController.Data;
+                    playerData.Position = data.Position;
+                    playerData.FacingDirection = data.FacingDirection;
+                    playerData.MoveSpeed = data.MoveSpeed;
+                    playerData.IsNewPlayer = data.IsNewPlayer;
+                    playerData.Gold = playerManager.Gold;
+                    
+                    // 收集背包物品
+                    if (data.Inventory != null)
+                    {
+                        playerData.Inventory.Clear();
+                        foreach (var itemEntity in data.Inventory.GetAllItems())
+                        {
+                            if (itemEntity == null) continue;
+                            
+                            playerData.Inventory.Add(new ItemSaveData
+                            {
+                                ConfigId = itemEntity.ConfigId,
+                                Count = itemEntity.Count,
+                                InstanceId = itemEntity.InstanceId
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to collect player data: {e}");
+            }
+        }
+        
+        /// <summary>
+        /// 收集农场数据
+        /// </summary>
+        private void CollectFarmData(FarmSaveData farmData)
+        {
+            try
+            {
+                var farmManager = FarmManager.Instance;
+                if (farmManager == null || farmManager.CurrentMap == null) return;
+                
+                farmData.CurrentMapId = farmManager.CurrentMap.MapId;
+                farmData.Soils.Clear();
+                
+                // 收集所有土地数据
+                foreach (var soil in farmManager.CurrentMap.GetAllSoils())
+                {
+                    var soilSave = new SoilSaveData
+                    {
+                        ConfigId = soil.ConfigId,
+                        GridPos = soil.GridPos,
+                        IsTilled = soil.IsTilled
+                    };
+                    
+                    // 收集作物数据
+                    if (soil.HasPlant && soil.Plant != null)
+                    {
+                        var plant = soil.Plant;
+                        soilSave.Plant = new PlantSaveData
+                        {
+                            ConfigId = plant.ConfigId,
+                            CurrentMaturity = plant.CurrentMaturity,
+                            CurrentStageIndex = plant.CurrentStageIndex,
+                            IsMature = plant.IsMature
+                        };
+                    }
+                    
+                    farmData.Soils.Add(soilSave);
+                }
+                
+                Debug.Log($"[SaveSystem] Collected farm data: {farmData.Soils.Count} soils");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to collect farm data: {e}");
+            }
+        }
+        
+        /// <summary>
+        /// 收集NPC数据
+        /// </summary>
+        private void CollectNPCData(Dictionary<string, NPCSaveData> npcData)
+        {
+            try
+            {
+                // 暂不实现，后续完善
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to collect NPC data: {e}");
+            }
+        }
+        
+        /// <summary>
+        /// 收集商店数据
+        /// </summary>
+        private void CollectShopData(ShopSaveData shopData)
+        {
+            try
+            {
+                // 暂不实现，后续完善
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to collect shop data: {e}");
+            }
+        }
+        
+        /// <summary>
+        /// 应用游戏数据到当前游戏状态
+        /// </summary>
+        /// <param name="saveData">存档数据</param>
+        private void ApplyGameData(GameSaveData saveData)
+        {
+            try
+            {
+                // 应用玩家数据
+                ApplyPlayerData(saveData.Player);
+                
+                // 应用农场数据
+                ApplyFarmData(saveData.Farm);
+                
+                // 应用NPC数据
+                ApplyNPCData(saveData.NPCs);
+                
+                // 应用商店数据
+                ApplyShopData(saveData.Shop);
+                
+                Debug.Log("[SaveSystem] Game data applied successfully");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to apply game data: {e}");
+            }
+        }
+        
+        /// <summary>
+        /// 应用玩家数据
+        /// </summary>
+        private void ApplyPlayerData(PlayerSaveData playerData)
+        {
+            try
+            {
+                var playerManager = PlayerManager.Instance;
+                if (playerManager == null) return;
+                
+                // 确保玩家存在
+                if (playerManager.Player == null)
+                {
+                    playerManager.CreatePlayer();
+                }
+                
+                var playerController = playerManager.Player;
+                if (playerController == null) return;
+                
+                // 设置玩家属性
+                playerController.Data.Position = playerData.Position;
+                playerController.Data.FacingDirection = playerData.FacingDirection;
+                playerController.Data.MoveSpeed = playerData.MoveSpeed;
+                playerController.Data.IsNewPlayer = playerData.IsNewPlayer;
+                
+                // 设置玩家位置
+                playerManager.SetPlayerPosition(playerData.Position);
+                
+                // 设置金币
+                playerManager.SetGold(playerData.Gold);
+                
+                // 清空并重新添加背包物品
+                if (playerController.Data.Inventory != null)
+                {
+                    playerController.Data.Inventory.Clear();
+                    
+                    // 添加物品
+                    foreach (var itemSave in playerData.Inventory)
+                    {
+                        playerController.Data.Inventory.AddItem(itemSave.ConfigId, itemSave.Count);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to apply player data: {e}");
+            }
+        }
+        
+        /// <summary>
+        /// 应用农场数据
+        /// </summary>
+        private void ApplyFarmData(FarmSaveData farmData)
+        {
+            try
+            {
+                var farmManager = FarmManager.Instance;
+                if (farmManager == null || farmManager.CurrentMap == null) return;
+                
+                // 注意：这里假设农场地图已经存在相同的土地布局
+                // 实际项目中可能需要根据存档数据重新创建土地
+                // 目前仅更新现有土地的状态
+                
+                foreach (var soilSave in farmData.Soils)
+                {
+                    var soil = farmManager.CurrentMap.GetSoil(soilSave.GridPos);
+                    if (soil == null)
+                    {
+                        // 如果土地不存在，创建新的（根据项目设计决定）
+                        // 暂时跳过
+                        continue;
+                    }
+                    
+                    // 更新土地状态
+                    soil.IsTilled = soilSave.IsTilled;
+                    
+                    // 更新或创建作物
+                    if (soilSave.Plant != null)
+                    {
+                        // 如果已经有作物，更新其状态
+                        if (soil.HasPlant)
+                        {
+                            var plant = soil.Plant;
+                            // TODO: 需要PlantEntity支持从存档加载成熟度
+                            // plant.CurrentMaturity = soilSave.Plant.CurrentMaturity; // 编译错误：set访问器不可访问
+                            // plant.CurrentStageIndex = soilSave.Plant.CurrentStageIndex; // 编译错误：set访问器不可访问
+                            // 暂时跳过作物状态恢复，等待PlantEntity完善
+                            Debug.LogWarning($"[SaveSystem] Plant state restoration not yet implemented for soil at {soilSave.GridPos}");
+                            // IsMature 是只读的，根据成熟度计算
+                            // PlantEntity 的 IsMature 基于 CurrentMaturity >= need_maturity
+                            // 我们无法直接设置，但 Grow 方法会更新
+                        }
+                        else
+                        {
+                            // 创建新的植物实体
+                            // 注意：PlantEntity 构造函数需要 configId，并且没有直接设置成熟度的方法
+                            // 需要修改 PlantEntity 以支持从存档加载
+                            // 暂时跳过，标记为需要完善
+                            Debug.LogWarning($"[SaveSystem] Planting from save not yet implemented for soil at {soilSave.GridPos}");
+                        }
+                    }
+                    else
+                    {
+                        // 没有作物，清除现有作物
+                        soil.Plant = null;
+                    }
+                }
+                
+                Debug.Log($"[SaveSystem] Applied farm data: {farmData.Soils.Count} soils");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to apply farm data: {e}");
+            }
+        }
+        
+        /// <summary>
+        /// 应用NPC数据
+        /// </summary>
+        private void ApplyNPCData(Dictionary<string, NPCSaveData> npcData)
+        {
+            try
+            {
+                // 暂不实现，后续完善
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to apply NPC data: {e}");
+            }
+        }
+        
+        /// <summary>
+        /// 应用商店数据
+        /// </summary>
+        private void ApplyShopData(ShopSaveData shopData)
+        {
+            try
+            {
+                // 暂不实现，后续完善
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SaveSystem] Failed to apply shop data: {e}");
+            }
+        }
+        
+        #endregion
+        
+        #region 辅助方法
+        
+        /// <summary>
+        /// 获取存档文件路径
+        /// </summary>
+        /// <param name="slot">存档槽索引（1-based）</param>
+        /// <returns>完整文件路径</returns>
+        private string GetSaveFilePath(int slot)
+        {
+            string fileName = $"save{slot}{SAVE_FILE_EXTENSION}";
+            return Path.Combine(mSaveFolderPath, fileName);
+        }
+        
+        private bool ValidateInitialized()
+        {
+            if (!IsInitialized)
+            {
+                Debug.LogError("[SaveSystem] Not initialized. Call Initialize() first.");
+                return false;
+            }
+            return true;
+        }
+        
+        #endregion
+    }
+    
+    /// <summary>
+    /// 存档槽信息
+    /// </summary>
+    public class SaveSlotInfo
+    {
+        public int Slot { get; set; }
+        public string FilePath { get; set; }
+        public bool Exists { get; set; }
+        public bool Corrupted { get; set; }
+        public DateTime SaveTime { get; set; }
+        public string Description { get; set; }
+        public string GameTime { get; set; }
+        public int PlayerGold { get; set; }
+        
+        public string DisplayText
+        {
+            get
+            {
+                if (Corrupted) return $"存档 {Slot} (损坏)";
+                if (!Exists) return $"存档 {Slot} (空)";
+                return $"存档 {Slot}: {Description}\n{SaveTime:yyyy-MM-dd HH:mm} | {GameTime} | 金币: {PlayerGold}";
+            }
+        }
+    }
+}

@@ -33,14 +33,23 @@ namespace FarmGame.Shop
         /// <summary>商店配置</summary>
         public ShopConfig ShopConfig { get; set; }
 
-        /// <summary>物品配置</summary>
-        public ItemConfig ItemConfig { get; set; }
+        /// <summary>物品配置信息（统一封装）</summary>
+        public ItemConfigInfo ItemConfigInfo { get; set; }
 
         /// <summary>购买价格</summary>
         public int BuyPrice => ShopConfig?.buy_price ?? 0;
 
-        /// <summary>出售价格</summary>
-        public int SellPrice => ItemConfig?.sell_price ?? 0;
+        /// <summary>物品ID</summary>
+        public int ItemId => ItemConfigInfo.ClassId;
+
+        /// <summary>物品名称</summary>
+        public string ItemName => ItemConfigInfo.Name;
+
+        /// <summary>物品图标</summary>
+        public string ItemIcon => ItemConfigInfo.Icon;
+
+        /// <summary>物品描述</summary>
+        public string ItemDescription => ItemConfigInfo.Description;
     }
 
     /// <summary>
@@ -84,28 +93,51 @@ namespace FarmGame.Shop
             // 按商店类型分组商品配置
             mShopItemsByType = new Dictionary<int, List<ShopConfig>>();
 
+            // 诊断：打印所有已加载的配置类型
+            var allTypes = ConfigManager.Instance.GetAllConfigTypes();
+            Debug.Log($"[ShopManager] ConfigManager 已加载的配置类型: {string.Join(", ", allTypes.Select(t => t.Name))}");
+
             try
             {
-                var shopList = ConfigManager.Instance.GetList<ShopConfig>();
-                if (shopList != null)
+                // 优先使用 GetList 获取 List 格式的配置
+                var listContainer = ConfigManager.Instance.GetList<ShopConfig>();
+                if (listContainer != null)
                 {
-                    foreach (var config in shopList.GetAll())
+                    var allConfigs = listContainer.GetAll();
+                    Debug.Log($"[ShopManager] 成功获取 ListContainer，读取到 {allConfigs.Count} 条商店配置");
+                    
+                    foreach (var config in allConfigs)
                     {
                         if (!mShopItemsByType.ContainsKey(config.shop_type))
                         {
                             mShopItemsByType[config.shop_type] = new List<ShopConfig>();
                         }
                         mShopItemsByType[config.shop_type].Add(config);
+                        Debug.Log($"[ShopManager] 加载商品: id={config.id}, shop_type={config.shop_type}, item_id={config.item_id}, price={config.buy_price}");
                     }
+                }
+                else
+                {
+                    Debug.LogWarning("[ShopManager] GetList<ShopConfig> 返回 null，配置可能不是 List 格式");
                 }
             }
             catch (KeyNotFoundException)
             {
-                // 配置表尚未生成或为空，使用空数据
-                Debug.LogWarning("[ShopManager] ShopConfig not found, shop will be empty");
+                Debug.LogWarning("[ShopManager] ShopConfig 未加载，请检查 shop.xlsx 文件是否存在");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[ShopManager] 初始化失败: {ex}");
             }
 
             mIsInitialized = true;
+            
+            // 输出详细的商店类型信息
+            foreach (var kvp in mShopItemsByType)
+            {
+                Debug.Log($"[ShopManager] 商店类型 {kvp.Key} 包含 {kvp.Value.Count} 个商品");
+            }
+            
             Debug.Log($"[ShopManager] Initialized with {mShopItemsByType.Count} shop types");
         }
 
@@ -120,24 +152,42 @@ namespace FarmGame.Shop
         /// <returns>商品数据列表</returns>
         public List<ShopItemData> GetShopItems(int shopType)
         {
-            if (!ValidateInitialized()) return new List<ShopItemData>();
+            if (!ValidateInitialized()) 
+            {
+                Debug.LogWarning("[ShopManager] GetShopItems called but not initialized");
+                return new List<ShopItemData>();
+            }
+
+            Debug.Log($"[ShopManager] GetShopItems called with shopType={shopType}, 已加载的商店类型: {string.Join(", ", mShopItemsByType.Keys)}");
 
             var result = new List<ShopItemData>();
 
             if (mShopItemsByType.TryGetValue(shopType, out var shopConfigs))
             {
+                Debug.Log($"[ShopManager] 找到商店类型 {shopType}，包含 {shopConfigs.Count} 个配置");
+                
                 foreach (var shopConfig in shopConfigs)
                 {
-                    var itemConfig = ConfigManager.Instance.GetConfig<ItemConfig>(shopConfig.item_id);
-                    if (itemConfig != null)
+                    // 使用 ItemConfigHelper 从多个配置表中查找物品
+                    var configInfo = ItemConfigHelper.GetConfigInfo(shopConfig.item_id);
+                    if (configInfo.IsValid)
                     {
                         result.Add(new ShopItemData
                         {
                             ShopConfig = shopConfig,
-                            ItemConfig = itemConfig
+                            ItemConfigInfo = configInfo
                         });
+                        Debug.Log($"[ShopManager] 添加商品: item_id={shopConfig.item_id}, name={configInfo.Name}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[ShopManager] 物品配置未找到 item_id={shopConfig.item_id}，请检查 item.xlsx 或 seed.xlsx");
                     }
                 }
+            }
+            else
+            {
+                Debug.LogWarning($"[ShopManager] 未找到商店类型 {shopType}");
             }
 
             return result;

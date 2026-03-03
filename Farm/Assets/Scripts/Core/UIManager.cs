@@ -419,5 +419,52 @@ namespace FarmGame.Core
         }
 
         #endregion
+
+        #region 存档面板专用方法
+
+        /// <summary>
+        /// 检查存档面板是否已打开
+        /// </summary>
+        /// <returns>是否已打开</returns>
+        public bool IsSaveLoadPanelOpen()
+        {
+            return GetPanel<SaveLoadPanel>() != null;
+        }
+
+        /// <summary>
+        /// 打开存档面板
+        /// </summary>
+        /// <param name="isSaveMode">是否为保存模式（默认true）</param>
+        /// <returns>打开的存档面板实例</returns>
+        public SaveLoadPanel OpenSaveLoadPanel(bool isSaveMode = true)
+        {
+            if (!ValidateInitialized()) return null;
+
+            var data = new SaveLoadPanelData()
+            {
+                IsSaveMode = isSaveMode
+            };
+
+            return OpenPanel<SaveLoadPanel>("UI/SaveUI/SaveLoadPanel", data);
+        }
+
+        /// <summary>
+        /// 关闭存档面板
+        /// </summary>
+        public void CloseSaveLoadPanel()
+        {
+            ClosePanel<SaveLoadPanel>();
+        }
+
+        /// <summary>
+        /// 获取已打开的存档面板
+        /// </summary>
+        /// <returns>存档面板实例</returns>
+        public SaveLoadPanel GetSaveLoadPanel()
+        {
+            return GetPanel<SaveLoadPanel>();
+        }
+
+        #endregion
     }
 }

@@ -20,9 +20,30 @@ namespace FarmGame.UI
     /// </summary>
     public partial class MainUIPanel : UIPanel
     {
+        #region 适配参数
+
+        // 基准分辨率（设计时的参考分辨率）
+        private const float BASE_WIDTH = 1280f;
+        private const float BASE_HEIGHT = 720f;
+        
+        // 按钮基准尺寸
+        private const float BASE_BUTTON_SIZE = 64f;
+        private const float MIN_BUTTON_SIZE = 48f;
+        private const float MAX_BUTTON_SIZE = 96f;
+        
+        // 边距基准值
+        private const float BASE_MARGIN = 20f;
+        private const float MIN_MARGIN = 10f;
+        private const float MAX_MARGIN = 40f;
+
+        #endregion
+
         #region 私有字段
 
         private MainUIPanelData mData;
+        
+        [SerializeField]
+        private Button mSaveButton;
 
         #endregion
 
@@ -32,11 +53,122 @@ namespace FarmGame.UI
         {
             mData = uiData as MainUIPanelData ?? new MainUIPanelData();
             
+            // 应用屏幕适配
+            ApplyScreenAdaptation();
+            
             // 绑定背包按钮点击事件
             if (BackpackButton != null)
             {
                 BackpackButton.onClick.RemoveAllListeners();
                 BackpackButton.onClick.AddListener(OnBackpackButtonClick);
+            }
+            
+            // 绑定存档按钮点击事件
+            if (mSaveButton != null)
+            {
+                mSaveButton.onClick.RemoveAllListeners();
+                mSaveButton.onClick.AddListener(OnSaveButtonClick);
+            }
+        }
+
+        /// <summary>
+        /// 应用屏幕适配
+        /// </summary>
+        private void ApplyScreenAdaptation()
+        {
+            // 获取Canvas的尺寸
+            var canvas = GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+
+            var canvasRect = canvas.GetComponent<RectTransform>();
+            float canvasWidth = canvasRect.rect.width;
+            float canvasHeight = canvasRect.rect.height;
+
+            // 如果Canvas尺寸无效，使用屏幕尺寸
+            if (canvasWidth <= 0 || canvasHeight <= 0)
+            {
+                canvasWidth = Screen.width;
+                canvasHeight = Screen.height;
+            }
+
+            // 计算缩放因子
+            float scaleX = canvasWidth / BASE_WIDTH;
+            float scaleY = canvasHeight / BASE_HEIGHT;
+            float scaleFactor = Mathf.Min(scaleX, scaleY);
+
+            // 计算适配后的按钮尺寸
+            float buttonSize = Mathf.Clamp(BASE_BUTTON_SIZE * scaleFactor, MIN_BUTTON_SIZE, MAX_BUTTON_SIZE);
+            float margin = Mathf.Clamp(BASE_MARGIN * scaleFactor, MIN_MARGIN, MAX_MARGIN);
+
+            // 适配背包按钮
+            AdaptButton(BackpackButton, buttonSize, margin, AnchorPosition.BottomRight);
+            
+            // 适配存档按钮（如果有的话，放在背包按钮上方）
+            if (mSaveButton != null)
+            {
+                var saveButtonRect = mSaveButton.GetComponent<RectTransform>();
+                if (saveButtonRect != null)
+                {
+                    saveButtonRect.sizeDelta = new Vector2(buttonSize, buttonSize);
+                    // 放在背包按钮上方
+                    saveButtonRect.anchorMin = new Vector2(1, 0);
+                    saveButtonRect.anchorMax = new Vector2(1, 0);
+                    saveButtonRect.pivot = new Vector2(1, 0);
+                    saveButtonRect.anchoredPosition = new Vector2(-margin, margin + buttonSize + 10f);
+                }
+            }
+
+            Debug.Log($"[MainUIPanel] 屏幕适配完成: Canvas({canvasWidth}x{canvasHeight}), 缩放因子:{scaleFactor:F2}, 按钮尺寸:{buttonSize:F0}, 边距:{margin:F0}");
+        }
+
+        /// <summary>
+        /// 锚点位置枚举
+        /// </summary>
+        private enum AnchorPosition
+        {
+            TopLeft, TopRight, BottomLeft, BottomRight
+        }
+
+        /// <summary>
+        /// 适配单个按钮
+        /// </summary>
+        private void AdaptButton(Button button, float size, float margin, AnchorPosition anchor)
+        {
+            if (button == null) return;
+
+            var rectTransform = button.GetComponent<RectTransform>();
+            if (rectTransform == null) return;
+
+            // 设置尺寸
+            rectTransform.sizeDelta = new Vector2(size, size);
+
+            // 根据锚点位置设置
+            switch (anchor)
+            {
+                case AnchorPosition.TopLeft:
+                    rectTransform.anchorMin = new Vector2(0, 1);
+                    rectTransform.anchorMax = new Vector2(0, 1);
+                    rectTransform.pivot = new Vector2(0, 1);
+                    rectTransform.anchoredPosition = new Vector2(margin, -margin);
+                    break;
+                case AnchorPosition.TopRight:
+                    rectTransform.anchorMin = new Vector2(1, 1);
+                    rectTransform.anchorMax = new Vector2(1, 1);
+                    rectTransform.pivot = new Vector2(1, 1);
+                    rectTransform.anchoredPosition = new Vector2(-margin, -margin);
+                    break;
+                case AnchorPosition.BottomLeft:
+                    rectTransform.anchorMin = new Vector2(0, 0);
+                    rectTransform.anchorMax = new Vector2(0, 0);
+                    rectTransform.pivot = new Vector2(0, 0);
+                    rectTransform.anchoredPosition = new Vector2(margin, margin);
+                    break;
+                case AnchorPosition.BottomRight:
+                    rectTransform.anchorMin = new Vector2(1, 0);
+                    rectTransform.anchorMax = new Vector2(1, 0);
+                    rectTransform.pivot = new Vector2(1, 0);
+                    rectTransform.anchoredPosition = new Vector2(-margin, margin);
+                    break;
             }
         }
 
@@ -61,6 +193,11 @@ namespace FarmGame.UI
             if (BackpackButton != null)
             {
                 BackpackButton.onClick.RemoveAllListeners();
+            }
+            
+            if (mSaveButton != null)
+            {
+                mSaveButton.onClick.RemoveAllListeners();
             }
         }
 
@@ -87,6 +224,19 @@ namespace FarmGame.UI
                 {
                     Debug.LogWarning("无法获取玩家背包数据，玩家或背包组件为空");
                 }
+            }
+        }
+        
+        /// <summary>
+        /// 存档按钮点击事件
+        /// </summary>
+        private void OnSaveButtonClick()
+        {
+            // 打开存档面板（默认为保存模式）
+            var uiManager = FarmGame.Core.UIManager.Instance;
+            if (uiManager != null)
+            {
+                uiManager.OpenSaveLoadPanel(true);
             }
         }
 

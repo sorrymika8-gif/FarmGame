@@ -11,6 +11,7 @@ using FarmGame.Farm;
 using FarmGame.Item;
 using FarmGame.Shop;
 using FarmGame.Core.LLMDescription;
+using FarmGame.Core.Save;
 using Cysharp.Threading.Tasks;
 
 namespace FarmGame.Core
@@ -68,6 +69,10 @@ namespace FarmGame.Core
             // 2. 初始化UI管理器
             UIManager.Instance.Initialize();
             Debug.Log("[BootManager] UIManager initialized");
+
+            // 2.5 初始化存档系统
+            SaveSystem.Instance.Initialize();
+            Debug.Log("[BootManager] SaveSystem initialized");
 
             // 3. 初始化地图管理器
             MapManager.Instance.Initialize();

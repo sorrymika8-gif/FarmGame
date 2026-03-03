@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5423591906194098015}
   - component: {fileID: 2084158300898855856}
   - component: {fileID: 4912919883652107711}
+  - component: {fileID: 4912919883652107712}
   m_Layer: 0
   m_HasEditorInfo: 1
   m_Name: SeedShop
@@ -150,7 +151,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mShopType: 1
   mInteractionDistance: 2
-  mShopName: "\u79CD\u5B50\u5E97"
-  mInteractionHint: "\u70B9\u51FB\u8FDB\u5165\u79CD\u5B50\u5E97"
+  mShopName: "\u79CD\u5B50\u5546\u5E97"
+  mInteractionHint: "\u70B9\u51FB\u8FDB\u5165\u79CD\u5B50\u5546\u5E97"
   mTooFarHint: "\u592A\u8FDC\u4E86\uFF0C\u8BF7\u9760\u8FD1\u4E00\u70B9"
   mShowHint: 1
+--- !u!114 &4912919883652107712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2906358598305102937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mLabelText: "\u79CD\u5B50\u5546\u5E97"
+  mOffset: {x: 0, y: 0.8, z: 0}
+  mFontSize: 48
+  mColor: {r: 1, g: 1, b: 1, a: 1}

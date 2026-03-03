@@ -109,5 +109,19 @@ namespace FarmGame.Item
         }
         
         public IEnumerable<ItemEntity> GetAllItems() => mItems.Values;
+        
+        /// <summary>
+        /// 清空背包
+        /// </summary>
+        public void Clear()
+        {
+            var itemIds = new List<int>(mItems.Keys);
+            foreach (int configId in itemIds)
+            {
+                mItems.Remove(configId);
+                OnItemChanged?.Invoke(configId, 0);
+            }
+            Debug.Log("[Inventory] Cleared all items");
+        }
     }
 }

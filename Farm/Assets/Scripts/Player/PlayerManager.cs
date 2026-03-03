@@ -211,6 +211,29 @@ namespace FarmGame.Player
             return mGold >= amount;
         }
 
+        /// <summary>
+        /// 直接设置金币数量（用于存档加载）
+        /// </summary>
+        /// <param name="amount">新的金币数量</param>
+        public void SetGold(int amount)
+        {
+            if (!ValidateInitialized()) return;
+            if (amount < 0)
+            {
+                Debug.LogWarning("[PlayerManager] SetGold amount cannot be negative");
+                amount = 0;
+            }
+            
+            int oldGold = mGold;
+            mGold = amount;
+            
+            if (oldGold != mGold)
+            {
+                OnGoldChanged?.Invoke(mGold);
+                Debug.Log($"[PlayerManager] Gold set: {oldGold} -> {mGold}");
+            }
+        }
+
         #endregion
 
         #region 私有方法

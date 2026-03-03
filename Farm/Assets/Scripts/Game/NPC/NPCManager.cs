@@ -211,7 +211,7 @@ namespace FarmGame.Game.NPC
                     // 注意：CommandQueue.ProcessNext() 通常是非阻塞的，只负责发起
                     // 如果指令是异步的 (如移动)，它会启动但立即返回
                     // 具体行为取决于 mBrain.ExecutorRegistry 中的实现
-                    // npc.CommandQueue.ProcessNext(); 
+                    npc.CommandQueue.ProcessNext(); 
                     // TODO: 暂时注释，等待 Unity 侧的 Executor 实现
                 }
             }

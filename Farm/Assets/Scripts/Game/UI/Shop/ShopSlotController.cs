@@ -105,6 +105,193 @@ namespace FarmGame.UI
 
             // 初始隐藏选中框
             SetSelected(false);
+            
+            // 立即设置LayoutElement，确保在父布局计算前生效
+            SetupLayoutElement();
+        }
+        
+        /// <summary>
+        /// 设置LayoutElement组件
+        /// </summary>
+        private void SetupLayoutElement()
+        {
+            var layoutElement = GetComponent<LayoutElement>();
+            if (layoutElement == null)
+            {
+                layoutElement = gameObject.AddComponent<LayoutElement>();
+            }
+            layoutElement.preferredHeight = 60f;
+            layoutElement.minHeight = 60f;
+            layoutElement.flexibleHeight = 0f;
+            layoutElement.flexibleWidth = 1f;
+            layoutElement.ignoreLayout = false;
+            
+            // 直接设置RectTransform高度
+            var rectTransform = GetComponent<RectTransform>();
+            if (rectTransform != null)
+            {
+                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, 60f);
+            }
+        }
+
+        /// <summary>
+        /// 转换为横向列表布局（图标在左，名称在中，价格在右）
+        /// </summary>
+        public void ConvertToHorizontalListLayout()
+        {
+            var rectTransform = GetComponent<RectTransform>();
+            if (rectTransform == null) return;
+            
+            // 设置锚点为水平拉伸，保持固定高度（由ShopPanel设置）
+            // 不在这里修改锚点，由ShopPanel控制
+            
+            // 设置固定高度
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, 60f);
+
+            // 设置固定高度，宽度自适应
+            var layoutElement = GetComponent<LayoutElement>();
+            if (layoutElement == null)
+            {
+                layoutElement = gameObject.AddComponent<LayoutElement>();
+            }
+            layoutElement.preferredHeight = 60f;
+            layoutElement.minHeight = 60f;
+            layoutElement.flexibleHeight = 0f; // 不允许垂直拉伸
+            layoutElement.flexibleWidth = 1f;
+            layoutElement.ignoreLayout = false; // 确保参与布局
+
+            // 首先设置 ignoreLayout 的元素，避免它们干扰布局
+            // 背景图片不参与布局
+            if (mBackgroundImage != null)
+            {
+                var bgLayout = mBackgroundImage.GetComponent<LayoutElement>();
+                if (bgLayout == null)
+                {
+                    bgLayout = mBackgroundImage.gameObject.AddComponent<LayoutElement>();
+                }
+                bgLayout.ignoreLayout = true;
+                
+                var bgRect = mBackgroundImage.GetComponent<RectTransform>();
+                if (bgRect != null)
+                {
+                    bgRect.anchorMin = Vector2.zero;
+                    bgRect.anchorMax = Vector2.one;
+                    bgRect.sizeDelta = Vector2.zero;
+                    bgRect.anchoredPosition = Vector2.zero;
+                }
+                // 确保背景在最底层
+                mBackgroundImage.transform.SetAsFirstSibling();
+            }
+
+            // 选中框不参与布局
+            if (mSelectFrame != null)
+            {
+                var selectLayout = mSelectFrame.GetComponent<LayoutElement>();
+                if (selectLayout == null)
+                {
+                    selectLayout = mSelectFrame.gameObject.AddComponent<LayoutElement>();
+                }
+                selectLayout.ignoreLayout = true;
+                
+                var selectRect = mSelectFrame.GetComponent<RectTransform>();
+                if (selectRect != null)
+                {
+                    selectRect.anchorMin = Vector2.zero;
+                    selectRect.anchorMax = Vector2.one;
+                    selectRect.sizeDelta = Vector2.zero;
+                    selectRect.anchoredPosition = Vector2.zero;
+                }
+                // 选中框在背景之上
+                mSelectFrame.transform.SetSiblingIndex(1);
+            }
+
+            // 不使用HorizontalLayoutGroup，直接设置子元素位置
+            // 调整图标布局
+            if (mIconImage != null)
+            {
+                var iconRect = mIconImage.GetComponent<RectTransform>();
+                if (iconRect != null)
+                {
+                    iconRect.anchorMin = new Vector2(0, 0.5f);
+                    iconRect.anchorMax = new Vector2(0, 0.5f);
+                    iconRect.pivot = new Vector2(0, 0.5f);
+                    iconRect.anchoredPosition = new Vector2(10, 0);
+                    iconRect.sizeDelta = new Vector2(50, 50);
+                }
+                var iconLayout = mIconImage.GetComponent<LayoutElement>();
+                if (iconLayout != null) DestroyImmediate(iconLayout);
+            }
+
+            // 调整名称布局
+            if (mNameText != null)
+            {
+                var nameRect = mNameText.GetComponent<RectTransform>();
+                if (nameRect != null)
+                {
+                    nameRect.anchorMin = new Vector2(0, 0);
+                    nameRect.anchorMax = new Vector2(1, 1);
+                    nameRect.pivot = new Vector2(0.5f, 0.5f);
+                    nameRect.offsetMin = new Vector2(70, 5); // 左边距离图标
+                    nameRect.offsetMax = new Vector2(-90, -5); // 右边留给价格
+                }
+                mNameText.alignment = TextAnchor.MiddleLeft;
+                mNameText.fontSize = 18;
+                var nameLayout = mNameText.GetComponent<LayoutElement>();
+                if (nameLayout != null) DestroyImmediate(nameLayout);
+            }
+
+            // 调整价格布局
+            if (mPriceText != null)
+            {
+                var priceRect = mPriceText.GetComponent<RectTransform>();
+                if (priceRect != null)
+                {
+                    priceRect.anchorMin = new Vector2(1, 0.5f);
+                    priceRect.anchorMax = new Vector2(1, 0.5f);
+                    priceRect.pivot = new Vector2(1, 0.5f);
+                    priceRect.anchoredPosition = new Vector2(-10, 0);
+                    priceRect.sizeDelta = new Vector2(80, 30);
+                }
+                mPriceText.alignment = TextAnchor.MiddleRight;
+                mPriceText.fontSize = 16;
+                var priceLayout = mPriceText.GetComponent<LayoutElement>();
+                if (priceLayout != null) DestroyImmediate(priceLayout);
+            }
+
+            // 隐藏数量文本
+            if (mCountText != null)
+            {
+                mCountText.gameObject.SetActive(false);
+            }
+            
+            // 移除HorizontalLayoutGroup（如果存在）
+            var horizontalLayout = GetComponent<HorizontalLayoutGroup>();
+            if (horizontalLayout != null)
+            {
+                DestroyImmediate(horizontalLayout);
+            }
+            
+            Debug.Log($"[ShopSlot] 布局转换完成，LayoutElement.preferredHeight={layoutElement.preferredHeight}, minHeight={layoutElement.minHeight}");
+        }
+
+        /// <summary>
+        /// 适配格子内部元素尺寸（保留兼容旧模式）
+        /// </summary>
+        private void AdaptInternalElements()
+        {
+            // 横向列表模式下不需要这个适配
+        }
+
+        private void Start()
+        {
+            // 延迟一帧再次适配，确保GridLayoutGroup已设置好尺寸
+            StartCoroutine(DelayedAdapt());
+        }
+
+        private System.Collections.IEnumerator DelayedAdapt()
+        {
+            yield return null; // 等待下一帧
+            AdaptInternalElements();
         }
 
         private void OnDestroy()
@@ -125,23 +312,26 @@ namespace FarmGame.UI
         /// <param name="itemData">商店商品数据</param>
         public void SetShopItem(ShopItemData itemData)
         {
-            if (itemData == null || itemData.ItemConfig == null)
+            if (itemData == null || !itemData.ItemConfigInfo.IsValid)
             {
                 ClearSlot();
                 return;
             }
 
-            mItemId = itemData.ItemConfig.class_id;
-            mItemName = itemData.ItemConfig.name;
-            mItemDescription = itemData.ItemConfig.description;
+            mItemId = itemData.ItemId;
+            mItemName = itemData.ItemName;
+            mItemDescription = itemData.ItemDescription;
             mPrice = itemData.BuyPrice;
             mCount = -1; // 购买模式不显示数量
 
             // 更新图标
-            LoadIcon(itemData.ItemConfig.icon);
+            LoadIcon(itemData.ItemIcon);
 
             // 更新显示
             UpdateDisplay();
+            
+            // 设置内部元素布局
+            ConvertToHorizontalListLayout();
         }
 
         /// <summary>
@@ -178,6 +368,9 @@ namespace FarmGame.UI
 
             // 更新显示
             UpdateDisplay();
+            
+            // 设置内部元素布局
+            ConvertToHorizontalListLayout();
         }
 
         /// <summary>
