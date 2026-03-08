@@ -1,5 +1,6 @@
 using UnityEngine;
 using FarmGame.Movement;
+using FarmGame.Core;
 
 namespace FarmGame.Player
 {
@@ -58,6 +59,13 @@ namespace FarmGame.Player
             if (mMovable != null)
             {
                 mMovable.MoveSpeed = mData.MoveSpeed;
+            }
+
+            // 设置渲染层级为 Characters
+            var spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                SortingLayerConfig.SetSortingLayer(spriteRenderer, SortingLayerConfig.Characters);
             }
 
             // 同步初始位置

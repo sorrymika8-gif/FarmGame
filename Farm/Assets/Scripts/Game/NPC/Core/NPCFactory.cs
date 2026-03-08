@@ -1,59 +1,48 @@
 using System;
 using UnityEngine;
 using FarmGame.LLMCore.Brain;
+using FarmGame.GameConfig.Generated;
+using FarmGame.Map;
 
 namespace FarmGame.Game.NPC
 {
     /// <summary>
-    /// NPC 配置数据 (对应配置表)
-    /// </summary>
-    [Serializable]
-    public class NPCConfig
-    {
-        public string Id;
-        public string Name;
-        public string Gender;
-        public string Personality;
-        public string Background;
-        public string Appearance;
-        public string InitialRoomId;
-        public Vector3 InitialPosition;
-        public string[] InitialMemories;
-        // 分区配置可以后续扩展，暂时使用默认值
-        public PartitionConfig[] PartitionConfigs;
-    }
-
-    /// <summary>
     /// NPC 工厂
+    /// 使用 NpcConfig (从配置表生成) 创建 NPC 实体
     /// </summary>
     public static class NPCFactory
     {
-        public static NPCEntity Create(NPCConfig config, Brain brain)
+        /// <summary>
+        /// 从配置表创建 NPC 实体
+        /// </summary>
+        /// <param name="config">NPC配置 (来自npc.xlsx)</param>
+        /// <param name="brain">Brain实例</param>
+        /// <returns>创建的NPC实体</returns>
+        public static NPCEntity Create(NpcConfig config, Brain brain)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
             if (brain == null) throw new ArgumentNullException(nameof(brain));
 
             var entity = new NPCEntity(
-                id: config.Id,
-                name: config.Name,
+                id: config.class_id.ToString(),
+                name: config.name,
                 executorRegistry: brain.ExecutorRegistry
             );
 
             // 设置属性
-            entity.Gender = config.Gender;
-            entity.Personality = config.Personality;
-            entity.Background = config.Background;
-            entity.Appearance = config.Appearance;
-            entity.RoomId = config.InitialRoomId;
-            entity.Position = config.InitialPosition;
+            entity.Gender = config.gender ?? "未知";
             
-            // 初始化记忆
-            // 注意: NPCEntity 内部现在使用默认的 MemoryStore 创建方式
-            // 如果需要特定 PartitionConfig，需要扩展 NPCEntity 的初始化能力或者手动配置
-            if (config.InitialMemories != null)
+            // 设置初始位置
+            if (config.init_pos != null && config.init_pos.Length >= 2)
             {
-                entity.InitializeMemories(config.InitialMemories);
+                entity.Position = MapManager.Instance.GridToWorld(config.init_pos[0], config.init_pos[1]);
             }
+            
+            // 设置交互距离
+            entity.InteractionDistance = config.interaction_dis > 0 ? config.interaction_dis : 2f;
+            
+            // 设置提示词文件路径
+            entity.PromptFilePath = config.prompt;
 
             return entity;
         }

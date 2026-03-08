@@ -168,6 +168,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mLabelText: "\u79CD\u5B50\u5546\u5E97"
-  mOffset: {x: 0, y: 0.8, z: 0}
-  mFontSize: 48
+  mOffset: {x: 0, y: 0, z: 0}
+  mFontSize: 64
+  mCharacterSize: 0.08
+  mFitWidthRatio: 0.75
+  mFitHeightRatio: 0.4
   mColor: {r: 1, g: 1, b: 1, a: 1}

@@ -9,56 +9,160 @@ namespace FarmGame.LLMCore.Brain
     /// <summary>
     /// 统一决策提示词构建器
     /// 用于所有类型的决策场景（对话、行为、战斗等）
-    /// 通过 TriggerEvent 区分不同的触发情境
+    /// 采用模块化设计：通用模块 + NPC专属人设
     /// </summary>
     public class UnifiedPromptBuilder : IPromptBuilder
     {
         public string DecisionType => DecisionTypes.Unified;
 
-        // 模板文件路径 (相对于 Assets 目录)
-        private const string TEMPLATE_REL_PATH = "Prompts/UnifiedPromptTemplate.md";
+        // 目录路径 (相对于 Assets 目录)
+        private const string NPC_PROMPTS_DIR = "Prompts/Npcs";
+        private const string COMMON_PROMPTS_DIR = "Prompts/Common";
 
         // 记忆条数限制
         private const int MAX_SHORT_TERM = 20;
         private const int MAX_LONG_TERM = 10;
         private const int MAX_PERMANENT = 10;
 
-        public string Build(DecisionContext context)
+        // 通用模块缓存
+        private static Dictionary<string, string> sCommonModuleCache;
+
+        /// <summary>
+        /// 初始化通用模块缓存（可在游戏启动时调用）
+        /// </summary>
+        public static void InitializeCache()
         {
-            // 加载模板
-            string fullPath = Path.Combine(Application.dataPath, TEMPLATE_REL_PATH);
-            if (!File.Exists(fullPath))
+            sCommonModuleCache = new Dictionary<string, string>();
+            string commonDir = Path.Combine(Application.dataPath, COMMON_PROMPTS_DIR);
+
+            string[] moduleFiles = { "BaseIdentity.md", "StatePerception.md", "MemorySystem.md", "DecisionRules.md", "OutputFormat.md" };
+            foreach (var fileName in moduleFiles)
             {
-                Debug.LogError($"[UnifiedPromptBuilder] 找不到提示词模板: {fullPath}");
+                string filePath = Path.Combine(commonDir, fileName);
+                if (File.Exists(filePath))
+                {
+                    sCommonModuleCache[fileName] = File.ReadAllText(filePath);
+                    Debug.Log($"[UnifiedPromptBuilder] 已缓存通用模块: {fileName}");
+                }
+                else
+                {
+                    Debug.LogWarning($"[UnifiedPromptBuilder] 通用模块文件不存在: {filePath}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 加载通用模块内容
+        /// </summary>
+        private string LoadCommonModule(string fileName)
+        {
+            // 优先从缓存读取
+            if (sCommonModuleCache != null && sCommonModuleCache.TryGetValue(fileName, out var cached))
+            {
+                return cached;
+            }
+
+            // 缓存未初始化则直接读文件
+            string filePath = Path.Combine(Application.dataPath, COMMON_PROMPTS_DIR, fileName);
+            if (File.Exists(filePath))
+            {
+                return File.ReadAllText(filePath);
+            }
+
+            Debug.LogWarning($"[UnifiedPromptBuilder] 通用模块文件不存在: {filePath}");
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 加载NPC专属人设文件
+        /// </summary>
+        private string LoadNpcPrompt(string promptFileName)
+        {
+            if (string.IsNullOrEmpty(promptFileName))
+            {
+                Debug.LogError($"[UnifiedPromptBuilder] NPC未配置专属提示词文件！请在npc.xlsx的prompt字段中填写提示词文件名（如 villager.md）");
                 return string.Empty;
             }
 
-            string template = File.ReadAllText(fullPath);
+            string fullPath = Path.Combine(Application.dataPath, NPC_PROMPTS_DIR, promptFileName);
+            if (!File.Exists(fullPath))
+            {
+                Debug.LogError($"[UnifiedPromptBuilder] 找不到NPC专属提示词文件: {fullPath}");
+                return string.Empty;
+            }
 
-            // 1. 构建角色设定字符串
+            Debug.Log($"[UnifiedPromptBuilder] 已加载NPC专属人设: {promptFileName}");
+            return File.ReadAllText(fullPath);
+        }
+
+        public string Build(DecisionContext context)
+        {
+            // 从上下文获取NPC专属提示词文件名
+            string promptFileName = null;
+            if (context.Extra != null && context.Extra.TryGetValue("PromptFilePath", out var pathObj))
+            {
+                promptFileName = pathObj as string;
+            }
+
+            var sb = new StringBuilder();
+
+            // ===== 按顺序组装模块 =====
+
+            // 1. 基础身份说明
+            sb.AppendLine(LoadCommonModule("BaseIdentity.md"));
+            sb.AppendLine();
+
+            // 2. NPC专属人设（性格、说话风格、特殊要求）
+            string npcPrompt = LoadNpcPrompt(promptFileName);
+            if (string.IsNullOrEmpty(npcPrompt))
+            {
+                return string.Empty; // NPC专属文件是必须的
+            }
+            sb.AppendLine(npcPrompt);
+            sb.AppendLine();
+
+            // 3. 状态和感知
+            sb.AppendLine(LoadCommonModule("StatePerception.md"));
+            sb.AppendLine();
+
+            // 4. 记忆系统
+            sb.AppendLine(LoadCommonModule("MemorySystem.md"));
+            sb.AppendLine();
+
+            // 5. 可用行为和表情
+            sb.AppendLine("## 可用行为");
+            sb.AppendLine(GetAvailableActions(context));
+            sb.AppendLine();
+            sb.AppendLine("## 可用表情");
+            sb.AppendLine(ExpressionHintLoader.GetAllExpressionHints());
+            sb.AppendLine();
+
+            // 6. 通用决策规则
+            sb.AppendLine(LoadCommonModule("DecisionRules.md"));
+            sb.AppendLine();
+
+            // 7. 输出格式
+            sb.AppendLine(LoadCommonModule("OutputFormat.md"));
+
+            // ===== 替换所有占位符 =====
+            string finalPrompt = sb.ToString();
+            return ReplacePlaceholders(finalPrompt, context);
+        }
+
+        /// <summary>
+        /// 替换提示词中的所有占位符
+        /// </summary>
+        private string ReplacePlaceholders(string template, DecisionContext context)
+        {
+            // 构建各种数据字符串
             string characterProfile = BuildDictionaryString(context.CharacterProfile, "无特定设定");
-
-            // 2. 构建当前状态字符串
             string currentState = BuildObjectDictionaryString(context.CurrentState, "无状态信息");
-
-            // 3. 构建环境感知字符串
             string perception = BuildObjectDictionaryString(context.Perception, "无特别感知");
-
-            // 4. 构建各层记忆字符串
             string shortTermMemories = BuildMemoryString(context.MemoryStore, "short_term", MAX_SHORT_TERM, "无最近经历");
             string longTermMemories = BuildMemoryString(context.MemoryStore, "long_term", MAX_LONG_TERM, "无重要记忆");
             string permanentMemories = BuildMemoryString(context.MemoryStore, "permanent", MAX_PERMANENT, "无刻骨铭心的记忆");
-
-            // 5. 获取触发事件
             string triggerEvent = string.IsNullOrEmpty(context.TriggerEvent) ? "无特定触发事件" : context.TriggerEvent;
 
-            // 6. 获取可用行为（可从 Extra 中指定特定行为列表，否则获取全部）
-            string availableActions = GetAvailableActions(context);
-
-            // 7. 获取表情列表（用于替换 SetExpression 中的占位符）
-            string expressionList = ExpressionHintLoader.GetAllExpressionHints();
-
-            // 替换所有占位符
             return template
                 .Replace("{{CHARACTER_PROFILE}}", characterProfile)
                 .Replace("{{CURRENT_STATE}}", currentState)
@@ -66,27 +170,20 @@ namespace FarmGame.LLMCore.Brain
                 .Replace("{{SHORT_TERM_MEMORIES}}", shortTermMemories)
                 .Replace("{{LONG_TERM_MEMORIES}}", longTermMemories)
                 .Replace("{{PERMANENT_MEMORIES}}", permanentMemories)
-                .Replace("{{TRIGGER_EVENT}}", triggerEvent)
-                .Replace("{{AVAILABLE_ACTIONS}}", availableActions)
-                .Replace("{{EXPRESSION_LIST}}", expressionList);
+                .Replace("{{TRIGGER_EVENT}}", triggerEvent);
         }
 
         /// <summary>
         /// 获取可用行为提示词
-        /// 如果 context.Extra 中指定了 "AvailableActions"，则只加载指定的行为
-        /// 否则加载所有行为
         /// </summary>
         private string GetAvailableActions(DecisionContext context)
         {
-            // 检查是否在 Extra 中指定了可用行为列表
             if (context.Extra != null && 
                 context.Extra.TryGetValue("AvailableActions", out var actionsObj) &&
                 actionsObj is IEnumerable<string> actionTypes)
             {
                 return ActionHintLoader.GetActionHints(actionTypes);
             }
-
-            // 默认返回所有行为
             return ActionHintLoader.GetAllActionHints();
         }
 
@@ -145,7 +242,6 @@ namespace FarmGame.LLMCore.Brain
             var memories = partition.GetAll();
             var sb = new StringBuilder();
 
-            // 取最近的 maxCount 条记忆
             int startIdx = memories.Count > maxCount ? memories.Count - maxCount : 0;
             for (int i = startIdx; i < memories.Count; i++)
             {

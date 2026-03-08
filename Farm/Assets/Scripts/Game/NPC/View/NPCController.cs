@@ -52,6 +52,13 @@ namespace FarmGame.Game.NPC
                 col.isTrigger = true; 
                 col.size = new Vector2(1, 1);
             }
+
+            // 设置渲染层级为 Characters
+            var spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                SortingLayerConfig.SetSortingLayer(spriteRenderer, SortingLayerConfig.Characters);
+            }
         }
 
         private void Start()

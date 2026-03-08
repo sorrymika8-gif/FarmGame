@@ -25,17 +25,8 @@ namespace FarmGame.GameConfig.Generated
         /// <summary>npc性别</summary>
         public string gender;
 
-        /// <summary>npc描述</summary>
-        public string desc;
-
-        /// <summary>npc性格</summary>
-        public string character;
-
-        /// <summary>npc背景</summary>
-        public string background;
-
-        /// <summary>npc补充提示词</summary>
-        public string extra_prompt;
+        /// <summary>npc提示词文件名</summary>
+        public string prompt;
 
         /// <summary>模型名</summary>
         public string model_name;

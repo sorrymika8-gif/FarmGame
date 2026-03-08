@@ -88,6 +88,18 @@ namespace FarmGame.Game.Interactable
 
             // 获取 SpriteRenderer（可选）
             mSpriteRenderer = GetComponent<SpriteRenderer>();
+
+            // 添加基于Y坐标的排序组件（建筑物使用静态模式）
+            var sortByY = GetComponent<SpriteSortByY>();
+            if (sortByY == null && mSpriteRenderer != null)
+            {
+                sortByY = gameObject.AddComponent<SpriteSortByY>();
+                sortByY.SetUpdateMode(SpriteSortByY.UpdateMode.OnceOnStart);
+            }
+            if (sortByY != null)
+            {
+                sortByY.SortingLayerName = SortingLayerConfig.MapObjects;
+            }
         }
 
         private void Update()

@@ -25,6 +25,8 @@ namespace FarmGame.Game.NPC
         public string Personality { get; set; }
         public string Background { get; set; }
         public string Appearance { get; set; }
+        /// <summary>NPC专属提示词文件名（如 villager.md）</summary>
+        public string PromptFilePath { get; set; }
         #endregion
 
         #region 动态状态
@@ -171,6 +173,9 @@ namespace FarmGame.Game.NPC
             
             // 传入 NPCEntity 引用，供执行器记录行为
             context.Extra["NPCEntity"] = this;
+            
+            // 传入NPC专属提示词文件路径
+            context.Extra["PromptFilePath"] = PromptFilePath;
 
             // 3. 触发大脑思考
             var brain = NPCManager.Instance.SharedBrain;
