@@ -193,6 +193,18 @@ namespace FarmGame.LLMCore.Brain
                         Y = Mathf.RoundToInt(data.y)
                     };
 
+                case CommandTypes.SetExpression:
+                    return new SetExpressionCommand
+                    {
+                        Expression = data.expression
+                    };
+
+                case CommandTypes.SetMood:
+                    return new SetMoodCommand
+                    {
+                        Emoji = data.emoji
+                    };
+
                 default:
                     Debug.LogWarning($"[UnifiedCommandParser] 未知的指令类型: {data.type}");
                     return null;
@@ -228,6 +240,12 @@ namespace FarmGame.LLMCore.Brain
 
             // Plant
              public int itemId;
+
+            // SetExpression
+            public string expression;
+
+            // SetMood
+            public string emoji;
         }
     }
 }

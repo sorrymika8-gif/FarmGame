@@ -83,6 +83,17 @@ namespace FarmGame.Game.NPC
         /// <param name="duration">显示时长（秒），0表示不自动消失，-1使用默认值</param>
         public void Show(string content, float duration = -1f)
         {
+            ShowWithMood(content, null, duration);
+        }
+
+        /// <summary>
+        /// 显示带心情emoji的气泡
+        /// </summary>
+        /// <param name="content">显示内容</param>
+        /// <param name="mood">心情emoji（显示在文本前面）</param>
+        /// <param name="duration">显示时长（秒），0表示不自动消失，-1使用默认值</param>
+        public void ShowWithMood(string content, string mood, float duration = -1f)
+        {
             if (string.IsNullOrEmpty(content))
             {
                 Debug.LogWarning("[NPCBubble] 显示内容为空");
@@ -92,10 +103,17 @@ namespace FarmGame.Game.NPC
             // 取消之前的自动隐藏
             CancelAutoHide();
 
+            // 构建带emoji的文本
+            string displayText = content;
+            if (!string.IsNullOrEmpty(mood))
+            {
+                displayText = $"{mood} {content}";
+            }
+
             // 设置文本
             if (mText != null)
             {
-                mText.text = content;
+                mText.text = displayText;
             }
 
             // 使用默认时长

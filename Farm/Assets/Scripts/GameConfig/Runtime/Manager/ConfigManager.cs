@@ -130,6 +130,7 @@ namespace FarmGame.GameConfig
                     foreach (var type in types)
                     {
                         mConfigTypeMap[type.Name] = type;
+                        Debug.Log($"[ConfigManager] 注册配置类型: {type.Name} ({type.Namespace})");
                     }
                 }
                 catch
@@ -138,7 +139,7 @@ namespace FarmGame.GameConfig
                 }
             }
 
-            Debug.Log($"[ConfigManager] 已注册 {mConfigTypeMap.Count} 个配置类型");
+            Debug.Log($"[ConfigManager] 已注册 {mConfigTypeMap.Count} 个配置类型: {string.Join(", ", mConfigTypeMap.Keys)}");
         }
 
         #endregion
@@ -274,7 +275,12 @@ namespace FarmGame.GameConfig
         {
             if (mContainers.TryGetValue(typeof(T), out var container))
             {
-                return container as IListContainer<T>;
+                var listContainer = container as IListContainer<T>;
+                if (listContainer == null)
+                {
+                    Debug.LogWarning($"[ConfigManager] 配置 {typeof(T).Name} 不是 List 格式，实际类型: {container.GetType().Name}");
+                }
+                return listContainer;
             }
             throw new KeyNotFoundException($"未找到配置: {typeof(T).Name}");
         }
@@ -306,10 +312,15 @@ namespace FarmGame.GameConfig
                 var map = container as IMapContainer<int, T>;
                 if (map != null)
                 {
-                    return map.Get(id);
+                    if (map.TryGet(id, out var value))
+                    {
+                        return value;
+                    }
+                    Debug.LogWarning($"[ConfigManager] GetConfig<{typeof(T).Name}>({id}) 失败: 配置不存在");
+                    return null;
                 }
             }
-            Debug.LogWarning($"[ConfigManager] GeConfig<{typeof(T).Name}>({id}) 失败: 容器不存在或Key类型不匹配");
+            Debug.LogWarning($"[ConfigManager] GetConfig<{typeof(T).Name}>({id}) 失败: 容器不存在或Key类型不匹配");
             return null;
         }
 

@@ -2,7 +2,7 @@
 // 自动生成，请勿手动修改
 // 来源: npc.xlsx
 // 描述: npc配置
-// 生成时间: 2026-02-23 02:47:02
+// 生成时间: 2026-03-02 23:51:09
 // ==========================================================
 
 using System;
@@ -25,17 +25,8 @@ namespace FarmGame.GameConfig.Generated
         /// <summary>npc性别</summary>
         public string gender;
 
-        /// <summary>npc描述</summary>
-        public string desc;
-
-        /// <summary>npc性格</summary>
-        public string character;
-
-        /// <summary>npc背景</summary>
-        public string background;
-
-        /// <summary>npc补充提示词</summary>
-        public string extra_prompt;
+        /// <summary>npc提示词文件名</summary>
+        public string prompt;
 
         /// <summary>模型名</summary>
         public string model_name;

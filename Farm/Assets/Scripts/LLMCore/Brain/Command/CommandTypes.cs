@@ -28,5 +28,11 @@ namespace FarmGame.LLMCore.Brain
 
         /// <summary>收获指令</summary>
         public const string Harvest = "Harvest";
+
+        /// <summary>设置表情指令</summary>
+        public const string SetExpression = "SetExpression";
+
+        /// <summary>设置心情指令（emoji）</summary>
+        public const string SetMood = "SetMood";
     }
 }

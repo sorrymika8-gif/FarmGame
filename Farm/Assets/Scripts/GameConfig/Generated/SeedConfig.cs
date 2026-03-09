@@ -2,7 +2,7 @@
 // 自动生成，请勿手动修改
 // 来源: seed.xlsx
 // 描述: 植物种子配置表
-// 生成时间: 2026-02-23 02:47:02
+// 生成时间: 2026-03-02 23:51:09
 // ==========================================================
 
 using System;
@@ -39,6 +39,9 @@ namespace FarmGame.GameConfig.Generated
 
         /// <summary>收获数量</summary>
         public int[] bonus_amount;
+
+        /// <summary>售价</summary>
+        public int sell_price;
 
         /// <summary>图标</summary>
         public string icon;

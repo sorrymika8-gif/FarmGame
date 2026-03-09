@@ -12,6 +12,7 @@ namespace FarmGame.Game.NPC
     public class DialogueSystem : MonoBehaviour
     {
         private NPCEntity mEntity;
+        private DialogueUIPanel mDialoguePanel;
 
         /// <summary>
         /// 绑定实体
@@ -28,8 +29,20 @@ namespace FarmGame.Game.NPC
         {
             if (mEntity == null) return;
 
-            // 打开对话面板，并传递当前 NPC 实体作为上下文
-            UIManager.Instance.OpenPanel<DialogueUIPanel>("UI/DialogUI/DiaLogUiPab", new DialogueUIData(mEntity));
+            // 打开对话面板（面板内已整合立绘显示）
+            mDialoguePanel = UIManager.Instance.OpenPanel<DialogueUIPanel>(
+                "UI/DialogUI/DiaLogUiPab", 
+                new DialogueUIData(mEntity)
+            );
+        }
+
+        /// <summary>
+        /// 结束对话
+        /// </summary>
+        public void EndDialogue()
+        {
+            // 对话面板自己管理关闭，这里只清理引用
+            mDialoguePanel = null;
         }
 
         /// <summary>

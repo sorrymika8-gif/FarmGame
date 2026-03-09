@@ -124,9 +124,13 @@ namespace FarmGame.Game.NPC
             // 3. 构建 Entity
             var entity = new NPCEntity(config.class_id.ToString(), config.name);
             entity.Position = spawnPos; // 同步位置到数据实体，防止 Bind 时被重置为 0
+            entity.Gender = config.gender ?? "未知";
             
             // 设置交互距离 (从配置读取)
             entity.InteractionDistance = config.interaction_dis > 0 ? config.interaction_dis : 2f;
+            
+            // 设置NPC专属提示词文件路径
+            entity.PromptFilePath = config.prompt;
             
             // 4. 注册 Entity
             Register(entity);
@@ -154,6 +158,14 @@ namespace FarmGame.Game.NPC
                 controller.Bind(entity);
                 RegisterController(controller);
             }
+
+            // 7. 添加基于Y坐标的排序组件
+            var sortByY = go.GetComponent<SpriteSortByY>();
+            if (sortByY == null)
+            {
+                sortByY = go.AddComponent<SpriteSortByY>();
+            }
+            sortByY.SortingLayerName = SortingLayerConfig.Characters;
         }
 
         public void Register(NPCEntity npc)
@@ -211,7 +223,7 @@ namespace FarmGame.Game.NPC
                     // 注意：CommandQueue.ProcessNext() 通常是非阻塞的，只负责发起
                     // 如果指令是异步的 (如移动)，它会启动但立即返回
                     // 具体行为取决于 mBrain.ExecutorRegistry 中的实现
-                    // npc.CommandQueue.ProcessNext(); 
+                    npc.CommandQueue.ProcessNext(); 
                     // TODO: 暂时注释，等待 Unity 侧的 Executor 实现
                 }
             }

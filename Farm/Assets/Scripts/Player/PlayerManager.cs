@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using QFramework;
 using FarmGame.Core;
@@ -13,6 +14,7 @@ namespace FarmGame.Player
         #region 常量
 
         private const string PLAYER_PREFAB_PATH = "prefabs/player/player";
+        private const int DEFAULT_GOLD = 100;
 
         #endregion
 
@@ -21,6 +23,16 @@ namespace FarmGame.Player
         private bool mIsInitialized;
         private PlayerController mPlayer;
         private Transform mPlayerRoot;
+        private int mGold;
+
+        #endregion
+
+        #region 事件
+
+        /// <summary>
+        /// 金币变化事件，参数为当前金币数量
+        /// </summary>
+        public event Action<int> OnGoldChanged;
 
         #endregion
 
@@ -30,6 +42,11 @@ namespace FarmGame.Player
         /// 玩家控制器实例
         /// </summary>
         public PlayerController Player => mPlayer;
+
+        /// <summary>
+        /// 玩家金币数量
+        /// </summary>
+        public int Gold => mGold;
 
         #endregion
 
@@ -45,6 +62,9 @@ namespace FarmGame.Player
             // 创建玩家根节点
             mPlayerRoot = new GameObject("PlayerRoot").transform;
             mPlayerRoot.SetParent(transform);
+
+            // 初始化金币
+            mGold = DEFAULT_GOLD;
 
             mIsInitialized = true;
             Debug.Log("[PlayerManager] Initialized");
@@ -131,6 +151,87 @@ namespace FarmGame.Player
 
             mPlayer.Data.Position = position;
             mPlayer.transform.position = position;
+        }
+
+        #endregion
+
+        #region 公共接口 - 金币管理
+
+        /// <summary>
+        /// 增加金币
+        /// </summary>
+        /// <param name="amount">增加数量</param>
+        public void AddGold(int amount)
+        {
+            if (!ValidateInitialized()) return;
+            if (amount <= 0)
+            {
+                Debug.LogWarning("[PlayerManager] AddGold amount must be positive");
+                return;
+            }
+
+            mGold += amount;
+            OnGoldChanged?.Invoke(mGold);
+            Debug.Log($"[PlayerManager] Gold added: +{amount}, Total: {mGold}");
+        }
+
+        /// <summary>
+        /// 花费金币
+        /// </summary>
+        /// <param name="amount">花费数量</param>
+        /// <returns>是否花费成功</returns>
+        public bool SpendGold(int amount)
+        {
+            if (!ValidateInitialized()) return false;
+            if (amount <= 0)
+            {
+                Debug.LogWarning("[PlayerManager] SpendGold amount must be positive");
+                return false;
+            }
+
+            if (mGold < amount)
+            {
+                Debug.LogWarning($"[PlayerManager] Not enough gold. Have: {mGold}, Need: {amount}");
+                return false;
+            }
+
+            mGold -= amount;
+            OnGoldChanged?.Invoke(mGold);
+            Debug.Log($"[PlayerManager] Gold spent: -{amount}, Total: {mGold}");
+            return true;
+        }
+
+        /// <summary>
+        /// 检查是否有足够金币
+        /// </summary>
+        /// <param name="amount">需要的金币数量</param>
+        /// <returns>是否足够</returns>
+        public bool HasEnoughGold(int amount)
+        {
+            return mGold >= amount;
+        }
+
+        /// <summary>
+        /// 直接设置金币数量（用于存档加载）
+        /// </summary>
+        /// <param name="amount">新的金币数量</param>
+        public void SetGold(int amount)
+        {
+            if (!ValidateInitialized()) return;
+            if (amount < 0)
+            {
+                Debug.LogWarning("[PlayerManager] SetGold amount cannot be negative");
+                amount = 0;
+            }
+            
+            int oldGold = mGold;
+            mGold = amount;
+            
+            if (oldGold != mGold)
+            {
+                OnGoldChanged?.Invoke(mGold);
+                Debug.Log($"[PlayerManager] Gold set: {oldGold} -> {mGold}");
+            }
         }
 
         #endregion

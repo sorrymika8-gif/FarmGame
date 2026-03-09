@@ -9,7 +9,9 @@ using FarmGame.GameConfig;
 using FarmGame.Game.NPC;
 using FarmGame.Farm;
 using FarmGame.Item;
+using FarmGame.Shop;
 using FarmGame.Core.LLMDescription;
+using FarmGame.Core.Save;
 using Cysharp.Threading.Tasks;
 using FarmGame.Weather;
 
@@ -69,6 +71,10 @@ namespace FarmGame.Core
             UIManager.Instance.Initialize();
             Debug.Log("[BootManager] UIManager initialized");
 
+            // 2.5 初始化存档系统
+            SaveSystem.Instance.Initialize();
+            Debug.Log("[BootManager] SaveSystem initialized");
+
             // 3. 初始化地图管理器
             MapManager.Instance.Initialize();
             Debug.Log("[BootManager] MapManager initialized");
@@ -93,7 +99,11 @@ namespace FarmGame.Core
             ItemManager.Instance.Initialize();
             Debug.Log("[BootManager] ItemManager initialized");
 
-            // 9. 初始化农场管理器
+            // 9. 初始化商店管理器
+            ShopManager.Instance.Initialize();
+            Debug.Log("[BootManager] ShopManager initialized");
+
+            // 10. 初始化农场管理器
             FarmManager.Instance.Initialize();
             Debug.Log("[BootManager] FarmManager initialized");
 
@@ -103,6 +113,7 @@ namespace FarmGame.Core
 
 
             // 10. 在此处添加其他管理器的初始化...
+            // 11. 在此处添加其他管理器的初始化...
 
             mIsInitialized = true;
             Debug.Log("[BootManager] All managers initialized successfully");
