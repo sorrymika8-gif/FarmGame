@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using QFramework;
 using FarmGame.Player;
 using FarmGame.Item;
+using TMPro;
+using FarmGame.Weather;
 
 namespace FarmGame.UI
 {
@@ -21,6 +23,16 @@ namespace FarmGame.UI
     public partial class MainUIPanel : UIPanel
     {
         #region 私有字段
+        
+		[SerializeField] private TextMeshProUGUI mWeatherText;
+        [SerializeField] private Image mWeatherIcon;
+        [SerializeField] private TextMeshProUGUI mEnvironmentText;
+		
+		[Header("Weather Icons")]
+        public Sprite SunnyIcon;
+        public Sprite RainyIcon;
+        public Sprite CloudyIcon;
+
 
         private MainUIPanelData mData;
 
@@ -38,6 +50,11 @@ namespace FarmGame.UI
                 BackpackButton.onClick.RemoveAllListeners();
                 BackpackButton.onClick.AddListener(OnBackpackButtonClick);
             }
+            // 1. 初始显示当前状态
+            UpdateWeatherUI(WeatherManager.Instance.CurrentWeather);
+
+            // 2. 订阅天气变化事件
+            WeatherManager.Instance.OnWeatherChanged += OnWeatherChanged;
         }
 
         protected override void OnOpen(IUIData uiData)
@@ -48,6 +65,7 @@ namespace FarmGame.UI
         protected override void OnShow()
         {
             // 主界面显示时的逻辑
+            UpdateEnvironmentStats();
         }
 
         protected override void OnHide()
@@ -61,6 +79,11 @@ namespace FarmGame.UI
             if (BackpackButton != null)
             {
                 BackpackButton.onClick.RemoveAllListeners();
+            }
+
+            if (WeatherManager.Instance != null)
+            {
+                WeatherManager.Instance.OnWeatherChanged -= OnWeatherChanged;
             }
         }
 
@@ -87,6 +110,45 @@ namespace FarmGame.UI
                 {
                     Debug.LogWarning("无法获取玩家背包数据，玩家或背包组件为空");
                 }
+            }
+        }
+
+        #endregion
+
+        #region 天气系统相关
+
+        private void OnWeatherChanged(WeatherType newWeather)
+        {
+            UpdateWeatherUI(newWeather);
+        }
+		private void UpdateWeatherUI(WeatherType weather)
+        {
+            // 更新文字
+            switch (weather)
+            {
+                case WeatherType.Sunny:
+                    mWeatherText.text = "天气：晴朗";
+                    mWeatherIcon.sprite = SunnyIcon;
+                    break;
+                case WeatherType.Rainy:
+                    mWeatherText.text = "天气：下雨";
+                    mWeatherIcon.sprite = RainyIcon;
+                    break;
+                case WeatherType.Cloudy:
+                    mWeatherText.text = "天气：多云";
+                    mWeatherIcon.sprite = CloudyIcon;
+                    break;
+            }
+        }
+
+        private void UpdateEnvironmentStats()
+        {
+            if (mEnvironmentText != null)
+            {
+                // 从 WeatherManager 实时读取数据
+                float temp = WeatherManager.Instance.CurrentTemperature;
+                float hum = WeatherManager.Instance.CurrentHumidity;
+                mEnvironmentText.text = $"温度: {temp:F1}°C  湿度: {hum:F1}%";
             }
         }
 

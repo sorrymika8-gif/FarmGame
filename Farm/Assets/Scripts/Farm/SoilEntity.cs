@@ -31,6 +31,20 @@ namespace FarmGame.Farm
         /// </summary>
         public Vector2Int GridPos { get; private set; }
 
+        private float mMoisture = 0f;
+        /// <summary>
+        /// 土地湿度 (0-100)
+        /// </summary>
+        public float Moisture
+        {
+            get => mMoisture;
+            set
+            {
+                mMoisture = Mathf.Clamp(value, 0f, 100f);
+                OnStateChanged?.Invoke(this); // 湿度变化也通知表现层更新（例如变深色）
+            }
+        }
+
         private bool mIsTilled = false;
         /// <summary>
         /// 是否已耕地

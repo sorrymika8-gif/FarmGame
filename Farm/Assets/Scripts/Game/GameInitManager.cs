@@ -3,6 +3,7 @@ using QFramework;
 using FarmGame.Map;
 using FarmGame.Player;
 using FarmGame.Core;
+using FarmGame.Weather;
 
 namespace FarmGame.Game
 {
@@ -78,6 +79,10 @@ namespace FarmGame.Game
             // 打开主界面
             FarmGame.Core.UIManager.Instance.OpenMainUIPanel();
             Debug.Log("[GameInitManager] MainUIPanel opened");
+
+            // 初始化天气系统
+            WeatherManager.Instance.Initialize();
+            Debug.Log("[GameInitManager] Weather system initialized");
 
             // 如果是新玩家，发放初始物品并标记为非新玩家
             if (isNewPlayer)

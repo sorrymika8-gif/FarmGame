@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using FarmGame.GameConfig;
 using FarmGame.GameConfig.Generated;
 using FarmGame.Item;
+using FarmGame.Weather;
 using QFramework;
 using UnityEngine;
 
@@ -106,6 +107,9 @@ namespace FarmGame.Farm
             IsInitialized = true;
             StartGrowthLoop().Forget();
             Debug.Log($"[FarmManager] Initialized with default map ({defaultMap.Count} soils).");
+
+            // 订阅下雨事件
+            WeatherManager.Instance.OnRainLoop += OnRainReceived;
         }
 
         public void RegisterMap(FarmMapData map)
@@ -195,6 +199,8 @@ namespace FarmGame.Farm
             return true;
         }
 
+
+
         #endregion
 
         #region 私有方法
@@ -202,28 +208,81 @@ namespace FarmGame.Farm
         /// <summary>
         /// 生长循环
         /// </summary>
+        private void OnRainReceived(float rainAmount)
+        {
+            if (CurrentMap == null) return;
+
+            // 下雨时，当前地图所有已耕地的土地湿度增加
+            foreach (var soil in CurrentMap.GetAllSoils())
+            {
+                if (soil.IsTilled)
+                {
+                    // 雨量直接转化为土地湿度
+                    soil.Moisture += rainAmount; 
+                }
+            }
+        }
+        
+        private void OnDestroy() 
+        {
+            // 修正缩进，确保安全性
+            if (WeatherManager.Instance != null)
+            {
+                WeatherManager.Instance.OnRainLoop -= OnRainReceived;
+            }
+        }  
         private async UniTaskVoid StartGrowthLoop()
         {
             while (this != null)
             {
                 await UniTask.Delay(mGrowthTickInterval);
 
-                // 更新所有地图
+                // 1. 获取当前天气状态（缓存，避免在循环内重复获取）
+                var weatherType = WeatherManager.Instance != null ? 
+                                 WeatherManager.Instance.CurrentWeather : WeatherType.Sunny;
+                bool isRainy = weatherType == WeatherType.Rainy;
+                bool isSunny = weatherType == WeatherType.Sunny;
+
+                // 2. 遍历所有注册的地图（确保后台地图也能正确生长）
                 foreach (var map in mMaps.Values)
                 {
                     foreach (var soil in map.GetAllSoils())
                     {
-                        if (soil.HasPlant)
+                        // --- 第一部分：植物生长逻辑 ---
+                        if (soil.HasPlant && !soil.Plant.IsMature)
                         {
                             var plant = soil.Plant;
-                            if (!plant.IsMature)
+                            var config = plant.PlantData;
+
+                            if (config != null)
                             {
-                                var config = plant.PlantData;
-                                if (config != null)
+                                // 基础生长速度
+                                float growthFactor = config.maturity_speed;
+
+                                // 天气与湿度加成逻辑
+                                // A. 缺水惩罚：湿度 < 20
+                                if (soil.Moisture < 20f) 
                                 {
-                                    plant.Grow(config.maturity_speed);
+                                    growthFactor *= 0.3f; 
                                 }
+                                // B. 理想环境加成：晴天且水分充足 (>40)
+                                else if (isSunny && soil.Moisture > 40f)
+                                {
+                                    growthFactor *= 1.5f;
+                                }
+
+                                // 执行唯一的生长调用
+                                plant.Grow(growthFactor);
                             }
+                        }
+
+                        // --- 第二部分：水分蒸发逻辑 ---
+                        // 只有在不下雨时才蒸发
+                        if (!isRainy)
+                        {
+                            // 晴天蒸发快 (2.0)，其他天气（多云）蒸发慢 (0.5)
+                            float evaporation = isSunny ? 2.0f : 0.5f;
+                            soil.Moisture -= evaporation;
                         }
                     }
                 }
