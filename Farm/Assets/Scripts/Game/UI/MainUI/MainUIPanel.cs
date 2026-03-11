@@ -216,6 +216,7 @@ namespace FarmGame.UI
             if (WeatherManager.Instance != null)
             {
                 WeatherManager.Instance.OnWeatherChanged -= OnWeatherChanged;
+            }
             
             if (mSaveButton != null)
             {
