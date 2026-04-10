@@ -14,6 +14,7 @@ using FarmGame.Core.LLMDescription;
 using FarmGame.Core.Save;
 using Cysharp.Threading.Tasks;
 using FarmGame.Weather;
+using FarmGame.Combat.Core;
 
 namespace FarmGame.Core
 {
@@ -111,8 +112,10 @@ namespace FarmGame.Core
             WeatherManager.Instance.Initialize();
             Debug.Log("[BootManager] WeatherManager initialized");
 
+            // 10. 初始化战斗管理器
+            CombatManager.Instance.Initialize();
+            Debug.Log("[BootManager] CombatManager initialized");
 
-            // 10. 在此处添加其他管理器的初始化...
             // 11. 在此处添加其他管理器的初始化...
 
             mIsInitialized = true;

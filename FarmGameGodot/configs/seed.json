@@ -1,0 +1,38 @@
+[
+	{
+		"class_id": 1001,
+		"name": "小麦",
+		"item_type": 2,
+		"need_maturity": 100.0,
+		"maturity_speed": 10.0,
+		"maturity_stage": [0, 25, 50, 75],
+		"bonus_item": [1002],
+		"bonus_amount": [3],
+		"sell_price": 5,
+		"icon": "wheat_seed"
+	},
+	{
+		"class_id": 1003,
+		"name": "草莓",
+		"item_type": 2,
+		"need_maturity": 150.0,
+		"maturity_speed": 8.0,
+		"maturity_stage": [0, 30, 60, 100],
+		"bonus_item": [1004],
+		"bonus_amount": [5],
+		"sell_price": 10,
+		"icon": "strawberry_seed"
+	},
+	{
+		"class_id": 1005,
+		"name": "胡萝卜",
+		"item_type": 2,
+		"need_maturity": 80.0,
+		"maturity_speed": 12.0,
+		"maturity_stage": [0, 20, 40, 60],
+		"bonus_item": [1006],
+		"bonus_amount": [2],
+		"sell_price": 8,
+		"icon": "carrot_seed"
+	}
+]

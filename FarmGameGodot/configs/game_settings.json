@@ -1,0 +1,26 @@
+[
+	{
+		"setting_key": "initial_gold",
+		"setting_value": "100",
+		"value_type": "int",
+		"description": "初始金币数"
+	},
+	{
+		"setting_key": "max_inventory_size",
+		"setting_value": "30",
+		"value_type": "int",
+		"description": "背包最大容量"
+	},
+	{
+		"setting_key": "growth_tick_interval",
+		"setting_value": "5.0",
+		"value_type": "float",
+		"description": "作物生长周期(秒)"
+	},
+	{
+		"setting_key": "rain_growth_bonus",
+		"setting_value": "2.0",
+		"value_type": "float",
+		"description": "下雨时生长加速倍率"
+	}
+]

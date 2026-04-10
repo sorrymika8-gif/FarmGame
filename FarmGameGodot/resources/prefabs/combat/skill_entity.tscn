@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5combat_skill01"]
+
+[ext_resource type="Script" path="res://scripts/combat/entity/skill_entity.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 4.0
+
+[node name="SkillEntity" type="Area2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")

@@ -1,0 +1,62 @@
+[
+	{
+		"class_id": 1001,
+		"name": "小麦种子",
+		"item_type": 2,
+		"icon": "wheat_seed",
+		"description": "普通的小麦种子,可以种植在田地里",
+		"use": "plant",
+		"use_arg": {},
+		"sell_price": 5
+	},
+	{
+		"class_id": 1002,
+		"name": "小麦",
+		"item_type": 3,
+		"icon": "wheat",
+		"description": "金黄的小麦,可以出售",
+		"use": "",
+		"use_arg": {},
+		"sell_price": 20
+	},
+	{
+		"class_id": 1003,
+		"name": "草莓种子",
+		"item_type": 2,
+		"icon": "strawberry_seed",
+		"description": "红红的草莓种子",
+		"use": "plant",
+		"use_arg": {},
+		"sell_price": 10
+	},
+	{
+		"class_id": 1004,
+		"name": "草莓",
+		"item_type": 3,
+		"icon": "strawberry",
+		"description": "甜美的草莓,可以出售或食用",
+		"use": "heal",
+		"use_arg": {"heal_amount": 10},
+		"sell_price": 40
+	},
+	{
+		"class_id": 1005,
+		"name": "胡萝卜种子",
+		"item_type": 2,
+		"icon": "carrot_seed",
+		"description": "橙色的胡萝卜种子",
+		"use": "plant",
+		"use_arg": {},
+		"sell_price": 8
+	},
+	{
+		"class_id": 1006,
+		"name": "胡萝卜",
+		"item_type": 3,
+		"icon": "carrot",
+		"description": "新鲜的胡萝卜",
+		"use": "heal",
+		"use_arg": {"heal_amount": 5},
+		"sell_price": 25
+	}
+]

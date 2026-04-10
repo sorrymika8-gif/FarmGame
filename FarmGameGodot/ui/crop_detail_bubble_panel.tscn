@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccropbubble"]
+
+[ext_resource type="Script" path="res://scripts/ui/crop_detail_bubble_panel.gd" id="1_crop"]
+
+[node name="CropDetailBubblePanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_crop")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -100.0
+offset_right = 120.0
+offset_bottom = 100.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+
+[node name="NameLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "作物名称"
+
+[node name="StageLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "阶段: 幼苗期"
+
+[node name="MaturityBar" type="ProgressBar" parent="Panel/VBoxContainer"]
+layout_mode = 2
+value = 50.0
+
+[node name="HarvestButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "收获"
+
+[node name="CloseButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "关闭"

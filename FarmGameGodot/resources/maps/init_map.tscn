@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8map1"]
+
+[ext_resource type="Script" path="res://scripts/map/init_map.gd" id="1_script"]
+
+[node name="InitMap" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -640.0
+offset_top = -360.0
+offset_right = 640.0
+offset_bottom = 360.0
+color = Color(0.267, 0.537, 0.267, 1)
+
+[node name="SoilTileMapLayer" type="TileMapLayer" parent="."]
+y_sort_enabled = true
+
+[node name="PlantTileMapLayer" type="TileMapLayer" parent="."]
+y_sort_enabled = true
+
+[node name="HighlightTileMapLayer" type="TileMapLayer" parent="."]
+y_sort_enabled = true
+
+[node name="ShopArea" type="Area2D" parent="."]
+position = Vector2(200, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShopArea"]
+
+[node name="ShopLabel" type="Label" parent="ShopArea"]
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = -10.0
+text = "商店"
+horizontal_alignment = 1

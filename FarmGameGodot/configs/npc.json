@@ -1,0 +1,20 @@
+[
+	{
+		"class_id": 1,
+		"name": "Ellie",
+		"gender": "女",
+		"prompt": "ellie.md",
+		"model_name": "ellie",
+		"init_pos": [5, 3],
+		"interaction_dis": 3
+	},
+	{
+		"class_id": 2,
+		"name": "Haman",
+		"gender": "男",
+		"prompt": "haman.md",
+		"model_name": "haman",
+		"init_pos": [10, 5],
+		"interaction_dis": 3
+	}
+]

@@ -1,0 +1,3 @@
+res://scripts/core/sprite_sort_by_y.gd
+res://scripts/movement/camera_follow.gd
+res://scripts/farm/farm_tilemap_view.gd

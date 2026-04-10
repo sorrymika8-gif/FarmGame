@@ -151,6 +151,17 @@ namespace FarmGame.UI
 
         #endregion
 
+        #region UI组件 - 店主显示
+
+        [Header("店主显示")]
+        [SerializeField]
+        private Image mShopkeeperPortrait; // 店主立绘
+
+        [SerializeField]
+        private Text mShopkeeperDialogue; // 店主对话文本
+
+        #endregion
+
         #region 私有字段
 
         private ShopPanelData mData;
@@ -175,6 +186,9 @@ namespace FarmGame.UI
         private const float MAX_PANEL_HEIGHT = 800f;
         private const float PANEL_WIDTH_RATIO = 0.85f;  // 面板占屏幕宽度比例
         private const float PANEL_HEIGHT_RATIO = 0.80f; // 面板占屏幕高度比例
+
+        // 店主相关
+        private const string SHOPKEEPER_ICON_PATH = "prefabs/npcs/ellie/ellie_icon";
 
         #endregion
 
@@ -219,6 +233,9 @@ namespace FarmGame.UI
 
             // 刷新商品列表
             RefreshItemList();
+
+            // 加载店主立绘
+            LoadShopkeeperPortrait();
         }
 
         /// <summary>
@@ -1338,6 +1355,37 @@ namespace FarmGame.UI
         {
             Debug.Log($"[ShopPanel] {message}");
             // TODO: 可以扩展为显示Toast或弹窗
+        }
+
+        #endregion
+
+        #region 店主相关
+
+        /// <summary>
+        /// 加载店主立绘
+        /// </summary>
+        private void LoadShopkeeperPortrait()
+        {
+            if (mShopkeeperPortrait == null) return;
+
+            var sprite = Resources.Load<Sprite>(SHOPKEEPER_ICON_PATH);
+            if (sprite != null)
+            {
+                mShopkeeperPortrait.sprite = sprite;
+                mShopkeeperPortrait.enabled = true;
+                Debug.Log("[ShopPanel] 店主立绘加载成功");
+            }
+            else
+            {
+                Debug.LogWarning($"[ShopPanel] 无法加载店主立绘: {SHOPKEEPER_ICON_PATH}");
+                mShopkeeperPortrait.enabled = false;
+            }
+
+            // 设置默认对话（可选）
+            if (mShopkeeperDialogue != null)
+            {
+                mShopkeeperDialogue.text = "嗯...欢迎光临...";
+            }
         }
 
         #endregion

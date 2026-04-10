@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5combat_char01"]
+
+[ext_resource type="Script" path="res://scripts/combat/entity/char_entity.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 8.0
+
+[node name="CharEntity" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")
+
+[node name="HurtArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+
+[node name="HurtShape" type="CollisionShape2D" parent="HurtArea"]
+shape = SubResource("CircleShape2D_1")
