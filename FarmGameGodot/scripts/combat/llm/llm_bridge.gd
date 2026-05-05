@@ -3,11 +3,13 @@ extends RefCounted
 
 ## LLM 桥接层 - 调用 LLM 生成技能数据
 
+static var _instance: LLMBridge = null
+
 static var instance: LLMBridge:
 	get:
-		if instance == null:
-			instance = LLMBridge.new()
-		return instance
+		if _instance == null:
+			_instance = LLMBridge.new()
+		return _instance
 
 var _is_initialized: bool = false
 

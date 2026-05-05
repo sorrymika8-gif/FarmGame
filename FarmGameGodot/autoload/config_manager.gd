@@ -47,17 +47,18 @@ func get_all(config_name: String) -> Array:
 func get_config(config_name: String, key_value) -> Dictionary:
 	var key_field = _get_key_field(config_name)
 	var map_key = config_name + "_" + key_field
+	var normalized_key = _normalize_lookup_key(key_value)
 	
 	if _config_maps.has(map_key):
 		var map = _config_maps[map_key]
-		if map.has(key_value):
-			return map[key_value]
+		if map.has(normalized_key):
+			return map[normalized_key]
 	
 	# 如果还没有建立索引，先建一个
 	if _configs.has(config_name):
 		_build_map(config_name, key_field)
-		if _config_maps.has(map_key) and _config_maps[map_key].has(key_value):
-			return _config_maps[map_key][key_value]
+		if _config_maps.has(map_key) and _config_maps[map_key].has(normalized_key):
+			return _config_maps[map_key][normalized_key]
 	
 	return {}
 
@@ -91,7 +92,7 @@ func _load_json_config(file_path: String, config_name: String) -> void:
 		push_error("[ConfigManager] JSON 解析失败: %s, 行 %d" % [json.get_error_message(), json.get_error_line()])
 		return
 	
-	var data = json.data
+	var data = _normalize_json_value(json.data)
 	if data is Array:
 		_configs[config_name] = data
 		print("[ConfigManager] 加载 JSON 配置: %s (%d 条)" % [config_name, data.size()])
@@ -149,6 +150,28 @@ func _parse_csv_value(value: String):
 	# 默认返回字符串
 	return value
 
+func _normalize_json_value(value):
+	match typeof(value):
+		TYPE_DICTIONARY:
+			var normalized: Dictionary = {}
+			for key in value.keys():
+				normalized[key] = _normalize_json_value(value[key])
+			return normalized
+		TYPE_ARRAY:
+			var normalized: Array = []
+			for item in value:
+				normalized.append(_normalize_json_value(item))
+			return normalized
+		TYPE_FLOAT:
+			return _normalize_lookup_key(value)
+		_:
+			return value
+
+func _normalize_lookup_key(value):
+	if typeof(value) == TYPE_FLOAT and is_equal_approx(value, float(int(value))):
+		return int(value)
+	return value
+
 func _get_key_field(config_name: String) -> String:
 	# 默认主键字段名
 	if _configs.has(config_name) and _configs[config_name].size() > 0:
@@ -164,5 +187,5 @@ func _build_map(config_name: String, key_field: String) -> void:
 	var map: Dictionary = {}
 	for item in _configs[config_name]:
 		if item.has(key_field):
-			map[item[key_field]] = item
+			map[_normalize_lookup_key(item[key_field])] = item
 	_config_maps[map_key] = map

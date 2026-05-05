@@ -14,6 +14,8 @@ var personality: String = ""
 var background: String = ""
 var appearance: String = ""
 var prompt_file_path: String = "" ## NPC专属提示词文件名
+var role: String = "npc"
+var shop_type: int = 0
 
 # ===== 动态状态 =====
 var position: Vector2 = Vector2.ZERO
@@ -90,7 +92,7 @@ func record_memory(content: String) -> void:
 		short_term.append(content)
 
 ## 接收聊天信息并触发思考
-func receive_chat_async(content: String) -> void:
+func receive_chat_async(content: String):
 	print("[玩家] %s" % content)
 	
 	# 1. 将玩家消息存入短期记忆
@@ -110,23 +112,27 @@ func receive_chat_async(content: String) -> void:
 	var brain = NPCManager.shared_brain
 	if brain == null:
 		push_error("[NPCEntity] SharedBrain is null!")
-		return
+		var empty_result = DecisionResult.new()
+		empty_result.success = false
+		empty_result.error_message = "SharedBrain is null"
+		return empty_result
 	
 	print("[NPCEntity] %s 开始调用 LLM 进行决策..." % npc_name)
 	var result = await brain.decide_async(context)
 	
 	if not result.success:
 		push_error("[NPCEntity] LLM 决策失败: %s" % result.error_message)
-		return
+		return result
 	
 	print("[NPCEntity] LLM 原始输出: %s" % result.raw_output)
 	
 	if result.commands.is_empty():
 		push_warning("[NPCEntity] LLM 返回成功但没有解析到任何指令")
-		return
+		return result
 	
 	print("[NPCEntity] 解析到 %d 条指令" % result.commands.size())
 	brain.execute_commands(result.commands, context)
+	return result
 
 ## 构建角色设定字典
 func build_character_profile() -> Dictionary:
@@ -137,6 +143,7 @@ func build_character_profile() -> Dictionary:
 		"Personality": personality,
 		"Background": background,
 		"Appearance": appearance,
+		"Role": role,
 	}
 
 ## 构建当前状态字典
@@ -162,4 +169,6 @@ func to_dict() -> Dictionary:
 		"position_y": position.y,
 		"health": health,
 		"emotion": emotion,
+		"role": role,
+		"shop_type": shop_type,
 	}

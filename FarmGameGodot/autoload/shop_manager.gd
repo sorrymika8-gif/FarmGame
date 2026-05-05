@@ -25,7 +25,7 @@ func initialize() -> void:
 	# 加载商店配置
 	var shop_configs = ConfigManager.get_all("shop")
 	for config in shop_configs:
-		var shop_type = config.get("shop_type", 0)
+		var shop_type = int(config.get("shop_type", 0))
 		if not _shop_items_by_type.has(shop_type):
 			_shop_items_by_type[shop_type] = []
 		_shop_items_by_type[shop_type].append(config)
@@ -36,23 +36,29 @@ func initialize() -> void:
 ## 获取指定商店的商品列表
 func get_shop_items(shop_type: int) -> Array:
 	if not _is_initialized:
+		push_warning("[ShopManager] 未初始化，无法获取商店商品")
 		return []
 	
+	var normalized_shop_type = int(shop_type)
 	var result: Array = []
-	if _shop_items_by_type.has(shop_type):
-		for shop_config in _shop_items_by_type[shop_type]:
-			var item_id = shop_config.get("item_id", 0)
+	if _shop_items_by_type.has(normalized_shop_type):
+		for shop_config in _shop_items_by_type[normalized_shop_type]:
+			var item_id = int(shop_config.get("item_id", 0))
 			var item_config = _get_item_config_info(item_id)
 			if not item_config.is_empty():
 				result.append({
 					"shop_config": shop_config,
 					"item_config": item_config,
-					"buy_price": shop_config.get("buy_price", 0),
+					"buy_price": int(shop_config.get("buy_price", 0)),
 					"item_id": item_id,
 					"item_name": item_config.get("name", ""),
 					"item_icon": item_config.get("icon", ""),
 					"item_description": item_config.get("description", ""),
 				})
+			else:
+				push_warning("[ShopManager] 未找到商品配置: %d" % item_id)
+	else:
+		push_warning("[ShopManager] 未找到商店类型: %d" % normalized_shop_type)
 	
 	return result
 
@@ -61,18 +67,20 @@ func get_buy_price(item_id: int, shop_type: int) -> int:
 	if not _is_initialized:
 		return -1
 	
-	if _shop_items_by_type.has(shop_type):
-		for config in _shop_items_by_type[shop_type]:
-			if config.get("item_id", 0) == item_id:
-				return config.get("buy_price", -1)
+	var normalized_item_id = int(item_id)
+	var normalized_shop_type = int(shop_type)
+	if _shop_items_by_type.has(normalized_shop_type):
+		for config in _shop_items_by_type[normalized_shop_type]:
+			if int(config.get("item_id", 0)) == normalized_item_id:
+				return int(config.get("buy_price", -1))
 	return -1
 
 ## 获取出售价格
 func get_sell_price(item_id: int) -> int:
 	if not _is_initialized:
 		return 0
-	var item_config = ConfigManager.get_config("item", item_id)
-	return item_config.get("sell_price", 0)
+	var item_config = ConfigManager.get_config("item", int(item_id))
+	return int(item_config.get("sell_price", 0))
 
 ## 检查是否能购买
 func can_buy(item_id: int, count: int, shop_type: int) -> bool:
@@ -139,12 +147,12 @@ func sell_item(item_id: int, count: int) -> bool:
 ## 获取物品统一配置信息（从多个配置表查询）
 func _get_item_config_info(config_id: int) -> Dictionary:
 	# 先尝试 item 配置表
-	var item_config = ConfigManager.get_config("item", config_id)
+	var item_config = ConfigManager.get_config("item", int(config_id))
 	if not item_config.is_empty():
 		return item_config
 	
 	# 再尝试 seed 配置表
-	var seed_config = ConfigManager.get_config("seed", config_id)
+	var seed_config = ConfigManager.get_config("seed", int(config_id))
 	if not seed_config.is_empty():
 		return seed_config
 	

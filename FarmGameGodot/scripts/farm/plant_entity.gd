@@ -63,6 +63,23 @@ var plant_name: String:
 	get:
 		return plant_data.get("name", "未知作物")
 
+func get_description_type() -> String:
+	return "Crop"
+
+func get_display_name() -> String:
+	return plant_name
+
+func get_cache_key() -> String:
+	return "crop_%d_stage_%d_maturity_%d" % [config_id, _current_stage_index, int(maturity_percent)]
+
+func get_describable_properties() -> Dictionary:
+	return {
+		"Name": plant_name,
+		"StageName": stage_name,
+		"MaturityPercent": maturity_percent,
+		"IsHarvestable": _is_mature,
+	}
+
 func _init(p_config_id: int = 0) -> void:
 	config_id = p_config_id
 	count = 1

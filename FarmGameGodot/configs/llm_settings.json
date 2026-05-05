@@ -1,20 +1,20 @@
-[
-	{
-		"setting_id": 1,
-		"provider_type": "deepseek",
-		"api_key": "",
-		"base_url": "https://api.deepseek.com",
-		"default_model": "deepseek-chat",
-		"enabled": true,
-		"description": "DeepSeek API"
-	},
-	{
-		"setting_id": 2,
-		"provider_type": "openai",
-		"api_key": "",
-		"base_url": "https://api.openai.com/v1",
-		"default_model": "gpt-4o-mini",
-		"enabled": false,
-		"description": "OpenAI API"
-	}
+﻿[
+    {
+        "setting_id":  1,
+        "provider_type":  "deepseek",
+        "api_key":  "sk-b84c42ba9d1042af9b165880c0306d61",
+        "base_url":  "https://api.deepseek.com",
+        "default_model":  "deepseek-chat",
+        "enabled":  true,
+        "description":  "DeepSeek API"
+    },
+    {
+        "setting_id":  2,
+        "provider_type":  "openai",
+        "api_key":  "",
+        "base_url":  "https://api.openai.com/v1",
+        "default_model":  "gpt-4o-mini",
+        "enabled":  false,
+        "description":  "OpenAI API"
+    }
 ]

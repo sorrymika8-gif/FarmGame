@@ -23,6 +23,7 @@ const MAX_TOKENS := 100
 
 func _init() -> void:
 	instance = self
+	initialize()
 
 ## 初始化并注册默认模板
 func initialize() -> void:
@@ -44,20 +45,19 @@ func generate_description_async(target, use_cache: bool = true) -> String:
 	# 加载模板
 	var template := await _load_template_async(context.type)
 	if template.is_empty():
-		return "（%s）" % context.display_name
+		return _build_fallback_description(context)
 	
 	# 替换占位符
 	var prompt := context.replace_template(template)
 	
 	# 调用 LLM
-	var llm_service = LLMService.instance
-	if llm_service == null or llm_service.client == null:
-		return "（%s）" % context.display_name
+	if LLMService == null or LLMService.client == null:
+		return _build_fallback_description(context)
 	
-	var result: String = await llm_service.client.chat_async(SYSTEM_PROMPT, prompt, TEMPERATURE, MAX_TOKENS)
+	var result: String = await LLMService.ask(prompt, SYSTEM_PROMPT, TEMPERATURE, MAX_TOKENS)
 	
 	if result.is_empty():
-		return "（%s）" % context.display_name
+		return _build_fallback_description(context)
 	
 	# 清理结果（去除多余空白和引号）
 	result = result.strip_edges()
@@ -69,6 +69,14 @@ func generate_description_async(target, use_cache: bool = true) -> String:
 		mDescriptionCache[context.cache_key] = result
 	
 	return result
+
+func _build_fallback_description(context: DescriptionContext) -> String:
+	var display_name = context.display_name if not context.display_name.is_empty() else str(context.get_property("Name", "事物"))
+	if context.type == "Crop":
+		var stage_name = str(context.get_property("StageName", ""))
+		if not stage_name.is_empty():
+			return "%s正处于%s。" % [display_name, stage_name]
+	return "（%s）" % display_name
 
 ## 加载模板（异步，但实际是同步文件读取）
 func _load_template_async(type_name: String) -> String:

@@ -61,11 +61,15 @@ func bind(entity: NPCEntity) -> void:
 func interact() -> void:
 	if _entity == null:
 		return
-	UIManager.open_panel("dialogue_ui_panel")
+	if _entity.role == "shop_owner" and _entity.shop_type > 0:
+		UIManager.open_shop_panel(_entity.shop_type, PlayerManager.get_player_inventory())
+		return
+	UIManager.open_dialogue_panel(_entity)
 
 ## 输入事件处理（点击交互）
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		get_viewport().set_input_as_handled()
 		if not _is_player_in_range():
 			print("[NPCController] 玩家不在交互距离内")
 			return

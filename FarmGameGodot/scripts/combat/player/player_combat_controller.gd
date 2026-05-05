@@ -12,7 +12,6 @@ var char_entity: CharEntity
 var _skill_slots: Array[SkillSlot] = []
 var _current_skill_index: int = 0
 var _aim_direction: Vector2 = Vector2.RIGHT
-var _input_direction: Vector2 = Vector2.ZERO
 var _last_skill_time: float = 0.0
 
 func _ready() -> void:
@@ -26,17 +25,10 @@ func bind(entity: CharEntity) -> void:
 func _process(delta: float) -> void:
 	if char_entity == null or not char_entity.is_alive():
 		return
-	_handle_move_input()
 	_handle_aim_input()
 	_handle_skill_input()
 	_handle_skill_switch()
 	_update_cooldowns(delta)
-
-func _physics_process(_delta: float) -> void:
-	_apply_movement()
-
-func _handle_move_input() -> void:
-	_input_direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 
 func _handle_aim_input() -> void:
 	var mouse_pos := get_global_mouse_position()
@@ -61,12 +53,6 @@ func _handle_skill_switch() -> void:
 	for i in range(mini(4, max_skill_slots)):
 		if Input.is_action_just_pressed("slot_%d" % (i + 1)):
 			_current_skill_index = i
-
-func _apply_movement() -> void:
-	if _input_direction.length_squared() > 0.01:
-		char_entity.set_move_direction(_input_direction)
-	else:
-		char_entity.stop_moving()
 
 func _apply_aim_assist() -> void:
 	var tree := get_tree()

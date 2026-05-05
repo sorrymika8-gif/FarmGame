@@ -41,6 +41,14 @@ func _refresh_display() -> void:
 	for child in item_container.get_children():
 		child.queue_free()
 	
+	if _shop_items.is_empty():
+		var empty_label = Label.new()
+		empty_label.text = "暂无商品"
+		empty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		empty_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		item_container.add_child(empty_label)
+		return
+
 	for shop_item in _shop_items:
 		var hbox = HBoxContainer.new()
 		

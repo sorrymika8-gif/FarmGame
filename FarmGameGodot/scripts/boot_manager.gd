@@ -26,6 +26,8 @@ func _initialize_async() -> void:
 	# 3. 初始化 LLM 服务
 	LLMService.initialize()
 	print("[BootManager] LLMService 初始化完成")
+	LLMDescriptionService.new()
+	print("[BootManager] LLMDescriptionService 初始化完成")
 	
 	# 4. 初始化 UI 管理器
 	UIManager.initialize()

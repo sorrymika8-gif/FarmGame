@@ -5,7 +5,9 @@
 		"gender": "女",
 		"prompt": "ellie.md",
 		"model_name": "ellie",
-		"init_pos": [5, 3],
+		"init_pos": [11, 6],
+		"role": "shop_owner",
+		"shop_type": 1,
 		"interaction_dis": 3
 	},
 	{
@@ -14,7 +16,8 @@
 		"gender": "男",
 		"prompt": "haman.md",
 		"model_name": "haman",
-		"init_pos": [10, 5],
+		"init_pos": [8, 8],
+		"role": "npc",
 		"interaction_dis": 3
 	}
 ]

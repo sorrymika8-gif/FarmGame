@@ -22,12 +22,12 @@ func _update_visual() -> void:
 		return
 	
 	visible = true
-	var stage = _plant.current_stage
+	var stage = _plant.current_stage_index
 	
 	if stage != _current_stage:
 		_current_stage = stage
 		# 根据种子ID和生长阶段加载对应的纹理
-		var seed_id = _plant.seed_config_id
+		var seed_id = _plant.config_id
 		var tex_path = "res://resources/sprites/plants/%d_stage_%d.png" % [seed_id, stage]
 		if ResourceLoader.exists(tex_path):
 			texture = load(tex_path)

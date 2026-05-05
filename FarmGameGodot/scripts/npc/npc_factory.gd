@@ -13,6 +13,8 @@ static func create(config: Dictionary, brain: Brain) -> NPCEntity:
 	
 	# 设置属性
 	entity.gender = config.get("gender", "未知")
+	entity.role = config.get("role", "npc")
+	entity.shop_type = int(config.get("shop_type", 0))
 	
 	# 设置初始位置
 	var init_pos = config.get("init_pos", [])
@@ -21,7 +23,7 @@ static func create(config: Dictionary, brain: Brain) -> NPCEntity:
 	
 	# 设置交互距离
 	var interaction_dis = config.get("interaction_dis", 0)
-	entity.interaction_distance = interaction_dis if interaction_dis > 0 else 2.0
+	entity.interaction_distance = float(interaction_dis) * MapManager.tile_size if interaction_dis > 0 else 2.0 * MapManager.tile_size
 	
 	# 设置提示词文件路径
 	entity.prompt_file_path = config.get("prompt", "")

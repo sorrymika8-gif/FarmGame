@@ -4,7 +4,7 @@ extends Node
 
 const INITIAL_MAP = "init_map"
 const INITIAL_SPAWN_POSITION = Vector2(0, 0)
-const GRASS_SEED_CONFIG_ID = 1000
+const INITIAL_SEED_CONFIG_ID = 1001
 const INITIAL_SEED_COUNT = 3
 
 var _is_initialized: bool = false
@@ -53,8 +53,8 @@ func start_new_game() -> void:
 	if is_new_player:
 		var inventory = PlayerManager.get_player_inventory()
 		if inventory and inventory.has_method("add_item"):
-			inventory.add_item(GRASS_SEED_CONFIG_ID, INITIAL_SEED_COUNT)
-			print("[GameInitManager] 发放初始物品: %d 颗牧草种子" % INITIAL_SEED_COUNT)
+			inventory.add_item(INITIAL_SEED_CONFIG_ID, INITIAL_SEED_COUNT)
+			print("[GameInitManager] 发放初始物品: %d 颗小麦种子" % INITIAL_SEED_COUNT)
 		
 		if PlayerManager.player and PlayerManager.player.has_method("set_new_player"):
 			PlayerManager.player.set_new_player(false)

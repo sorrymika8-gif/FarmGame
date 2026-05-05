@@ -4,9 +4,9 @@ extends Node
 
 const GROWTH_TICK_INTERVAL_KEY = "growth_tick_interval"
 const DEFAULT_GROWTH_TICK_INTERVAL = 1.0 # 秒
-const DEFAULT_FARM_WIDTH = 5
-const DEFAULT_FARM_HEIGHT = 4
-const DEFAULT_FARM_ORIGIN = Vector2i(0, 0)
+const DEFAULT_FARM_WIDTH = 8
+const DEFAULT_FARM_HEIGHT = 5
+const DEFAULT_FARM_ORIGIN = Vector2i(-4, 2)
 
 ## 物品类型枚举（对应 Unity 的 ItemType）
 const ITEM_TYPE_SEED = 2

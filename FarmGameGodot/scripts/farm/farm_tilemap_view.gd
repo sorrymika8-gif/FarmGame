@@ -13,11 +13,20 @@ extends Node2D
 @export var tilled_tile_atlas: Vector2i = Vector2i(0, 0)
 @export var highlight_tile_atlas: Vector2i = Vector2i(1, 0)
 
+const TILLED_TILE_TEXTURE_PATH = "res://assets/sprites/farm/tile_tilled_clean.svg"
+const UNTILLED_TILE_TEXTURE_PATH = "res://assets/sprites/farm/tile_untilled_clean.svg"
+
 var _map_data: FarmMapData = null
 var _soil_cache: Dictionary = {} # Vector2i -> SoilEntity
+var _soil_views: Dictionary = {} # Vector2i -> Sprite2D
 var _crop_views: Dictionary = {} # Vector2i -> CropView (Node2D)
 var _current_highlight: Vector2i = Vector2i(-9999, -9999)
 var _is_initialized: bool = false
+var _tilled_texture: Texture2D = null
+var _untilled_texture: Texture2D = null
+
+func _ready() -> void:
+	add_to_group("farm_view")
 
 func _exit_tree() -> void:
 	# 取消订阅
@@ -32,6 +41,11 @@ func _exit_tree() -> void:
 			crop_view.queue_free()
 	_crop_views.clear()
 
+	for soil_view in _soil_views.values():
+		if is_instance_valid(soil_view):
+			soil_view.queue_free()
+	_soil_views.clear()
+
 ## 初始化视图
 func initialize(map_data: FarmMapData) -> void:
 	if _is_initialized:
@@ -44,6 +58,7 @@ func initialize(map_data: FarmMapData) -> void:
 	
 	_map_data = map_data
 	_soil_cache.clear()
+	_load_tile_textures()
 	
 	for soil in _map_data.get_all_soils():
 		_soil_cache[soil.grid_pos] = soil
@@ -56,10 +71,7 @@ func initialize(map_data: FarmMapData) -> void:
 
 ## 根据世界坐标获取土地实体
 func get_soil_at_world_pos(world_pos: Vector2) -> SoilEntity:
-	if soil_tilemap == null:
-		return null
-	var cell_pos = soil_tilemap.local_to_map(soil_tilemap.to_local(world_pos))
-	var grid_pos = Vector2i(cell_pos.x, cell_pos.y)
+	var grid_pos = world_to_grid(world_pos)
 	return _soil_cache.get(grid_pos)
 
 ## 根据网格坐标获取土地实体
@@ -68,15 +80,15 @@ func get_soil_at_grid_pos(grid_pos: Vector2i) -> SoilEntity:
 
 ## 世界坐标转网格坐标
 func world_to_grid(world_pos: Vector2) -> Vector2i:
-	if soil_tilemap == null:
-		return Vector2i.ZERO
+	if soil_tilemap == null or soil_tilemap.tile_set == null:
+		return MapManager.world_to_grid(world_pos)
 	var cell_pos = soil_tilemap.local_to_map(soil_tilemap.to_local(world_pos))
 	return Vector2i(cell_pos.x, cell_pos.y)
 
 ## 网格坐标转世界坐标
 func grid_to_world(grid_pos: Vector2i) -> Vector2:
-	if soil_tilemap == null:
-		return Vector2.ZERO
+	if soil_tilemap == null or soil_tilemap.tile_set == null:
+		return MapManager.grid_to_world(grid_pos)
 	var cell_pos = Vector2i(grid_pos.x, grid_pos.y)
 	return soil_tilemap.to_global(soil_tilemap.map_to_local(cell_pos))
 
@@ -109,9 +121,36 @@ func _on_soil_state_changed(soil: SoilEntity) -> void:
 
 ## 更新土地Tile
 func _update_soil_tile(soil: SoilEntity) -> void:
-	if soil_tilemap == null:
+	if soil_tilemap != null and soil_tilemap.tile_set != null:
+		soil_tilemap.set_cell(soil.grid_pos, 0, tilled_tile_atlas)
+	_update_soil_sprite(soil)
+
+func _load_tile_textures() -> void:
+	_tilled_texture = load(TILLED_TILE_TEXTURE_PATH) as Texture2D
+	_untilled_texture = load(UNTILLED_TILE_TEXTURE_PATH) as Texture2D
+
+func _update_soil_sprite(soil: SoilEntity) -> void:
+	var grid_pos = soil.grid_pos
+	var soil_view = _soil_views.get(grid_pos) as Sprite2D
+	if soil_view == null or not is_instance_valid(soil_view):
+		soil_view = Sprite2D.new()
+		soil_view.name = "SoilTile_%d_%d" % [grid_pos.x, grid_pos.y]
+		soil_view.z_index = 0
+		add_child(soil_view)
+		_soil_views[grid_pos] = soil_view
+
+	soil_view.texture = _tilled_texture if soil.is_tilled else _untilled_texture
+	soil_view.position = to_local(grid_to_world(grid_pos))
+	_fit_sprite_to_tile(soil_view)
+
+func _fit_sprite_to_tile(sprite: Sprite2D) -> void:
+	if sprite.texture == null:
 		return
-	soil_tilemap.set_cell(soil.grid_pos, 0, tilled_tile_atlas)
+	var texture_size = sprite.texture.get_size()
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
+		return
+	var tile_size = MapManager.tile_size
+	sprite.scale = Vector2(tile_size / texture_size.x, tile_size / texture_size.y)
 
 ## 更新作物显示
 func _update_plant_tile(soil: SoilEntity) -> void:
@@ -122,7 +161,7 @@ func _update_plant_tile(soil: SoilEntity) -> void:
 			# 创建作物视图
 			var crop_view = CropView.new()
 			crop_view.name = "CropView_%d_%d" % [grid_pos.x, grid_pos.y]
-			crop_view.position = grid_to_world(grid_pos)
+			crop_view.position = to_local(grid_to_world(grid_pos))
 			add_child(crop_view)
 			crop_view.bind(soil)
 			_crop_views[grid_pos] = crop_view

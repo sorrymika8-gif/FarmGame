@@ -27,6 +27,8 @@ func open_panel(panel_scene_path: String, data: Dictionary = {}) -> Control:
 	if _panels.has(panel_name) and is_instance_valid(_panels[panel_name]):
 		var existing = _panels[panel_name]
 		existing.visible = true
+		if existing.has_method("setup"):
+			existing.setup(data)
 		return existing
 	
 	# 加载面板场景

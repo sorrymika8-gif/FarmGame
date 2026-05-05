@@ -5,7 +5,7 @@ extends Node
 var _is_initialized: bool = false
 var _current_map: Node2D = null
 var _map_root: Node2D = null
-var _tile_size: float = 16.0 # Godot 中常用像素尺寸
+var _tile_size: float = 32.0
 
 const MAP_DIR = "res://resources/maps/"
 
