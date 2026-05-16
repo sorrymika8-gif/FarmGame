@@ -1,11 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://c8map1"]
+[gd_scene load_steps=7 format=3 uid="uid://c8map1"]
 
 [ext_resource type="Script" path="res://scripts/map/init_map.gd" id="1_script"]
 [ext_resource type="Script" path="res://scripts/game/interactable/shop_interactable.gd" id="2_shop_interactable"]
 [ext_resource type="Texture2D" path="res://assets/sprites/shops/seed_shop.svg" id="3_shop_sprite"]
+[ext_resource type="Script" path="res://scripts/game/interactable/exploration_entrance.gd" id="4_explore_entrance"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_shop"]
 size = Vector2(96, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_explore"]
+size = Vector2(64, 64)
 
 [node name="InitMap" type="Node2D"]
 script = ExtResource("1_script")
@@ -50,4 +54,26 @@ offset_right = 32.0
 offset_bottom = -32.0
 mouse_filter = 2
 text = "种子店"
+horizontal_alignment = 1
+
+[node name="ExplorationArea" type="Area2D" parent="."]
+position = Vector2(-184, 80)
+input_pickable = true
+script = ExtResource("4_explore_entrance")
+entrance_name = "外出探索"
+
+[node name="Icon" type="Polygon2D" parent="ExplorationArea"]
+color = Color(0.243, 0.529, 0.914, 1)
+polygon = PackedVector2Array(-24, -24, 24, -24, 24, 24, -24, 24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExplorationArea"]
+shape = SubResource("RectangleShape2D_explore")
+
+[node name="Label" type="Label" parent="ExplorationArea"]
+offset_left = -42.0
+offset_top = -50.0
+offset_right = 42.0
+offset_bottom = -32.0
+mouse_filter = 2
+text = "外出探索"
 horizontal_alignment = 1

@@ -1,0 +1,79 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/exploration_play_panel.gd" id="1_play"]
+
+[node name="ExplorationPlayPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_play")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.055, 0.067, 0.071, 1)
+
+[node name="Hud" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -260.0
+offset_top = 24.0
+offset_right = 360.0
+offset_bottom = 56.0
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="HpLabel" type="Label" parent="Hud"]
+layout_mode = 2
+text = "生命: 100"
+
+[node name="TimerLabel" type="Label" parent="Hud"]
+layout_mode = 2
+text = "坚持: 0.0 / 10"
+
+[node name="AllyLabel" type="Label" parent="Hud"]
+layout_mode = 2
+text = "NPC 无"
+
+[node name="MapPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 72.0
+offset_right = -16.0
+offset_bottom = -16.0
+clip_contents = true
+
+[node name="WorldRect" type="ColorRect" parent="MapPanel"]
+layout_mode = 0
+color = Color(0.12, 0.18, 0.13, 1)
+
+[node name="WorldGrid" type="ColorRect" parent="MapPanel"]
+layout_mode = 0
+color = Color(0.18, 0.25, 0.18, 0.35)
+
+[node name="Player" type="ColorRect" parent="MapPanel"]
+layout_mode = 0
+color = Color(0.2, 0.62, 1, 1)
+
+[node name="ResultLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -24.0
+offset_right = 120.0
+offset_bottom = 24.0
+text = "探索胜利"
+horizontal_alignment = 1
+vertical_alignment = 1

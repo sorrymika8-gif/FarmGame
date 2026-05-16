@@ -12,6 +12,7 @@ var _inventory = null
 var _is_initialized: bool = false
 var _pending_soil = null
 var _pending_screen_pos: Vector2 = Vector2.ZERO
+var _keyboard_move_direction: Vector2 = Vector2.ZERO
 
 const MIN_FARM_INTERACTION_DISTANCE = 48.0
 const FARM_INTERACTION_DISTANCE_FACTOR = 1.5
@@ -43,7 +44,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	_handle_click_input(event)
 
 func _process(_delta: float) -> void:
-	_try_complete_pending_farm_interaction()
+	if not _is_initialized or not input_enabled:
+		return
+	_handle_keyboard_movement(_delta)
 
 func _handle_click_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -62,13 +65,37 @@ func _handle_click_input(event: InputEvent) -> void:
 				if _is_soil_in_interaction_range(soil_world_pos):
 					_open_soil_interaction(soil, soil_world_pos, event.position)
 					return
-				_queue_farm_interaction(soil, soil_world_pos, event.position)
+				print("[PlayerInputHandler] 距离太远，无法交互土地: %s" % str(soil.grid_pos))
 				return
 		
-		# 不是农田或距离太远，执行移动
+		# 鼠标只用于交互，不再点击地面移动
 		_clear_pending_farm_interaction()
-		if _movable and _movable.has_method("move_to"):
-			_movable.move_to(world_pos)
+
+func _handle_keyboard_movement(delta: float) -> void:
+	if _player == null:
+		return
+	var direction := Vector2.ZERO
+	if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT):
+		direction.x -= 1.0
+	if Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT):
+		direction.x += 1.0
+	if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP):
+		direction.y -= 1.0
+	if Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN):
+		direction.y += 1.0
+	if direction != Vector2.ZERO:
+		direction = direction.normalized()
+		if _movable and _movable.has_method("stop_movement"):
+			_movable.stop_movement()
+		var speed := 100.0
+		if _movable:
+			var movable_speed = _movable.get("move_speed")
+			if movable_speed != null:
+				speed = float(movable_speed)
+		_player.position += direction * speed * delta
+		_keyboard_move_direction = direction
+	elif _keyboard_move_direction != Vector2.ZERO:
+		_keyboard_move_direction = Vector2.ZERO
 
 func _get_mouse_world_position() -> Vector2:
 	var viewport = get_viewport()
