@@ -28,20 +28,39 @@ var current_map:
 func initialize() -> void:
 	if _is_initialized:
 		return
-	
+
 	# 从游戏设置中读取生长周期
 	var game_settings = ConfigManager.get_all("game_settings")
 	for setting in game_settings:
 		if setting.get("key", "") == GROWTH_TICK_INTERVAL_KEY:
 			_growth_tick_interval = float(setting.get("value", DEFAULT_GROWTH_TICK_INTERVAL)) / 1000.0
 			break
-	
+
 	print("[FarmManager] 生长周期间隔: %ss" % str(_growth_tick_interval))
-	
-	# 创建默认农场地图
+
+	_create_default_farm_map()
+
+	_is_initialized = true
+
+	# 启动生长循环
+	_start_growth_loop()
+
+	# 订阅下雨事件
+	if WeatherManager.has_signal("rain_loop"):
+		WeatherManager.rain_loop.connect(_on_rain_received)
+
+	print("[FarmManager] 初始化完成，默认地图 (%d 块土地)" % _current_map.count())
+
+func reset_farm_data() -> void:
+	_maps.clear()
+	_current_view = null
+	_create_default_farm_map()
+	print("[FarmManager] 农场数据已重置")
+
+func _create_default_farm_map() -> void:
 	var FarmMapDataScript = load("res://scripts/farm/farm_map_data.gd")
 	var SoilEntityScript = load("res://scripts/farm/soil_entity.gd")
-	
+
 	var default_map = FarmMapDataScript.new("Main")
 	var soil_id = 1
 	for y in range(DEFAULT_FARM_HEIGHT):
@@ -53,20 +72,9 @@ func initialize() -> void:
 			default_map.add_soil(soil)
 			soil.state_changed.connect(_on_soil_state_changed)
 			soil_id += 1
-	
+
 	register_map(default_map)
 	_current_map = default_map
-	
-	_is_initialized = true
-	
-	# 启动生长循环
-	_start_growth_loop()
-	
-	# 订阅下雨事件
-	if WeatherManager.has_signal("rain_loop"):
-		WeatherManager.rain_loop.connect(_on_rain_received)
-	
-	print("[FarmManager] 初始化完成，默认地图 (%d 块土地)" % default_map.count())
 
 ## 注册地图
 func register_map(map) -> void:
@@ -78,7 +86,7 @@ func register_map(map) -> void:
 func get_or_create_map_data(map_id: String) -> FarmMapData:
 	if _maps.has(map_id):
 		return _maps[map_id]
-	
+
 	# 创建新的地图数据
 	var new_map = FarmMapData.new(map_id)
 	var soil_id = 1
@@ -91,7 +99,7 @@ func get_or_create_map_data(map_id: String) -> FarmMapData:
 			new_map.add_soil(soil)
 			soil.state_changed.connect(_on_soil_state_changed)
 			soil_id += 1
-	
+
 	register_map(new_map)
 	return new_map
 
@@ -128,31 +136,31 @@ func plant_seed(soil, item_id: int, inventory) -> bool:
 func plant(soil, item_id: int, inventory) -> bool:
 	if soil == null:
 		return false
-	
+
 	if soil.has_plant:
 		push_warning("[FarmManager] 无法种植: %s 已有作物" % str(soil.grid_pos))
 		return false
-	
+
 	# 检查物品配置
 	var config_info = _get_item_config_info(item_id)
 	if config_info.is_empty():
 		push_warning("[FarmManager] 物品 %d 配置不存在" % item_id)
 		return false
-	
+
 	var item_type = config_info.get("item_type", -1)
 	if item_type != ITEM_TYPE_SEED:
 		push_warning("[FarmManager] 物品 %d 不是种子" % item_id)
 		return false
-	
+
 	# 扣除种子
 	if not inventory.remove_item(item_id, 1):
 		return false
-	
+
 	# 创建作物
 	var PlantEntityScript = load("res://scripts/farm/plant_entity.gd")
 	var new_plant = PlantEntityScript.new(item_id)
 	soil.plant = new_plant
-	
+
 	print("[FarmManager] 种植 %s 在 %s" % [config_info.get("name", ""), str(soil.grid_pos)])
 	return true
 
@@ -160,16 +168,16 @@ func plant(soil, item_id: int, inventory) -> bool:
 func harvest(soil, inventory) -> bool:
 	if soil == null or not soil.has_plant:
 		return false
-	
+
 	var plant_entity = soil.plant
 	if not plant_entity.is_mature:
 		push_warning("[FarmManager] 作物未成熟: %s" % str(soil.grid_pos))
 		return false
-	
+
 	# 计算产出
 	var plant_config = _get_seed_config(plant_entity.config_id)
 	var harvested_items: Array = []
-	
+
 	if plant_config.has("bonus_item"):
 		var bonus_items = plant_config["bonus_item"]
 		var bonus_amounts = plant_config.get("bonus_amount", [])
@@ -181,10 +189,10 @@ func harvest(soil, inventory) -> bool:
 					reward_count = bonus_amounts[i]
 				inventory.add_item(reward_item_id, reward_count)
 				harvested_items.append({"item_id": reward_item_id, "count": reward_count})
-	
+
 	# 清除作物
 	soil.plant = null
-	
+
 	plant_harvested.emit(soil, harvested_items)
 	print("[FarmManager] 收获: %s" % str(soil.grid_pos))
 	return true
@@ -202,25 +210,25 @@ func _on_growth_tick() -> void:
 	var weather_type = WeatherManager.current_weather if WeatherManager._is_initialized else 0
 	var is_rainy = (weather_type == WeatherManager.WeatherType.RAINY) if WeatherManager._is_initialized else false
 	var is_sunny = (weather_type == WeatherManager.WeatherType.SUNNY) if WeatherManager._is_initialized else true
-	
+
 	for map in _maps.values():
 		for soil in map.get_all_soils():
 			# 植物生长逻辑
 			if soil.has_plant and not soil.plant.is_mature:
 				var plant_entity = soil.plant
 				var config = _get_seed_config(plant_entity.config_id)
-				
+
 				if not config.is_empty():
 					var growth_factor: float = config.get("maturity_speed", 1.0)
-					
+
 					# 天气与湿度加成
 					if soil.moisture < 20.0:
 						growth_factor *= 0.3
 					elif is_sunny and soil.moisture > 40.0:
 						growth_factor *= 1.5
-					
+
 					plant_entity.grow(growth_factor)
-			
+
 			# 水分蒸发逻辑
 			if not is_rainy:
 				var evaporation = 2.0 if is_sunny else 0.5

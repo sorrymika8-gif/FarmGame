@@ -87,6 +87,14 @@ func remove_npc(npc_id: String) -> void:
 	_entities.erase(npc_id)
 	npc_removed.emit(npc_id)
 
+func clear_all_npcs() -> void:
+	for npc_id in _controllers.keys():
+		var ctrl = _controllers[npc_id]
+		if is_instance_valid(ctrl):
+			ctrl.queue_free()
+	_controllers.clear()
+	_entities.clear()
+
 ## 获取距离最近的 NPC
 func get_nearest_npc(pos: Vector2, max_distance: float = INF) -> NPCController:
 	var nearest: NPCController = null

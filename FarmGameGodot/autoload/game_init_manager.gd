@@ -8,6 +8,7 @@ const INITIAL_SEED_CONFIG_ID = 1001
 const INITIAL_SEED_COUNT = 3
 
 var _is_initialized: bool = false
+var _is_game_running: bool = false
 
 func initialize() -> void:
 	if _is_initialized:
@@ -20,43 +21,72 @@ func start_new_game() -> void:
 	if not _is_initialized:
 		push_error("[GameInitManager] 未初始化")
 		return
-	
+
+	_prepare_game_world()
+
 	# 创建玩家
 	if not PlayerManager.create_player():
 		push_error("[GameInitManager] 创建玩家失败")
 		return
-	
+
 	# 检查是否新玩家
 	var is_new_player = true
 	if PlayerManager.player and PlayerManager.player.has_method("get_data"):
 		var data = PlayerManager.player.get_data()
 		if data:
 			is_new_player = data.get("is_new_player", true)
-	
+
 	var map_to_load = INITIAL_MAP
 	var spawn_position = INITIAL_SPAWN_POSITION
-	
+
 	print("[GameInitManager] 开始游戏, 新玩家: %s" % str(is_new_player))
-	
+
 	# 使用 GameManager 进入场景
 	GameManager.enter_scene(map_to_load, spawn_position)
-	
+
 	# 打开主界面
 	UIManager.open_main_ui()
 	print("[GameInitManager] 主界面已打开")
-	
+
 	# 初始化天气系统
 	WeatherManager.initialize()
 	print("[GameInitManager] 天气系统已初始化")
-	
+
 	# 新玩家发放初始物品
 	if is_new_player:
 		var inventory = PlayerManager.get_player_inventory()
 		if inventory and inventory.has_method("add_item"):
 			inventory.add_item(INITIAL_SEED_CONFIG_ID, INITIAL_SEED_COUNT)
 			print("[GameInitManager] 发放初始物品: %d 颗小麦种子" % INITIAL_SEED_COUNT)
-		
+
 		if PlayerManager.player and PlayerManager.player.has_method("set_new_player"):
 			PlayerManager.player.set_new_player(false)
-	
+
 	print("[GameInitManager] 游戏初始化完成")
+	_is_game_running = true
+
+func start_game_from_save(slot_index: int) -> void:
+	start_new_game()
+	if SaveSystem.load_game(slot_index):
+		print("[GameInitManager] 已从槽位 %d 读取游戏" % slot_index)
+
+func return_to_main_menu() -> void:
+	_is_game_running = false
+	get_tree().paused = false
+	UIManager.close_all_panels()
+	NPCManager.clear_all_npcs()
+	MapManager.unload_map()
+	PlayerManager.reset_state()
+	FarmManager.reset_farm_data()
+	UIManager.open_panel("res://ui/main_menu_panel.tscn")
+
+func is_game_running() -> bool:
+	return _is_game_running
+
+func _prepare_game_world() -> void:
+	get_tree().paused = false
+	UIManager.close_all_panels()
+	NPCManager.clear_all_npcs()
+	MapManager.unload_map()
+	PlayerManager.reset_state()
+	FarmManager.reset_farm_data()

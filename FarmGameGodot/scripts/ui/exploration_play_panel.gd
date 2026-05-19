@@ -16,10 +16,7 @@ const BARRAGE_NPC_FIRE_INTERVAL := 0.24
 const MELEE_NPC_ATTACK_INTERVAL := 0.9
 const SPAWN_INTERVAL := 0.45
 const CONTACT_INTERVAL := 0.45
-const CONTACT_DAMAGE := 10
-const NPC_CONTACT_DAMAGE := 8
 const SURVIVE_TIME := 10.0
-const ENEMY_HP := 6
 const GRID_STEP := 100.0
 
 @onready var map_panel: Panel = $MapPanel
@@ -35,7 +32,9 @@ var _selected_npcs: Array[String] = ["melee", "ranged", "barrage"]
 var _arena_size := DEFAULT_ARENA_SIZE
 var _player_pos := Vector2.ZERO
 var _player_facing := Vector2.DOWN
-var _player_hp := 100
+var _player_stats: Dictionary = {}
+var _enemy_stats: Dictionary = {}
+var _player_hp := 100.0
 var _elapsed := 0.0
 var _spawn_timer := 0.0
 var _fire_timer := 0.0
@@ -59,6 +58,7 @@ func _ready() -> void:
 	_arena_size = map_panel.size
 	if _arena_size.x <= 0.0 or _arena_size.y <= 0.0:
 		_arena_size = DEFAULT_ARENA_SIZE
+	_initialize_combat_stats()
 	_player_pos = _arena_size * 0.5
 	_create_grid_lines()
 	_create_selected_allies()
@@ -92,6 +92,7 @@ func _create_selected_allies() -> void:
 	var slot_offsets := [Vector2(-42.0, 34.0), Vector2(42.0, 34.0), Vector2(0.0, 58.0)]
 	var slot := 0
 	for npc_id in _selected_npcs:
+		var stats := EquipmentManager.get_actor_stats(npc_id)
 		var node := ColorRect.new()
 		node.size = ALLY_SIZE
 		node.color = _get_ally_color(npc_id)
@@ -107,8 +108,9 @@ func _create_selected_allies() -> void:
 			"follow_speed": _get_ally_follow_speed(npc_id),
 			"reaction_delay": _get_ally_reaction_delay(npc_id),
 			"reaction_timer": 0.0,
-			"hp": 70,
-			"max_hp": 70,
+			"stats": stats,
+			"hp": float(stats.get("max_hp", 1.0)),
+			"max_hp": float(stats.get("max_hp", 1.0)),
 			"attack_cd": 0.0,
 			"contact_cd": 0.0,
 			"alive": true,
@@ -117,6 +119,19 @@ func _create_selected_allies() -> void:
 		var ally_pos: Vector2 = ally["pos"]
 		_update_world_rect(node, ally_pos, ALLY_SIZE)
 		slot += 1
+
+func _initialize_combat_stats() -> void:
+	_player_stats = EquipmentManager.get_actor_stats("player")
+	_enemy_stats = {
+		"max_hp": 42.0,
+		"move_speed": ENEMY_SPEED,
+		"attack": 10.0,
+		"defense": 5.0,
+		"crit_rate": 0.0,
+		"crit_damage": 0.5,
+		"level": 1,
+	}
+	_player_hp = float(_player_stats.get("max_hp", 1.0))
 
 func _create_grid_lines() -> void:
 	for child in _grid_lines:
@@ -147,17 +162,13 @@ func _get_ally_color(npc_id: String) -> Color:
 
 func _get_ally_name(npc_id: String) -> String:
 	if npc_id == "melee":
-		return "近战"
+		return "Rowan"
 	if npc_id == "ranged":
-		return "远程"
-	return "重弹幕"
+		return "Mira"
+	return "Nox"
 
 func _get_ally_follow_speed(npc_id: String) -> float:
-	if npc_id == "melee":
-		return 285.0
-	if npc_id == "ranged":
-		return 225.0
-	return 175.0
+	return float(EquipmentManager.get_actor_stats(npc_id).get("move_speed", 0.0))
 
 func _get_ally_reaction_delay(npc_id: String) -> float:
 	if npc_id == "melee":
@@ -178,7 +189,7 @@ func _handle_player_move(delta: float) -> void:
 		direction.y += 1.0
 	if direction != Vector2.ZERO:
 		_player_facing = direction.normalized()
-		_player_pos += _player_facing * PLAYER_SPEED * delta
+		_player_pos += _player_facing * float(_player_stats.get("move_speed", PLAYER_SPEED)) * delta
 	_player_pos = _clamp_to_world(_player_pos, PLAYER_SIZE)
 
 func _update_allies(delta: float) -> void:
@@ -238,7 +249,7 @@ func _try_melee_attack(ally: Dictionary) -> void:
 			continue
 		var knockback := to_enemy.normalized() * 42.0
 		enemy["pos"] = _clamp_to_world(enemy_pos + knockback, ENEMY_SIZE)
-		_damage_enemy_at(i, 2)
+		_damage_enemy_at(i, _roll_damage(ally.get("stats", {}), 0.95))
 
 func _show_melee_swing(center_pos: Vector2, forward: Vector2) -> void:
 	var swing := Polygon2D.new()
@@ -255,7 +266,7 @@ func _show_melee_swing(center_pos: Vector2, forward: Vector2) -> void:
 			swing.queue_free()
 	)
 
-func _try_ally_projectile(ally: Dictionary, interval: float, speed: float, size: Vector2, color: Color, damage: int) -> void:
+func _try_ally_projectile(ally: Dictionary, interval: float, speed: float, size: Vector2, color: Color, skill_multiplier: float) -> void:
 	if float(ally["attack_cd"]) > 0.0:
 		return
 	var pos: Vector2 = ally["pos"]
@@ -267,7 +278,7 @@ func _try_ally_projectile(ally: Dictionary, interval: float, speed: float, size:
 	var direction := (target_pos - pos).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
-	_spawn_projectile(pos, direction * speed, size, color, damage)
+	_spawn_projectile(pos, direction * speed, size, color, _roll_damage(ally.get("stats", {}), skill_multiplier))
 
 func _try_spawn_enemy() -> void:
 	if _spawn_timer > 0.0:
@@ -288,7 +299,7 @@ func _try_spawn_enemy() -> void:
 	node.color = Color(0.9, 0.22, 0.18, 1.0)
 	node.size = ENEMY_SIZE
 	map_panel.add_child(node)
-	_enemies.append({"node": node, "pos": pos, "hp": ENEMY_HP, "contact_cd": 0.0})
+	_enemies.append({"node": node, "pos": pos, "hp": float(_enemy_stats.get("max_hp", 1.0)), "contact_cd": 0.0})
 	_update_world_rect(node, pos, ENEMY_SIZE)
 
 func _update_enemies(delta: float) -> void:
@@ -302,7 +313,7 @@ func _update_enemies(delta: float) -> void:
 		var target := _find_nearest_target(pos)
 		var target_pos: Vector2 = target.get("pos", _player_pos)
 		var direction := (target_pos - pos).normalized()
-		pos += direction * ENEMY_SPEED * delta
+		pos += direction * float(_enemy_stats.get("move_speed", ENEMY_SPEED)) * delta
 		pos = _clamp_to_world(pos, ENEMY_SIZE)
 		enemy["pos"] = pos
 		enemy["contact_cd"] = maxf(float(enemy["contact_cd"]) - delta, 0.0)
@@ -328,17 +339,18 @@ func _find_nearest_target(from_pos: Vector2) -> Dictionary:
 func _damage_target(target: Dictionary) -> void:
 	if str(target.get("type", "player")) == "ally":
 		var ally: Dictionary = target["ally"]
-		ally["hp"] = int(ally["hp"]) - NPC_CONTACT_DAMAGE
-		if int(ally["hp"]) <= 0:
-			ally["hp"] = 0
+		var ally_stats: Dictionary = ally.get("stats", {})
+		ally["hp"] = float(ally["hp"]) - _roll_incoming_damage(ally_stats)
+		if float(ally["hp"]) <= 0.0:
+			ally["hp"] = 0.0
 			ally["alive"] = false
 			var node: ColorRect = ally["node"]
 			if is_instance_valid(node):
 				node.color = Color(0.18, 0.18, 0.18, 1.0)
 		return
-	_player_hp -= CONTACT_DAMAGE
-	if _player_hp <= 0:
-		_player_hp = 0
+	_player_hp -= _roll_incoming_damage(_player_stats)
+	if _player_hp <= 0.0:
+		_player_hp = 0.0
 		_finish_run(false)
 
 func _try_fire_player_projectile() -> void:
@@ -352,9 +364,9 @@ func _try_fire_player_projectile() -> void:
 	var direction := (target_pos - _player_pos).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
-	_spawn_projectile(_player_pos, direction * PROJECTILE_SPEED, PROJECTILE_SIZE, Color(1.0, 0.85, 0.24, 1.0), 1)
+	_spawn_projectile(_player_pos, direction * PROJECTILE_SPEED, PROJECTILE_SIZE, Color(1.0, 0.85, 0.24, 1.0), _roll_damage(_player_stats, 1.0))
 
-func _spawn_projectile(pos: Vector2, velocity: Vector2, size: Vector2, color: Color, damage: int) -> void:
+func _spawn_projectile(pos: Vector2, velocity: Vector2, size: Vector2, color: Color, damage: float) -> void:
 	var node := ColorRect.new()
 	node.color = color
 	node.size = size
@@ -379,13 +391,13 @@ func _update_projectiles(delta: float) -> void:
 			_projectiles.remove_at(i)
 			continue
 		var projectile_size: Vector2 = projectile["size"]
-		if _projectile_hit_enemy(pos, projectile_size.x * 0.5, int(projectile["damage"])):
+		if _projectile_hit_enemy(pos, projectile_size.x * 0.5, float(projectile["damage"])):
 			node.queue_free()
 			_projectiles.remove_at(i)
 			continue
 		_update_world_rect(node, pos, projectile_size)
 
-func _projectile_hit_enemy(projectile_pos: Vector2, radius: float, damage: int) -> bool:
+func _projectile_hit_enemy(projectile_pos: Vector2, radius: float, damage: float) -> bool:
 	for i in range(_enemies.size() - 1, -1, -1):
 		var enemy: Dictionary = _enemies[i]
 		var enemy_pos: Vector2 = enemy["pos"]
@@ -395,12 +407,12 @@ func _projectile_hit_enemy(projectile_pos: Vector2, radius: float, damage: int) 
 		return true
 	return false
 
-func _damage_enemy_at(index: int, damage: int) -> void:
+func _damage_enemy_at(index: int, damage: float) -> void:
 	if index < 0 or index >= _enemies.size():
 		return
 	var enemy: Dictionary = _enemies[index]
-	enemy["hp"] = int(enemy["hp"]) - damage
-	if int(enemy["hp"]) <= 0:
+	enemy["hp"] = float(enemy["hp"]) - damage
+	if float(enemy["hp"]) <= 0.0:
 		var node: ColorRect = enemy["node"]
 		if is_instance_valid(node):
 			node.queue_free()
@@ -424,8 +436,17 @@ func _finish_run(victory: bool) -> void:
 	_is_running = false
 	result_label.visible = true
 	result_label.text = "探索胜利" if victory else "探索失败"
+	if victory:
+		var reward := EquipmentManager.create_random_equipment(1)
+		result_label.text += "\n获得: %s" % str(reward.get("name", "未知装备"))
 	await get_tree().create_timer(1.0).timeout
 	UIManager.close_panel("exploration_play_panel")
+
+func _roll_damage(attacker_stats: Dictionary, skill_multiplier: float) -> float:
+	return float(EquipmentManager.calculate_damage(attacker_stats, _enemy_stats, skill_multiplier, _rng).get("damage", 0.0))
+
+func _roll_incoming_damage(defender_stats: Dictionary) -> float:
+	return float(EquipmentManager.calculate_damage(_enemy_stats, defender_stats, 1.0, _rng).get("damage", 0.0))
 
 func _update_player_node() -> void:
 	_update_world_rect(player_rect, _player_pos, PLAYER_SIZE)
@@ -469,12 +490,12 @@ func _clamp_to_world(pos: Vector2, rect_size: Vector2) -> Vector2:
 	)
 
 func _update_hud() -> void:
-	hp_label.text = "玩家生命: %d" % _player_hp
+	hp_label.text = "玩家生命: %d/%d" % [ceili(_player_hp), ceili(float(_player_stats.get("max_hp", 1.0)))]
 	timer_label.text = "坚持: %.1f / %.0f" % [minf(_elapsed, SURVIVE_TIME), SURVIVE_TIME]
 	var parts: Array[String] = []
 	for ally_value in _allies:
 		var ally: Dictionary = ally_value
-		parts.append("%s:%d" % [str(ally["name"]), int(ally["hp"])])
+		parts.append("%s:%d" % [str(ally["name"]), ceili(float(ally["hp"]))])
 	var ally_text := ""
 	for part in parts:
 		if ally_text != "":

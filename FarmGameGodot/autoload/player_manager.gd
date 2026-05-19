@@ -73,6 +73,11 @@ func destroy_player() -> void:
 		_player = null
 		print("[PlayerManager] 玩家已销毁")
 
+func reset_state() -> void:
+	destroy_player()
+	_gold = DEFAULT_GOLD
+	gold_changed.emit(_gold)
+
 ## 设置玩家位置
 func set_player_position(position: Vector2) -> void:
 	if _player == null:

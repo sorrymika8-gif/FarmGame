@@ -9,6 +9,9 @@ var current_hp: float = 100.0
 var base_move_speed: float = 5.0
 var base_attack: float = 10.0
 var base_defense: float = 5.0
+var crit_rate: float = 0.05
+var crit_damage: float = 0.5
+var level: int = 1
 
 # 状态效果列表
 var _active_effects: Array[StatusEffect] = []
@@ -35,6 +38,18 @@ func get_defense() -> float:
 	var defense := base_defense
 	defense *= (1.0 + get_effect_value(AtomEnums.StatusEffectType.DEFENSE_MOD) / 100.0)
 	return maxf(0.0, defense)
+
+func get_crit_rate() -> float:
+	return clampf(crit_rate, 0.0, 1.0)
+
+func get_crit_damage() -> float:
+	return maxf(crit_damage, 0.0)
+
+func get_defense_multiplier_against(attacker_level: int = 1) -> float:
+	var atk_level := maxi(attacker_level, 1)
+	var def_level := maxi(level, 1)
+	var defense := get_defense()
+	return float(atk_level + 100) / float((atk_level + 100) + (def_level + 100) * defense / 100.0)
 
 func is_silenced() -> bool:
 	return has_effect(AtomEnums.StatusEffectType.SILENCE)

@@ -13,11 +13,11 @@ signal load_completed(slot_index: int)
 func initialize() -> void:
 	if _is_initialized:
 		return
-	
+
 	# 确保存档目录存在
 	if not DirAccess.dir_exists_absolute(SAVE_DIR):
 		DirAccess.make_dir_absolute(SAVE_DIR)
-	
+
 	_is_initialized = true
 	print("[SaveSystem] 初始化完成")
 
@@ -26,19 +26,19 @@ func save_game(slot_index: int) -> bool:
 	if not _is_initialized:
 		push_error("[SaveSystem] 未初始化")
 		return false
-	
+
 	var save_data = _collect_save_data()
 	var file_path = _get_save_path(slot_index)
-	
+
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
 	if file == null:
 		push_error("[SaveSystem] 无法创建存档文件: %s" % file_path)
 		return false
-	
+
 	var json_text = JSON.stringify(save_data, "\t")
 	file.store_string(json_text)
 	file.close()
-	
+
 	save_completed.emit(slot_index)
 	print("[SaveSystem] 存档保存成功: 槽位 %d" % slot_index)
 	return true
@@ -48,33 +48,33 @@ func load_game(slot_index: int) -> bool:
 	if not _is_initialized:
 		push_error("[SaveSystem] 未初始化")
 		return false
-	
+
 	var file_path = _get_save_path(slot_index)
-	
+
 	if not FileAccess.file_exists(file_path):
 		push_warning("[SaveSystem] 存档不存在: %s" % file_path)
 		return false
-	
+
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
 		push_error("[SaveSystem] 无法读取存档文件: %s" % file_path)
 		return false
-	
+
 	var json_text = file.get_as_text()
 	file.close()
-	
+
 	var json = JSON.new()
 	if json.parse(json_text) != OK:
 		push_error("[SaveSystem] 存档解析失败")
 		return false
-	
+
 	var save_data = json.data as Dictionary
 	if save_data == null:
 		push_error("[SaveSystem] 存档数据格式错误")
 		return false
-	
+
 	_apply_save_data(save_data)
-	
+
 	load_completed.emit(slot_index)
 	print("[SaveSystem] 存档加载成功: 槽位 %d" % slot_index)
 	return true
@@ -122,8 +122,9 @@ func _collect_save_data() -> Dictionary:
 		"farm": {},
 		"inventory": {},
 		"gold": 0,
+		"equipment": {},
 	}
-	
+
 	# 收集玩家数据
 	if PlayerManager._is_initialized and PlayerManager._player != null:
 		var player = PlayerManager._player
@@ -133,7 +134,7 @@ func _collect_save_data() -> Dictionary:
 			"is_new_player": false
 		}
 		data["gold"] = PlayerManager._gold
-		
+
 		# 收集背包数据
 		var inventory_data: Array = []
 		if PlayerManager._player.has_method("get_inventory"):
@@ -145,7 +146,7 @@ func _collect_save_data() -> Dictionary:
 						"count": item.count
 					})
 		data["inventory"] = inventory_data
-	
+
 	# 收集农场数据
 	if FarmManager._is_initialized and FarmManager._current_map != null:
 		var farm_data: Array = []
@@ -163,7 +164,10 @@ func _collect_save_data() -> Dictionary:
 				}
 			farm_data.append(soil_data)
 		data["farm"] = farm_data
-	
+
+	if EquipmentManager:
+		data["equipment"] = EquipmentManager.to_save_data()
+
 	return data
 
 func _apply_save_data(data: Dictionary) -> void:
@@ -175,10 +179,10 @@ func _apply_save_data(data: Dictionary) -> void:
 			player_data.get("position_y", 0)
 		)
 		PlayerManager.set_player_position(pos)
-	
+
 	if data.has("gold"):
 		PlayerManager.set_gold(data["gold"])
-	
+
 	# 恢复背包数据
 	if data.has("inventory"):
 		var inventory = PlayerManager.get_player_inventory()
@@ -186,7 +190,7 @@ func _apply_save_data(data: Dictionary) -> void:
 			inventory.clear()
 			for item_data in data["inventory"]:
 				inventory.add_item(item_data["config_id"], item_data["count"])
-	
+
 	# 恢复农场数据
 	if data.has("farm"):
 		for soil_data in data["farm"]:
@@ -201,3 +205,6 @@ func _apply_save_data(data: Dictionary) -> void:
 					var plant = PlantEntity.new(plant_info["config_id"])
 					plant.current_maturity = plant_info.get("current_maturity", 0.0)
 					soil.plant = plant
+
+	if data.has("equipment") and EquipmentManager:
+		EquipmentManager.load_save_data(data["equipment"])

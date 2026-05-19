@@ -6,6 +6,8 @@ extends Control
 @onready var weather_label: Label = $MarginContainer/VBoxContainer/TopBar/WeatherLabel
 @onready var backpack_button: Button = $MarginContainer/VBoxContainer/BottomBar/BackpackButton
 @onready var save_button: Button = $MarginContainer/VBoxContainer/BottomBar/SaveButton
+@onready var equipment_button: Button = $MarginContainer/VBoxContainer/BottomBar/EquipmentButton
+@onready var pause_button: Button = $MarginContainer/VBoxContainer/BottomBar/PauseButton
 
 func _ready() -> void:
 	# 连接按钮信号
@@ -13,6 +15,10 @@ func _ready() -> void:
 		backpack_button.pressed.connect(_on_backpack_pressed)
 	if save_button:
 		save_button.pressed.connect(_on_save_pressed)
+	if equipment_button:
+		equipment_button.pressed.connect(_on_equipment_pressed)
+	if pause_button:
+		pause_button.pressed.connect(_on_pause_pressed)
 	
 	# 连接金币变化信号
 	PlayerManager.gold_changed.connect(_on_gold_changed)
@@ -39,6 +45,13 @@ func _on_backpack_pressed() -> void:
 
 func _on_save_pressed() -> void:
 	UIManager.open_save_load_panel(true)
+
+func _on_equipment_pressed() -> void:
+	UIManager.open_equipment_panel()
+
+func _on_pause_pressed() -> void:
+	UIManager.open_pause_menu()
+	get_tree().paused = true
 
 func _update_gold_display() -> void:
 	if gold_label:

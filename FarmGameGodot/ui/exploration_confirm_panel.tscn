@@ -65,17 +65,17 @@ theme_override_constants/separation = 6
 [node name="MeleeCheck" type="CheckBox" parent="Panel/MarginContainer/VBoxContainer/NpcOptions"]
 layout_mode = 2
 button_pressed = true
-text = "近战 NPC"
+text = "Rowan（近战）"
 
 [node name="RangedCheck" type="CheckBox" parent="Panel/MarginContainer/VBoxContainer/NpcOptions"]
 layout_mode = 2
 button_pressed = true
-text = "远程 NPC"
+text = "Mira（远程）"
 
 [node name="BarrageCheck" type="CheckBox" parent="Panel/MarginContainer/VBoxContainer/NpcOptions"]
 layout_mode = 2
 button_pressed = true
-text = "重弹幕 NPC"
+text = "Nox（重弹幕）"
 
 [node name="Spacer" type="Control" parent="Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -85,6 +85,10 @@ size_flags_vertical = 3
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
+
+[node name="EquipmentButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonBar"]
+layout_mode = 2
+text = "管理装备"
 
 [node name="CancelButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonBar"]
 layout_mode = 2

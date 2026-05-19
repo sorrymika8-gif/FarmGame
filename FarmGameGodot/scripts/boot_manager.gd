@@ -6,7 +6,23 @@ extends Node
 var _is_initialized: bool = false
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_initialize_async()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not _is_initialized:
+		return
+	if event.is_action_pressed("ui_cancel") and GameInitManager.is_game_running():
+		if UIManager.close_top_popup_panel():
+			get_viewport().set_input_as_handled()
+			return
+		if UIManager.is_panel_open("pause_menu_panel"):
+			UIManager.close_panel("pause_menu_panel")
+			get_tree().paused = false
+		else:
+			UIManager.open_panel("res://ui/pause_menu_panel.tscn")
+			get_tree().paused = true
+		get_viewport().set_input_as_handled()
 
 func _initialize_async() -> void:
 	if _is_initialized:
@@ -76,9 +92,12 @@ func _initialize_async() -> void:
 	# 15. 初始化战斗管理器
 	CombatManager.initialize()
 	print("[BootManager] CombatManager 初始化完成")
+
+	# 16. 初始化装备管理器
+	EquipmentManager.initialize()
+	print("[BootManager] EquipmentManager 初始化完成")
 	
 	_is_initialized = true
 	print("[BootManager] 所有管理器初始化完成!")
 	
-	# 启动新游戏
-	GameInitManager.start_new_game()
+	UIManager.open_panel("res://ui/main_menu_panel.tscn")

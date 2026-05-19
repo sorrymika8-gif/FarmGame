@@ -36,6 +36,7 @@ FarmManager="*res://autoload/farm_manager.gd"
 WeatherManager="*res://autoload/weather_manager.gd"
 CombatManager="*res://autoload/combat_manager.gd"
 GameManager="*res://autoload/game_manager.gd"
+EquipmentManager="*res://autoload/equipment_manager.gd"
 
 [display]
 

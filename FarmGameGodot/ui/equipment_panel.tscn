@@ -1,0 +1,104 @@
+[gd_scene format=3 uid="uid://cvncuf5dxg4oh"]
+
+[ext_resource type="Script" path="res://scripts/ui/equipment_panel.gd" id="1_equipment"]
+
+[node name="EquipmentPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_equipment")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.35)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -430.0
+offset_top = -290.0
+offset_right = 430.0
+offset_bottom = 290.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopBar" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "装备管理"
+
+[node name="CloseButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/TopBar"]
+layout_mode = 2
+text = "X"
+
+[node name="ActorTabs" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Content" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="LeftPane" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="StatsLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/Content/LeftPane"]
+layout_mode = 2
+text = "属性"
+
+[node name="SlotScroll" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer/Content/LeftPane"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SlotContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/Content/LeftPane/SlotScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="RightPane" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="InventoryTitle" type="Label" parent="Panel/MarginContainer/VBoxContainer/Content/RightPane"]
+layout_mode = 2
+text = "装备库存"
+
+[node name="SelectedLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/Content/RightPane"]
+layout_mode = 2
+text = "已选：无"
+
+[node name="InventoryScroll" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer/Content/RightPane"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="InventoryContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/Content/RightPane/InventoryScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6

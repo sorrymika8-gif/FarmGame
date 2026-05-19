@@ -3,17 +3,20 @@
 extends Control
 
 var _is_save_mode: bool = true
+var _on_load_selected: Callable = Callable()
 
 @onready var title_label: Label = $Panel/MarginContainer/VBoxContainer/TopBar/TitleLabel
 @onready var close_button: Button = $Panel/MarginContainer/VBoxContainer/TopBar/CloseButton
 @onready var slot_container: VBoxContainer = $Panel/MarginContainer/VBoxContainer/ScrollContainer/SlotContainer
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	if close_button:
 		close_button.pressed.connect(_on_close_pressed)
 
 func setup(data: Dictionary) -> void:
 	_is_save_mode = data.get("is_save_mode", true)
+	_on_load_selected = data.get("on_load_selected", Callable())
 	
 	if title_label:
 		title_label.text = "保存游戏" if _is_save_mode else "加载游戏"
@@ -52,6 +55,10 @@ func _refresh_slots() -> void:
 func _on_slot_pressed(slot_index: int) -> void:
 	if _is_save_mode:
 		SaveSystem.save_game(slot_index)
+	elif _on_load_selected.is_valid():
+		_on_load_selected.call(slot_index)
+		UIManager.close_panel("save_load_panel")
+		return
 	else:
 		SaveSystem.load_game(slot_index)
 	

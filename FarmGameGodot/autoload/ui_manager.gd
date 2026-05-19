@@ -5,13 +5,25 @@ extends CanvasLayer
 var _is_initialized: bool = false
 var _panels: Dictionary = {} # panel_name -> Control
 var _panel_stack: Array = [] # 面板打开栈
+var _non_popup_panels := {
+	"main_ui_panel": true,
+	"main_menu_panel": true,
+	"exploration_play_panel": true,
+}
 
 func initialize() -> void:
 	if _is_initialized:
 		return
 	layer = 100 # UI 在最上层
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_is_initialized = true
 	print("[UIManager] 初始化完成")
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not _is_initialized:
+		return
+	if event.is_action_pressed("ui_cancel") and close_top_popup_panel():
+		get_viewport().set_input_as_handled()
 
 ## 打开 UI 面板
 ## panel_scene_path: 面板场景路径（res://ui/xxx.tscn）
@@ -42,6 +54,7 @@ func open_panel(panel_scene_path: String, data: Dictionary = {}) -> Control:
 	if panel == null:
 		push_error("[UIManager] 面板不是 Control 类型: %s" % panel_scene_path)
 		return null
+	panel.process_mode = Node.PROCESS_MODE_ALWAYS
 	
 	# 设置全屏
 	panel.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -70,6 +83,8 @@ func close_panel(panel_name: String) -> void:
 	
 	_panels.erase(panel_name)
 	_panel_stack.erase(panel_name)
+	if panel_name == "pause_menu_panel":
+		get_tree().paused = false
 	print("[UIManager] 关闭面板: %s" % panel_name)
 
 ## 显示面板
@@ -107,11 +122,33 @@ func close_top_panel() -> void:
 		var top = _panel_stack.back()
 		close_panel(top)
 
+func close_top_popup_panel() -> bool:
+	for i in range(_panel_stack.size() - 1, -1, -1):
+		var panel_name: String = _panel_stack[i]
+		if _non_popup_panels.has(panel_name):
+			continue
+		if not _panels.has(panel_name) or not is_instance_valid(_panels[panel_name]):
+			_panel_stack.remove_at(i)
+			_panels.erase(panel_name)
+			continue
+		close_panel(panel_name)
+		return true
+	return false
+
 # --- 便捷方法 ---
 
 ## 打开主界面
 func open_main_ui() -> Control:
 	return open_panel("res://ui/main_ui_panel.tscn")
+
+func open_main_menu() -> Control:
+	return open_panel("res://ui/main_menu_panel.tscn")
+
+func open_pause_menu() -> Control:
+	return open_panel("res://ui/pause_menu_panel.tscn")
+
+func open_equipment_panel() -> Control:
+	return open_panel("res://ui/equipment_panel.tscn")
 
 ## 打开背包面板
 func open_backpack_panel(inventory) -> Control:

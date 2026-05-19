@@ -19,5 +19,38 @@
 		"init_pos": [8, 8],
 		"role": "npc",
 		"interaction_dis": 3
+	},
+	{
+		"class_id": 3,
+		"name": "Rowan",
+		"gender": "男",
+		"prompt": "rowan.md",
+		"model_name": "rowan",
+		"init_pos": [-10, 7],
+		"role": "npc",
+		"exploration_role": "melee",
+		"interaction_dis": 3
+	},
+	{
+		"class_id": 4,
+		"name": "Mira",
+		"gender": "女",
+		"prompt": "mira.md",
+		"model_name": "mira",
+		"init_pos": [-4, 7],
+		"role": "npc",
+		"exploration_role": "ranged",
+		"interaction_dis": 3
+	},
+	{
+		"class_id": 5,
+		"name": "Nox",
+		"gender": "男",
+		"prompt": "nox.md",
+		"model_name": "nox",
+		"init_pos": [-7, 10],
+		"role": "npc",
+		"exploration_role": "barrage",
+		"interaction_dis": 3
 	}
 ]
