@@ -25,6 +25,12 @@ func enter_scene(map_name: String, spawn_pos: Vector2) -> void:
 	
 	# 5. 初始化农田视图（仅初始地图）
 	_setup_farm_on_init_map(map_name)
+
+	# 6. 生成当前地图的 NPC
+	NPCManager.spawn_npcs_for_map(map_name)
+
+	# 7. 应用城镇日程
+	TownManager.apply_npc_schedules()
 	
 	print("[GameManager] 进入场景: %s at %s" % [map_name, str(spawn_pos)])
 

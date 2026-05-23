@@ -27,5 +27,11 @@ static func create(config: Dictionary, brain: Brain) -> NPCEntity:
 	
 	# 设置提示词文件路径
 	entity.prompt_file_path = config.get("prompt", "")
+	entity.current_location_id = str(config.get("location_id", ""))
+
+	var initial_memories = config.get("initial_memories", [])
+	if initial_memories is Array:
+		for memory in initial_memories:
+			entity.record_memory(str(memory))
 	
 	return entity

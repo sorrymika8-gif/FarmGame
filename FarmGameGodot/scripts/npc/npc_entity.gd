@@ -25,6 +25,7 @@ var hunger: float = 0.0
 var fatigue: float = 0.0
 var emotion: String = "neutral"
 var current_activity: String = "idle"
+var current_location_id: String = ""
 
 ## 当前表情ID（用于立绘显示）
 var current_expression: String = "default"
@@ -87,6 +88,8 @@ func clear_mood() -> void:
 
 ## 记录行为到短期记忆
 func record_memory(content: String) -> void:
+	if content.strip_edges().is_empty():
+		return
 	var short_term = memory_store.get_partition("short_term")
 	if short_term:
 		short_term.append(content)
@@ -105,8 +108,21 @@ func receive_chat_async(content: String):
 	context.trigger_event = "ReceiveChat"
 	context.character_profile = build_character_profile()
 	context.current_state = build_current_state()
+	context.perception = TownManager.build_npc_perception(self)
 	context.extra["NPCEntity"] = self
 	context.extra["PromptFilePath"] = prompt_file_path
+	context.extra["AvailableActions"] = [
+		CommandTypes.Speak,
+		CommandTypes.SetExpression,
+		CommandTypes.SetMood,
+		CommandTypes.MemoryOperation,
+		CommandTypes.Move,
+	]
+
+	var controller = NPCManager.get_controller(id)
+	if controller != null:
+		context.extra["Node"] = controller
+		context.extra["Movable"] = controller.get_movable()
 	
 	# 3. 触发大脑思考
 	var brain = NPCManager.shared_brain
@@ -150,6 +166,7 @@ func build_character_profile() -> Dictionary:
 func build_current_state() -> Dictionary:
 	return {
 		"Position": str(position),
+		"Location": TownManager.get_location_name(current_location_id),
 		"Health": health,
 		"Hunger": hunger,
 		"Fatigue": fatigue,
@@ -168,7 +185,33 @@ func to_dict() -> Dictionary:
 		"position_x": position.x,
 		"position_y": position.y,
 		"health": health,
+		"hunger": hunger,
+		"fatigue": fatigue,
 		"emotion": emotion,
+		"current_activity": current_activity,
+		"current_location_id": current_location_id,
+		"current_expression": current_expression,
+		"current_mood": current_mood,
 		"role": role,
 		"shop_type": shop_type,
+		"memory_store": memory_store.to_dict(),
 	}
+
+## 从存档数据恢复动态状态
+func apply_save_data(data: Dictionary) -> void:
+	position = Vector2(
+		float(data.get("position_x", position.x)),
+		float(data.get("position_y", position.y))
+	)
+	health = float(data.get("health", health))
+	hunger = float(data.get("hunger", hunger))
+	fatigue = float(data.get("fatigue", fatigue))
+	emotion = str(data.get("emotion", emotion))
+	current_activity = str(data.get("current_activity", current_activity))
+	current_location_id = str(data.get("current_location_id", current_location_id))
+	current_expression = str(data.get("current_expression", current_expression))
+	current_mood = str(data.get("current_mood", current_mood))
+
+	var memory_data = data.get("memory_store", {})
+	if memory_data is Dictionary:
+		memory_store.from_dict(memory_data)

@@ -1,0 +1,157 @@
+[gd_scene load_steps=10 format=3 uid="uid://c8townmap01"]
+
+[ext_resource type="Script" path="res://scripts/game/interactable/shop_interactable.gd" id="1_shop_interactable"]
+[ext_resource type="Texture2D" path="res://assets/sprites/shops/seed_shop.svg" id="2_shop_sprite"]
+[ext_resource type="Script" path="res://scripts/game/interactable/exploration_entrance.gd" id="3_explore_entrance"]
+[ext_resource type="Script" path="res://scripts/map/map_transition.gd" id="4_map_transition"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_shop"]
+size = Vector2(96, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_explore"]
+size = Vector2(64, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
+size = Vector2(72, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_square"]
+size = Vector2(192, 96)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_marker"]
+radius = 18.0
+
+[node name="town_map" type="Node2D"]
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -640.0
+offset_top = -360.0
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 2
+color = Color(0.355, 0.482, 0.451, 1)
+
+[node name="SquareGround" type="ColorRect" parent="."]
+offset_left = -96.0
+offset_top = 80.0
+offset_right = 96.0
+offset_bottom = 176.0
+mouse_filter = 2
+color = Color(0.443, 0.42, 0.337, 1)
+
+[node name="SquareLabel" type="Label" parent="."]
+offset_left = -54.0
+offset_top = 48.0
+offset_right = 54.0
+offset_bottom = 72.0
+mouse_filter = 2
+text = "小镇广场"
+horizontal_alignment = 1
+
+[node name="SeedShopArea" type="Area2D" parent="."]
+position = Vector2(208, 80)
+input_pickable = true
+script = ExtResource("1_shop_interactable")
+shop_type = 1
+shop_name = "种子店"
+
+[node name="ShopSprite" type="Sprite2D" parent="SeedShopArea"]
+texture = ExtResource("2_shop_sprite")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeedShopArea"]
+shape = SubResource("RectangleShape2D_shop")
+
+[node name="ShopLabel" type="Label" parent="SeedShopArea"]
+offset_left = -32.0
+offset_top = -50.0
+offset_right = 32.0
+offset_bottom = -32.0
+mouse_filter = 2
+text = "种子店"
+horizontal_alignment = 1
+
+[node name="ExplorationArea" type="Area2D" parent="."]
+position = Vector2(-176, 80)
+input_pickable = true
+script = ExtResource("3_explore_entrance")
+entrance_name = "外出探索"
+
+[node name="Icon" type="Polygon2D" parent="ExplorationArea"]
+color = Color(0.243, 0.529, 0.914, 1)
+polygon = PackedVector2Array(-24, -24, 24, -24, 24, 24, -24, 24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExplorationArea"]
+shape = SubResource("RectangleShape2D_explore")
+
+[node name="Label" type="Label" parent="ExplorationArea"]
+offset_left = -42.0
+offset_top = -50.0
+offset_right = 42.0
+offset_bottom = -32.0
+mouse_filter = 2
+text = "外出探索"
+horizontal_alignment = 1
+
+[node name="FarmExit" type="Area2D" parent="."]
+position = Vector2(-272, 176)
+input_pickable = true
+script = ExtResource("4_map_transition")
+target_map = "init_map"
+target_spawn_grid = Vector2i(5, 2)
+transition_name = "返回农场"
+
+[node name="ExitIcon" type="Polygon2D" parent="FarmExit"]
+color = Color(0.2, 0.65, 0.32, 1)
+polygon = PackedVector2Array(-28, -16, 28, -16, 28, 16, -28, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FarmExit"]
+shape = SubResource("RectangleShape2D_exit")
+
+[node name="ExitLabel" type="Label" parent="FarmExit"]
+offset_left = -42.0
+offset_top = -42.0
+offset_right = 42.0
+offset_bottom = -22.0
+mouse_filter = 2
+text = "返回农场"
+horizontal_alignment = 1
+
+[node name="HomeMarker" type="Area2D" parent="."]
+position = Vector2(304, 304)
+
+[node name="HomeIcon" type="Polygon2D" parent="HomeMarker"]
+color = Color(0.545, 0.341, 0.286, 1)
+polygon = PackedVector2Array(-22, 8, 0, -18, 22, 8, 14, 8, 14, 24, -14, 24, -14, 8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HomeMarker"]
+shape = SubResource("CircleShape2D_marker")
+
+[node name="HomeLabel" type="Label" parent="HomeMarker"]
+offset_left = -42.0
+offset_top = -48.0
+offset_right = 42.0
+offset_bottom = -28.0
+mouse_filter = 2
+text = "住处附近"
+horizontal_alignment = 1
+
+[node name="FarmEdgeMarker" type="Area2D" parent="."]
+position = Vector2(112, 272)
+
+[node name="FarmEdgeIcon" type="Polygon2D" parent="FarmEdgeMarker"]
+color = Color(0.28, 0.62, 0.25, 1)
+polygon = PackedVector2Array(-22, -10, 22, -10, 22, 10, -22, 10)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FarmEdgeMarker"]
+shape = SubResource("CircleShape2D_marker")
+
+[node name="FarmEdgeLabel" type="Label" parent="FarmEdgeMarker"]
+offset_left = -42.0
+offset_top = -42.0
+offset_right = 42.0
+offset_bottom = -22.0
+mouse_filter = 2
+text = "农场边"
+horizontal_alignment = 1

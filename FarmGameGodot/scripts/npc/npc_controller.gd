@@ -26,8 +26,11 @@ func _ready() -> void:
 		col.shape = shape
 		add_child(col)
 	
+	_initialize_movable()
+	
 	# 初始化气泡
 	_initialize_bubble()
+	_register_command_callbacks()
 	
 	# 设置输入检测区域
 	var area = Area2D.new()
@@ -57,11 +60,16 @@ func bind(entity: NPCEntity) -> void:
 	# 注册到 Manager
 	NPCManager.register_controller(self)
 
+## 获取移动组件
+func get_movable() -> Movable:
+	return _movable
+
 ## 交互接口
 func interact() -> void:
 	if _entity == null:
 		return
-	if _entity.role == "shop_owner" and _entity.shop_type > 0:
+	var is_at_shop = _entity.current_location_id.is_empty() or _entity.current_location_id == "seed_shop"
+	if _entity.role == "shop_owner" and _entity.shop_type > 0 and is_at_shop:
 		UIManager.open_shop_panel(_entity.shop_type, PlayerManager.get_player_inventory())
 		return
 	UIManager.open_dialogue_panel(_entity)
@@ -102,6 +110,24 @@ func _initialize_bubble() -> void:
 	_bubble_timer.timeout.connect(_hide_bubble)
 	add_child(_bubble_timer)
 
+func _initialize_movable() -> void:
+	var existing_movable = get_node_or_null("Movable")
+	if existing_movable is Movable:
+		_movable = existing_movable
+	else:
+		var MovableScript = load("res://scripts/movement/movable.gd")
+		var movable_node = Node.new()
+		movable_node.set_script(MovableScript)
+		movable_node.name = "Movable"
+		add_child(movable_node)
+		_movable = movable_node as Movable
+	_movable.target_node = self
+
+func _register_command_callbacks() -> void:
+	var callback = Callable(self, "_on_bubble_speak")
+	if not CommandExecutors.on_bubble_speak.has(callback):
+		CommandExecutors.on_bubble_speak.append(callback)
+
 ## 显示气泡
 func show_bubble(content: String, duration: float = 3.0) -> void:
 	if _bubble_label == null:
@@ -126,12 +152,20 @@ func _hide_bubble() -> void:
 func move_to(p_position: Vector2) -> void:
 	if _movable:
 		_movable.move_to(p_position)
+	else:
+		global_position = p_position
 
 ## 说话（会显示气泡）
 func speak(content: String) -> void:
 	print("[NPC %s] 说: %s" % [_entity.npc_name if _entity else "Unknown", content])
 	show_bubble(content)
 
+func _on_bubble_speak(speaker_node: Node, content: String, mood: String) -> void:
+	if speaker_node != self:
+		return
+	show_bubble_with_mood(content, mood)
+
 func _exit_tree() -> void:
+	CommandExecutors.on_bubble_speak.erase(Callable(self, "_on_bubble_speak"))
 	if _entity and NPCManager:
-		NPCManager.unregister_controller(_entity.id)
+		NPCManager.unregister_controller(_entity.id, self)

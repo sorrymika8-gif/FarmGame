@@ -89,11 +89,15 @@ func _initialize_async() -> void:
 	WeatherManager.initialize()
 	print("[BootManager] WeatherManager 初始化完成")
 	
-	# 15. 初始化战斗管理器
+	# 15. 初始化城镇管理器
+	TownManager.initialize()
+	print("[BootManager] TownManager 初始化完成")
+	
+	# 16. 初始化战斗管理器
 	CombatManager.initialize()
 	print("[BootManager] CombatManager 初始化完成")
 
-	# 16. 初始化装备管理器
+	# 17. 初始化装备管理器
 	EquipmentManager.initialize()
 	print("[BootManager] EquipmentManager 初始化完成")
 	

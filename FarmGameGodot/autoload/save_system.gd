@@ -118,12 +118,19 @@ func _collect_save_data() -> Dictionary:
 	var data: Dictionary = {
 		"version": 1,
 		"timestamp": Time.get_unix_time_from_system(),
+		"current_map": "init_map",
 		"player": {},
 		"farm": {},
 		"inventory": {},
 		"gold": 0,
 		"equipment": {},
+		"town": {},
+		"npcs": [],
 	}
+
+	# 收集玩家数据
+	if MapManager.current_map != null:
+		data["current_map"] = str(MapManager.current_map.name)
 
 	# 收集玩家数据
 	if PlayerManager._is_initialized and PlayerManager._player != null:
@@ -168,17 +175,35 @@ func _collect_save_data() -> Dictionary:
 	if EquipmentManager:
 		data["equipment"] = EquipmentManager.to_save_data()
 
+	if TownManager:
+		data["town"] = TownManager.to_save_data()
+
+	if NPCManager:
+		data["npcs"] = NPCManager.to_save_data()
+
 	return data
 
 func _apply_save_data(data: Dictionary) -> void:
-	# 恢复玩家数据
+	var target_map = str(data.get("current_map", "init_map"))
+	var player_position = Vector2.ZERO
+	var has_player_position = false
+
 	if data.has("player"):
 		var player_data = data["player"]
-		var pos = Vector2(
+		player_position = Vector2(
 			player_data.get("position_x", 0),
 			player_data.get("position_y", 0)
 		)
-		PlayerManager.set_player_position(pos)
+		has_player_position = true
+
+	if not target_map.is_empty():
+		var current_map_name = str(MapManager.current_map.name) if MapManager.current_map != null else ""
+		if current_map_name != target_map:
+			GameManager.enter_scene(target_map, player_position)
+		elif has_player_position:
+			PlayerManager.set_player_position(player_position)
+	elif has_player_position:
+		PlayerManager.set_player_position(player_position)
 
 	if data.has("gold"):
 		PlayerManager.set_gold(data["gold"])
@@ -208,3 +233,9 @@ func _apply_save_data(data: Dictionary) -> void:
 
 	if data.has("equipment") and EquipmentManager:
 		EquipmentManager.load_save_data(data["equipment"])
+
+	if data.has("town") and TownManager:
+		TownManager.load_save_data(data["town"])
+
+	if data.has("npcs") and NPCManager:
+		NPCManager.load_save_data(data["npcs"])

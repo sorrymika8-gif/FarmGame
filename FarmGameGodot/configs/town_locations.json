@@ -1,0 +1,47 @@
+[
+	{
+		"id": "seed_shop",
+		"name": "种子店",
+		"map_name": "town_map",
+		"grid_pos": [6, 2],
+		"radius_tiles": 3,
+		"tags": ["shop", "indoor", "work"],
+		"description": "艾莉经营的小种子店，柜台旁总有几袋没来得及整理的种子。"
+	},
+	{
+		"id": "town_square",
+		"name": "小镇广场",
+		"map_name": "town_map",
+		"grid_pos": [0, 4],
+		"radius_tiles": 4,
+		"tags": ["public", "social", "outdoor"],
+		"description": "小镇居民偶尔停下来闲聊的开阔空地。"
+	},
+	{
+		"id": "farm_edge",
+		"name": "农场边",
+		"map_name": "town_map",
+		"grid_pos": [3, 8],
+		"radius_tiles": 4,
+		"tags": ["farm", "outdoor", "work"],
+		"description": "靠近农田的小路，能看到作物和泥土的状态。"
+	},
+	{
+		"id": "exploration_gate",
+		"name": "探索入口",
+		"map_name": "town_map",
+		"grid_pos": [-6, 2],
+		"radius_tiles": 4,
+		"tags": ["exploration", "training", "outdoor"],
+		"description": "外出探索前集合和检查装备的地方。"
+	},
+	{
+		"id": "npc_home",
+		"name": "住处附近",
+		"map_name": "town_map",
+		"grid_pos": [9, 9],
+		"radius_tiles": 4,
+		"tags": ["home", "rest"],
+		"description": "居民休息和收拾私人物品的一片安静角落。"
+	}
+]

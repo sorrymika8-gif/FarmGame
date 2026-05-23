@@ -1,0 +1,26 @@
+[
+	{"npc_id": "1", "period": "morning", "location_id": "seed_shop", "activity": "看店并整理种子袋", "condition": "default"},
+	{"npc_id": "1", "period": "afternoon", "location_id": "town_square", "activity": "在广场偷懒晒太阳", "condition": "default"},
+	{"npc_id": "1", "period": "evening", "location_id": "npc_home", "activity": "慢吞吞地收摊回住处", "condition": "default"},
+	{"npc_id": "1", "period": "any", "location_id": "seed_shop", "activity": "躲雨并抱怨种子受潮", "condition": "rainy"},
+
+	{"npc_id": "2", "period": "morning", "location_id": "farm_edge", "activity": "假装路过农场边", "condition": "default"},
+	{"npc_id": "2", "period": "afternoon", "location_id": "town_square", "activity": "在广场别扭地观察大家", "condition": "default"},
+	{"npc_id": "2", "period": "evening", "location_id": "npc_home", "activity": "嘴硬地说只是准备回去", "condition": "default"},
+	{"npc_id": "2", "period": "any", "location_id": "npc_home", "activity": "躲雨时小声抱怨天气", "condition": "rainy"},
+
+	{"npc_id": "3", "period": "morning", "location_id": "exploration_gate", "activity": "检查近战装备和入口安全", "condition": "default"},
+	{"npc_id": "3", "period": "afternoon", "location_id": "farm_edge", "activity": "帮忙巡视农场边界", "condition": "default"},
+	{"npc_id": "3", "period": "evening", "location_id": "town_square", "activity": "在广场放松并等同伴", "condition": "default"},
+	{"npc_id": "3", "period": "any", "location_id": "exploration_gate", "activity": "雨中确认探索入口是否安全", "condition": "rainy"},
+
+	{"npc_id": "4", "period": "morning", "location_id": "town_square", "activity": "观察小镇动向和路线", "condition": "default"},
+	{"npc_id": "4", "period": "afternoon", "location_id": "exploration_gate", "activity": "整理远程支援补给", "condition": "default"},
+	{"npc_id": "4", "period": "evening", "location_id": "npc_home", "activity": "记录今天的见闻", "condition": "default"},
+	{"npc_id": "4", "period": "any", "location_id": "seed_shop", "activity": "在屋檐下规划安全路线", "condition": "rainy"},
+
+	{"npc_id": "5", "period": "morning", "location_id": "exploration_gate", "activity": "安静测试火力节奏", "condition": "default"},
+	{"npc_id": "5", "period": "afternoon", "location_id": "town_square", "activity": "在广场边缘保持警戒", "condition": "default"},
+	{"npc_id": "5", "period": "evening", "location_id": "npc_home", "activity": "维护装备并休息", "condition": "default"},
+	{"npc_id": "5", "period": "any", "location_id": "exploration_gate", "activity": "雨中检查火力覆盖空间", "condition": "rainy"}
+]

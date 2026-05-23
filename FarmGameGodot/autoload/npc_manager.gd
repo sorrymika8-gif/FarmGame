@@ -36,7 +36,9 @@ func register_controller(controller: NPCController) -> void:
 	_controllers[controller.npc_id] = controller
 
 ## 注销 NPC 控制器
-func unregister_controller(npc_id: String) -> void:
+func unregister_controller(npc_id: String, controller: NPCController = null) -> void:
+	if controller != null and _controllers.get(npc_id) != controller:
+		return
 	_controllers.erase(npc_id)
 
 ## 获取 NPC 控制器
@@ -45,9 +47,14 @@ func get_controller(npc_id: String) -> NPCController:
 
 ## 从配置创建并生成 NPC
 func spawn_npc_from_config(config: Dictionary) -> NPCController:
-	var entity = NPCFactory.create(config, shared_brain)
-	var npc_id = entity.id
-	_entities[npc_id] = entity
+	var npc_id = str(config.get("class_id", ""))
+	if npc_id.is_empty():
+		return null
+
+	var entity: NPCEntity = _entities.get(npc_id)
+	if entity == null:
+		entity = NPCFactory.create(config, shared_brain)
+		_entities[npc_id] = entity
 	
 	# 加载或创建 NPC 场景
 	var model_name = config.get("model_name", npc_id)
@@ -73,6 +80,15 @@ func spawn_npc_from_config(config: Dictionary) -> NPCController:
 	print("[NpcManager] NPC 已生成: %s at %s" % [entity.npc_name, str(entity.position)])
 	return controller
 
+## 生成指定地图上的 NPC
+func spawn_npcs_for_map(map_name: String) -> void:
+	clear_all_controllers()
+	var npc_configs = ConfigManager.get_all("npc")
+	for cfg in npc_configs:
+		var npc_map_name = str(cfg.get("map_name", "town_map"))
+		if npc_map_name == map_name:
+			spawn_npc_from_config(cfg)
+
 ## 获取 NPC 实体
 func get_entity(npc_id: String) -> NPCEntity:
 	return _entities.get(npc_id)
@@ -88,12 +104,15 @@ func remove_npc(npc_id: String) -> void:
 	npc_removed.emit(npc_id)
 
 func clear_all_npcs() -> void:
+	clear_all_controllers()
+	_entities.clear()
+
+func clear_all_controllers() -> void:
 	for npc_id in _controllers.keys():
 		var ctrl = _controllers[npc_id]
 		if is_instance_valid(ctrl):
 			ctrl.queue_free()
 	_controllers.clear()
-	_entities.clear()
 
 ## 获取距离最近的 NPC
 func get_nearest_npc(pos: Vector2, max_distance: float = INF) -> NPCController:
@@ -112,6 +131,35 @@ func get_nearest_npc(pos: Vector2, max_distance: float = INF) -> NPCController:
 ## 获取所有 NPC 实体
 func get_all_entities() -> Dictionary:
 	return _entities.duplicate()
+
+## 获取所有 NPC 控制器
+func get_all_controllers() -> Dictionary:
+	return _controllers.duplicate()
+
+## 序列化 NPC 动态数据
+func to_save_data() -> Array:
+	var data: Array = []
+	for entity in _entities.values():
+		if entity != null and entity.has_method("to_dict"):
+			data.append(entity.to_dict())
+	return data
+
+## 读取 NPC 动态数据
+func load_save_data(data: Array) -> void:
+	for npc_data in data:
+		if not (npc_data is Dictionary):
+			continue
+		var npc_id = str(npc_data.get("id", ""))
+		if npc_id.is_empty():
+			continue
+
+		var entity = get_entity(npc_id)
+		if entity != null and entity.has_method("apply_save_data"):
+			entity.apply_save_data(npc_data)
+
+		var controller = get_controller(npc_id)
+		if controller != null and is_instance_valid(controller) and entity != null:
+			controller.global_position = entity.position
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:

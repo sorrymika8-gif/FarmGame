@@ -24,12 +24,4 @@ func _ready() -> void:
 	# 注册到 FarmManager
 	FarmManager.set_current_view(_farm_view)
 	
-	# 生成 NPC
-	_spawn_npcs()
-	
 	print("[InitMap] 地图初始化完成")
-
-func _spawn_npcs() -> void:
-	var npc_configs = ConfigManager.get_all("npc")
-	for cfg in npc_configs:
-		NPCManager.spawn_npc_from_config(cfg)

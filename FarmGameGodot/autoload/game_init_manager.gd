@@ -78,6 +78,7 @@ func return_to_main_menu() -> void:
 	MapManager.unload_map()
 	PlayerManager.reset_state()
 	FarmManager.reset_farm_data()
+	TownManager.reset_state()
 	UIManager.open_panel("res://ui/main_menu_panel.tscn")
 
 func is_game_running() -> bool:
@@ -90,3 +91,4 @@ func _prepare_game_world() -> void:
 	MapManager.unload_map()
 	PlayerManager.reset_state()
 	FarmManager.reset_farm_data()
+	TownManager.reset_state()
